@@ -16,7 +16,7 @@ const mongoDb = process.env.MONGODB_CONNECTION_CLOUD || process.env.MONGODB_CONN
 
 mongoose.Promise = global.Promise
 mongoose.set('strictQuery', true);
-const dbConnection = mongoose.connect(`${mongoDb}/crowdDb`, {
+const dbConnection = mongoose.connect(`${mongoDb}/iMoveDb`, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
