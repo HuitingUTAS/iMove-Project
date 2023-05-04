@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv  from "dotenv"
 import { searchNearestProviders } from "./controllers/BookingController.js"
+import { loginUser, getPwd } from "./controllers/UserController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -29,6 +30,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.route("/crowd/booking")
     .post(searchNearestProviders)
+
+app.route("/loginPage")
+    .post(loginUser)
+
+app.route("/pwd")
+    .get(getPwd)
 
 app.listen(port, () => {
     console.log(`Crowd Service is listening on port: ${port}`)

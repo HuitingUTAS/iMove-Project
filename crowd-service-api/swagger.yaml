@@ -30,6 +30,32 @@ paths:
                 $ref: '#/components/schemas/ResponseBody'
               example:
                 message: "RequestError: Error: connect ECONNREFUSED 127.0.0.1:3000"
+  /loginPage:
+    post:
+      summary: Login backend site
+      description: According to different roles (Manager, Dispatcher, Packer, Driver), login backend site
+      requestBody:
+        description: User Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':    
+          description: Login successfully
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/LoginResponse'
+        '400':    
+          description: Server response error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ResponseBody'
+              example:
+                message: "Login Error"
 components:
   schemas:
     BookingRequest:
@@ -157,3 +183,68 @@ components:
       properties:
         message:
           type: string
+    UserRequest:
+      type: object
+      properties:
+        role:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      example:
+        role: "packer"
+        username: "packer1"
+        password: "123456"
+    LoginResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+        role:
+          type: string
+      example:
+        message: "login successfully"
+        user:
+            username: "packer1"
+            password: "$2b$10$eNDcvieJhgvVuWp.aotLAerVPt0pgPflGc9AK17wMOEJkKjC3Ra5S"
+            name: "Packer 1"
+            address: ""
+            email: ""
+            gender: ""
+            phone: ""
+            photo: ""
+        token: ""
+        role: "packer"
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        email:
+          type: string
+        gender:
+          type: string
+        phone:
+          type: string
+        photo:
+          type: string
+      example:
+        username: "packer1"
+        password: "$2b$10$eNDcvieJhgvVuWp.aotLAerVPt0pgPflGc9AK17wMOEJkKjC3Ra5S"
+        name: "Packer 1"
+        address: ""
+        email: ""
+        gender: ""
+        phone: ""
+        photo: ""
