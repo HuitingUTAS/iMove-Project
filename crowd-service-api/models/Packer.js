@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const packerScherSchema = new Schema({
+export const packerSchema = new Schema({
     username: {
         type: String,
     },
@@ -28,5 +28,3 @@ const packerScherSchema = new Schema({
         type: String,
     },
 })
-
-module.exports = mongoose.model('Packer', packerScherSchema);

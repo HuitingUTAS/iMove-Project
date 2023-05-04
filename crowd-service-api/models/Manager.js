@@ -6,7 +6,7 @@ const accessCode = Object.freeze({
     Manager: 'manager',
 });
 
-const managerSchema = new Schema({
+export const managerSchema = new Schema({
     username: {
         type: String,
     },
@@ -36,5 +36,3 @@ const managerSchema = new Schema({
         enum: Object.values(accessCode),
     },
 })
-
-module.exports = mongoose.model('Manager', managerSchema);

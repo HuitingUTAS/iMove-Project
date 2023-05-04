@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const dispatcherSchema = new Schema({
+export const dispatcherSchema = new Schema({
     username: {
         type: String,
     },
@@ -28,5 +28,3 @@ const dispatcherSchema = new Schema({
         type: String,
     },
 })
-
-module.exports = mongoose.model('Dispatcher', dispatcherSchema);

@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const customerSchema = new Schema({
+export const customerSchema = new Schema({
     customerPO: {
         type: String,
         required: "CustomerPO is required."
@@ -16,5 +16,3 @@ const customerSchema = new Schema({
         required: "Address is required."
     },
 })
-
-module.exports = mongoose.model('Customer', customerSchema);

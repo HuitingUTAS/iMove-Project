@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const senderSchema = new Schema({
+export const senderSchema = new Schema({
     accName: {
         type: String,
     },
@@ -19,5 +19,3 @@ const senderSchema = new Schema({
         type: String,
     },
 })
-
-module.exports = mongoose.model('Sender', senderSchema);

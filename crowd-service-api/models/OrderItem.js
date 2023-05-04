@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const orderItemSchema = new Schema({
+export const orderItemSchema = new Schema({
     itemCode: {
         type: String,
         required: "Item Code is required."
@@ -36,5 +36,3 @@ const orderItemSchema = new Schema({
         ref: 'Order' // Refer: https://mongoosejs.com/docs/populate.html
     },
 })
-
-module.exports = mongoose.model('OrderItem', orderItemSchema);

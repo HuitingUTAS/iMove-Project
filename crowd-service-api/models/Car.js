@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const carSchema = new Schema({
+export const carSchema = new Schema({
     make: {
         type: String,
     },
@@ -28,5 +28,3 @@ const carSchema = new Schema({
         type: String,
     },
 })
-
-module.exports = mongoose.model('Car', carSchema);

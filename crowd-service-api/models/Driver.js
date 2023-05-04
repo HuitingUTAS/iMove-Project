@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const driverSchema = new Schema({
+export const driverSchema = new Schema({
     name: {
         type: String,
     },
@@ -28,5 +28,3 @@ const driverSchema = new Schema({
         type: String,
     },
 })
-
-module.exports = mongoose.model('Driver', driverSchema);

@@ -18,7 +18,7 @@ const currencyCode = Object.freeze({
     USD: 'USD',
 });
 
-const orderSchema = new Schema({
+export const orderSchema = new Schema({
     SO: {
         type: String,
         required: "SO is required."
@@ -91,5 +91,3 @@ const orderSchema = new Schema({
 Object.assign(orderSchema.statics, {
     shipmentStatus, paymentStatus, currencyCode
 });
-
-module.exports = mongoose.model('Order', orderSchema);
