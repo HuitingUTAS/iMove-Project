@@ -7,8 +7,9 @@ The backend is developed in Node/Express. The frontend is developed in React.
 1. Navigate to the `backend` folder.
 2. Run `npm install` to install all node modules.
 3. Run `npm start` to start the app.
-4. Open `http://localhost:3002/` to check if the app is on.
-5. Read the API document on `http://localhost:3002/api-docs/`.
+4. Copy `.env.example` and create new file `.env`, update the content with your real data
+5. Open `http://localhost:3002/` to check if the app is on.
+6. Read the API document on `http://localhost:3002/api-docs/`.
 
 
 ## Run the Frontend
