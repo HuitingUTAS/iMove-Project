@@ -1,6 +1,5 @@
 import express from 'express'
 import dotenv  from "dotenv"
-import { searchNearestProviders } from "./controllers/BookingController.js"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrder } from "./controllers/OrderController.js"
 import mongoose from "mongoose"
@@ -29,9 +28,6 @@ app.use(bodyParser.json())
 app.use(express.static("views"))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.route("/crowd/booking")
-    .post(searchNearestProviders)
-
 app.route("/loginPage")
     .post(loginUser)
 
@@ -43,5 +39,5 @@ app.route("/order/:orderNumber")
     // .post(updateOrder)
 
 app.listen(port, () => {
-    console.log(`Crowd Service is listening on port: ${port}`)
+    console.log(`iMove Backend is listening on port: ${port}`)
 })
