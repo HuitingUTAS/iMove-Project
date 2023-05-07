@@ -28,6 +28,11 @@ app.use(bodyParser.json())
 app.use(express.static("views"))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.route("/")
+    .get(function(req, res, next) {
+        res.send("Welcome iMove Backend");
+    });
+
 app.route("/loginPage")
     .post(loginUser)
 
