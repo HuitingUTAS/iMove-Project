@@ -56,6 +56,31 @@ paths:
                 $ref: '#/components/schemas/ResponseBody'
               example:
                 message: "Login Error"
+  /order/{orderNumber}:
+    get:
+      summary: Get Orders by Order Number
+      parameters:
+        - in: path
+          name: orderNumber
+          schema:
+            type: string
+          required: true
+          description: Get Orders by Order Number
+      responses:
+        '200':    
+          description: An JSON of the order
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Order'
+        '400':    
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ResponseBody'
+              example:
+                message: "Data not found"
 components:
   schemas:
     BookingRequest:
@@ -248,3 +273,74 @@ components:
         gender: ""
         phone: ""
         photo: ""
+    Order:
+      type: object
+      properties:
+        createDate:
+          type: string
+          format: date-time
+        shipmentStatus:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              date:
+                type: string
+                format: date-time
+        paymentStatus:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              date:
+                type: string
+                format: date-time
+        currencyCode:
+          type: string
+        remark:
+          type: string
+        totalAmount:
+          type: number
+        customer:
+          type: string
+        car:
+          type: string
+        driver:
+          type: string
+        parcelQty:
+          type: number
+        prefferedDeliveryDate:
+          type: string
+          format: date-time
+        need_fridge:
+          type: boolean
+        sender:
+          type: string
+        consignmentID:
+          type: string
+        orderNumber:
+          type: string
+      example:
+        createDate: "2023-04-01T10:30:00.000Z"
+        shipmentStatus: 
+          status: "prepared"
+          date: "2023-04-01T00:00:00.000Z"
+        paymentStatus:
+          status: "unpaid"
+          date: "2023-04-01T00:00:00.000Z"
+        csurrencyCode: "AUD"
+        remark": ""
+        totalAmount: 420
+        customer": "6435531588941c5e51959bc1"
+        car: "643554d888941c5e51959bc3"
+        driver: "643557b065b8ad5725de954b"
+        parcelQty: 3
+        prefferedDeliveryDate: "2023-04-01T00:00:00.000Z"
+        need_fridge: true
+        sender: "643fc42ac4fbf335914624c7"
+        consignmentID: ""
+        orderNumber: "SOF003101"

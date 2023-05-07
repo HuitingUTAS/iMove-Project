@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv  from "dotenv"
 import { searchNearestProviders } from "./controllers/BookingController.js"
 import { loginUser, getPwd } from "./controllers/UserController.js"
+import { getOrder } from "./controllers/OrderController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -36,6 +37,10 @@ app.route("/loginPage")
 
 app.route("/pwd")
     .get(getPwd)
+
+app.route("/order/:orderNumber")
+    .get(getOrder)
+    // .post(updateOrder)
 
 app.listen(port, () => {
     console.log(`Crowd Service is listening on port: ${port}`)

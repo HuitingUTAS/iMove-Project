@@ -19,9 +19,9 @@ const currencyCode = Object.freeze({
 });
 
 export const orderSchema = new Schema({
-    SO: {
+    orderNumber: {
         type: String,
-        required: "SO is required."
+        required: "Order Number is required."
     },
     consignmentID: {
         type: String,
