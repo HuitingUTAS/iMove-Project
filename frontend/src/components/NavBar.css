@@ -1,0 +1,47 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #333;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+  }
+  
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+  }
+  
+  .navbar a:hover {
+    color: #ddd;
+  }
+  
+  .profile-icon {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #333;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .dropdown a {
+    display: block;
+    padding: 5px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .dropdown a:hover {
+    background-color: #444;
+  }
+  

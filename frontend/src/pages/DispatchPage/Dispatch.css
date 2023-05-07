@@ -1,0 +1,32 @@
+.dispatchtest{
+    width: 100vw;
+    height: 100vh;
+    margin-top:60px;
+    padding: 0;
+  }
+
+.add{
+    max-width: 90%;
+    padding:3rem;
+    margin: 5rem auto;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 1px #999;
+}
+.unallocated{
+    max-width: 90%;
+    padding:3rem;
+    margin: 5rem auto;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 1px #999;
+}
+
+.allocated{
+    max-width: 90%;
+    padding:3rem;
+    margin: 5rem auto;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 1px #999;
+}
