@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function AddOrder() {
   const nagivation = new useNavigate();
   const [orderDetails, setOrderDetails] = useState({
+    OrderID: "",
     SenderName: "",
     ReciverName: "",
     Address: "",
@@ -13,6 +14,7 @@ function AddOrder() {
     Item: "",
     Requirement: "",
     Fridge: "",
+    DeliverDate: "",
   });
 
   const handleInputChange = (event) => {
@@ -45,6 +47,19 @@ function AddOrder() {
       <h2>Add Order</h2>
       <Form onSubmit={handleSubmit}>
         <Row>
+          <Col md={5}>
+            <Form.Group controlId="orderID">
+              <Form.Label>orderID</Form.Label>
+              <Form.Control
+                type="text"
+                name="OrderID"
+                value={orderDetails.OrderID}
+                onChange={handleChange}
+                placeholder="Enter Order ID"
+                required
+              />
+            </Form.Group>
+          </Col>
           <Col>
             <Form.Group controlId="senderName">
               <Form.Label>Sender Name</Form.Label>
@@ -58,8 +73,13 @@ function AddOrder() {
               />
             </Form.Group>
           </Col>
-          <Col>
-            <Form.Group controlId="reciverName">
+        </Row>
+        <Row>
+          <Col md={5}>
+            <Form.Group
+              controlId="reciverName"
+              style={{ margin: "1.5rem auto" }}
+            >
               <Form.Label>Reciver Name</Form.Label>
               <Form.Control
                 type="text"
@@ -71,22 +91,22 @@ function AddOrder() {
               />
             </Form.Group>
           </Col>
+          <Col>
+            <Form.Group controlId="address" style={{ margin: "1.5rem auto" }}>
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                type="address"
+                name="Address"
+                value={orderDetails.Address}
+                onChange={handleChange}
+                placeholder="Enter address"
+                required
+              />
+            </Form.Group>
+          </Col>
         </Row>
         <Row>
-          <Form.Group controlId="address" style={{ margin: "1.5rem auto" }}>
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-              type="text"
-              name="Address"
-              value={orderDetails.Address}
-              onChange={handleChange}
-              placeholder="Enter address"
-              required
-            />
-          </Form.Group>
-        </Row>
-        <Row>
-          <Col md={6}>
+          <Col md={5}>
             <Form.Group controlId="phoneNumber">
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
@@ -95,6 +115,18 @@ function AddOrder() {
                 value={orderDetails.PhoneNumber}
                 onChange={handleChange}
                 placeholder="Enter phone number"
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col md={3}>
+            <Form.Group controlId="deliverdate">
+              <Form.Label>Deliver Date</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="DeliverDate"
+                value={orderDetails.DeliverDate}
+                onChange={handleChange}
                 required
               />
             </Form.Group>

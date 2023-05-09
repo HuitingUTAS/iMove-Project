@@ -10,6 +10,7 @@ import PackerPage from "./pages/PackerUpPage/PackerPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import AddOrder from "./pages/DispatchPage/AddOrder";
 import ErrorPage from "./components/ErrorPage";
+import BatchOrder from "./pages/DispatchPage/BatchOrder";
 import "./App.css";
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
           <Route path="/packer" element={<PackerPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="/addOrder" element={<AddOrder />} />
+          <Route path="/batchOrder" element={<BatchOrder />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

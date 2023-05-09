@@ -1,25 +1,12 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-function UnallocatedOrders({
-  orders,
-  handleUpload,
-  handleAllocate,
-  handleAdd,
-}) {
+function UnallocatedOrders({ orders, handleAllocate }) {
   const navigate = useNavigate();
   return (
     <div className="unallocated">
       <h3>Unallocated Orders</h3>
-      {orders.map((order) => (
-        <div key={order.id} className="order">
-          <p>Order ID: {order.id}</p>
-          <p>Customer: {order.customer}</p>
-          <p>Items: {order.items}</p>
-          <p>Price: {order.price}</p>
-        </div>
-      ))}
       <div className="order-buttons">
         <Button
           variant="warning"
@@ -29,13 +16,31 @@ function UnallocatedOrders({
         >
           Add Order
         </Button>
-        <Button variant="primary" onClick={handleUpload}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            navigate("/batchOrder");
+          }}
+        >
           Upload Orders
         </Button>
+      </div>
+      <Table title="Unlocated">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Order Number</th>
+              <th>Sender</th>
+              <th>Revicer</th>
+              <th>Items</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
         <Button variant="success" onClick={handleAllocate}>
           Allocate Orders
         </Button>
-      </div>
+      </Table>
     </div>
   );
 }
