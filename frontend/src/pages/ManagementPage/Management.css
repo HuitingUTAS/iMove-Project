@@ -1,6 +1,17 @@
 .managementTest{
-    width: 100vw;
-    height: 100vh;
-    margin-top:60px;
-    padding: 0;
-  }
+  width: 100vw;
+  height: 100vh;
+  margin-top:60px;
+  padding: 0;
+  
+}
+
+.roleTab{
+  max-width: 90%;
+  padding:3rem;
+  margin: 5rem auto;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  box-shadow: 0 1px 10px 1px #999;
+}
+
