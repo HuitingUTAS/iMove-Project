@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Form, Button, Tabs, Tab, Row, Col } from "react-bootstrap";
 import "./Management.css";
 import CarManage from "./CarManage";
-import DispatcherMange from "./DispatcherMange";
+import DispatcherManage from "./DispatcherManage";
 import PackerManage from "./PackerManage";
 import DriverManage from "./DriverManage";
 import Manager from "./Manager";
+import CustomerManage from "./CustomerManage";
+import ItemManage from "./ItemManage";
 
 function ManagementPage() {
   return (
@@ -31,7 +33,7 @@ function ManagementPage() {
             title="Dispatcher Management"
             style={{ margin: "1.5rem auto" }}
           >
-            <DispatcherMange></DispatcherMange>
+            <DispatcherManage></DispatcherManage>
           </Tab>
           <Tab
             eventKey="driver"
@@ -46,6 +48,20 @@ function ManagementPage() {
             style={{ margin: "1.5rem auto" }}
           >
             <Manager></Manager>
+          </Tab>
+          <Tab
+            eventKey="customer"
+            title="Customer Management"
+            style={{ margin: "1.5rem auto" }}
+          >
+            <CustomerManage></CustomerManage>
+          </Tab>
+          <Tab
+            eventKey="item"
+            title="Item Management"
+            style={{ margin: "1.5rem auto" }}
+          >
+            <ItemManage></ItemManage>
           </Tab>
         </Tabs>
       </div>

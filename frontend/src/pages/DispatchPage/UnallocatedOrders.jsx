@@ -26,21 +26,19 @@ function UnallocatedOrders({ orders, handleAllocate }) {
         </Button>
       </div>
       <Table title="Unlocated">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Order Number</th>
-              <th>Sender</th>
-              <th>Revicer</th>
-              <th>Items</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-        <Button variant="success" onClick={handleAllocate}>
-          Allocate Orders
-        </Button>
+        <thead>
+          <tr>
+            <th>Order Number</th>
+            <th>Sender</th>
+            <th>Revicer</th>
+            <th>Items</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
       </Table>
+      <Button variant="success" onClick={handleAllocate}>
+        Allocate Orders
+      </Button>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Button, Table } from "react-bootstrap";
+import { Button, Col, Table, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import "./Dispatch.css";
@@ -66,27 +66,28 @@ function BatchOrder() {
             readExcel(file);
           }}
         />
-        <Button variant="primary" onClick={handleUpload}>
-          Import File
-        </Button>
-        <Button variant="success" onClick={BatchAdd}>
-          Add
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={() => {
-            nagivation("/dispatch");
-          }}
-        >
-          Cancel
-        </Button>
+        <Row>
+          <Col md={9} style={{ margin: "1rem auto" }}>
+            <Button variant="primary" onClick={handleUpload}>
+              Import File
+            </Button>
+          </Col>
+          <Col style={{ margin: "1rem auto" }}>
+            <Button variant="success" onClick={BatchAdd}>
+              Confrim
+            </Button>
+            <Button variant="secondary" onClick={() => nagivation("/dispatch")}>
+              Cancel
+            </Button>
+          </Col>
+        </Row>
       </div>
-      <div style={{ flexGrow: 1, overflowY: "scroll", maxHeight: "500px" }}>
+      <div style={{ overflowY: "scroll", maxHeight: "500px" }}>
         <Table className="table">
           <thead>
             <tr>
               <th>Order Number</th>
-              <th>Customer</th>
+              <th>Receiver</th>
               <th>Item Name</th>
               <th>UOM</th>
               <th>Qty</th>
