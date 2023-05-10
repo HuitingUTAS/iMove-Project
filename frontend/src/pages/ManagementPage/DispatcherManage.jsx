@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
-function DispatcherMange() {
+function DispatcherManage() {
   const [dispatchers, setdispatchers] = useState([]);
   return (
     <div>
@@ -29,4 +29,4 @@ function DispatcherMange() {
   );
 }
 
-export default DispatcherMange;
+export default DispatcherManage;
