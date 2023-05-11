@@ -514,6 +514,6 @@ function RegistrationPage() {
       </Col>
     </Row>
   </Container>
-);
+  );
 };
 export default RegistrationPage;
