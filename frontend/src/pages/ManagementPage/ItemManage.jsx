@@ -44,9 +44,15 @@ function ItemManage() {
   const [editIndex, setEditIndex] = useState(null);
   const [items, setItems] = useState(sampleItems);
   const [showModal, setShowModal] = useState(false);
+  const [originalItem, setOriginalItem] = useState(null);
+  const [originalItems, setOriginalItems] = useState([]);
   const [newItem, setNewItem] = useState({ id: "", name: "", volume: "" });
   const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+    if (e.target.value) {
+      setSearch(e.target.value.toLowerCase());
+    } else {
+      setSearch("");
+    }
   };
   const filteredItems = items.filter((item) => {
     const keyword = search.toLowerCase();
@@ -65,6 +71,7 @@ function ItemManage() {
     }
   };
   const handleEdit = (index) => {
+    setOriginalItem(JSON.parse(JSON.stringify(items[index])));
     setEditIndex(index);
   };
   const handleNameChange = (e, index) => {
@@ -92,7 +99,7 @@ function ItemManage() {
   };
   const handleCancel = (index) => {
     const newItems = [...items];
-    newItems[index] = { ...items[index] };
+    newItems[index] = originalItem;
     setItems(newItems);
     setEditIndex(null);
   };
@@ -152,7 +159,7 @@ function ItemManage() {
                         <Dropdown.Item eventKey="1-2m³">
                           1-2m&sup3;
                         </Dropdown.Item>
-                        <Dropdown.Item eventKey="2-3v">
+                        <Dropdown.Item eventKey="2-3m³">
                           2-3m&sup3;
                         </Dropdown.Item>
                         <Dropdown.Item eventKey="3-4m³">
