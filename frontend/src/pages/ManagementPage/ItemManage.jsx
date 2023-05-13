@@ -45,7 +45,6 @@ function ItemManage() {
   const [items, setItems] = useState(sampleItems);
   const [showModal, setShowModal] = useState(false);
   const [originalItem, setOriginalItem] = useState(null);
-  const [originalItems, setOriginalItems] = useState([]);
   const [newItem, setNewItem] = useState({ id: "", name: "", volume: "" });
   const handleSearchChange = (e) => {
     if (e.target.value) {

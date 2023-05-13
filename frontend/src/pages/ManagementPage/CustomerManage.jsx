@@ -40,6 +40,7 @@ function CustomerManage() {
   const [search, setSearch] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [customers, setCustomers] = useState(sampleCustomers);
+  const [originalCustomer, setOriginalCustomer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
     id: "",
@@ -66,6 +67,7 @@ function CustomerManage() {
     }
   };
   const handleEdit = (index) => {
+    setOriginalCustomer(JSON.parse(JSON.stringify(customers[index])));
     setEditIndex(index);
   };
   const handleNameChange = (e, index) => {
@@ -79,9 +81,9 @@ function CustomerManage() {
     setNewCustomer({ ...newCustomer, id: nextId });
     setShowModal(true);
   };
-  const handleAddressChange = (newAddress, index) => {
+  const handleAddressChange = (e, index) => {
     const newCustomers = [...customers];
-    newCustomers[index].address = newAddress;
+    newCustomers[index].address = e.target.value;
     setCustomers(newCustomers);
   };
   const handleDelete = (index) => {
@@ -93,7 +95,7 @@ function CustomerManage() {
   };
   const handleCancel = (index) => {
     const newCustomers = [...customers];
-    newCustomers[index] = { ...customers[index] };
+    newCustomers[index] = originalCustomer;
     setCustomers(newCustomers);
     setEditIndex(null);
   };
