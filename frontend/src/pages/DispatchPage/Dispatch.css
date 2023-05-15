@@ -29,3 +29,12 @@
     background-color: #fff;
     box-shadow: 0 1px 10px 1px #999;
 }
+
+.addItem{
+    max-width: 100%;
+    padding:3rem;
+    margin: 2rem auto;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    box-shadow: 0 1px 10px 1px #999;
+}

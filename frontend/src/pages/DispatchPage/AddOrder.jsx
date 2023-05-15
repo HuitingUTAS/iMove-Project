@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import "./Dispatch.css";
 import { useNavigate } from "react-router-dom";
 
@@ -16,6 +16,22 @@ function AddOrder() {
     Fridge: "",
     DeliverDate: "",
   });
+
+  const [items, setItems] = useState([]);
+  const [newItem, setNewItem] = useState({
+    itemName: "",
+    uom: "",
+    quantity: 0,
+  });
+
+  const handleAddItem = () => {
+    setItems((prevItems) => [...prevItems, newItem]);
+    setNewItem({
+      itemName: "",
+      uom: "",
+      quantity: 0,
+    });
+  };
 
   const handleInputChange = (event) => {
     const target = event.target;
@@ -110,7 +126,7 @@ function AddOrder() {
             <Form.Group controlId="phoneNumber">
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
-                type="number"
+                type="tel"
                 name="PhoneNumber"
                 value={orderDetails.PhoneNumber}
                 onChange={handleChange}
@@ -158,19 +174,6 @@ function AddOrder() {
         </Row>
         <Row>
           <Col>
-            <Form.Group controlId="item">
-              <Form.Label>Items</Form.Label>
-              <Form.Control
-                as="textarea"
-                name="Item"
-                value={orderDetails.Item}
-                onChange={handleChange}
-                placeholder="Enter including items"
-                required
-              />
-            </Form.Group>
-          </Col>
-          <Col>
             <Form.Group controlId="requirement">
               <Form.Label>Special Requirement</Form.Label>
               <Form.Control
@@ -183,6 +186,99 @@ function AddOrder() {
             </Form.Group>
           </Col>
         </Row>
+        <div className="addItem">
+          <h2>Insert Item</h2>
+          <hr />
+          <Row>
+            <Col>
+              <Form.Group controlId="itemName">
+                <Form.Label>Item Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="itemName"
+                  value={newItem.itemName}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, itemName: e.target.value })
+                  }
+                  placeholder="Enter item name"
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="itemUOM">
+                <Form.Label>Item UOM</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="uom"
+                  value={newItem.uom}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, uom: e.target.value })
+                  }
+                  placeholder="Enter unit of measure"
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Form.Group controlId="itemQuantity">
+                <Form.Label>Item Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="quantity"
+                  value={newItem.quantity}
+                  onChange={(e) =>
+                    setNewItem({
+                      ...newItem,
+                      quantity: parseInt(e.target.value),
+                    })
+                  }
+                  placeholder="Enter item quantity"
+                  required
+                />
+              </Form.Group>
+            </Col>
+            <Col>
+              <Button
+                variant="primary"
+                onClick={handleAddItem}
+                style={{ textAlign: "right" }}
+              >
+                Add Item
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div
+                style={{
+                  margin: "1.5rem auto",
+                  overflowY: "scroll",
+                  maxHeight: "500px",
+                }}
+              >
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Item Name</th>
+                      <th>UOM</th>
+                      <th>Quantity</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.itemName}</td>
+                        <td>{item.uom}</td>
+                        <td>{item.quantity}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            </Col>
+          </Row>
+        </div>
         <Row>
           <Col md={10} style={{ margin: "1rem auto" }}>
             <Button variant="primary" type="submit">
