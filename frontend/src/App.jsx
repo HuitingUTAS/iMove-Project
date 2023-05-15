@@ -11,6 +11,7 @@ import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import AddOrder from "./pages/DispatchPage/AddOrder";
 import ErrorPage from "./components/ErrorPage";
 import BatchOrder from "./pages/DispatchPage/BatchOrder";
+import TrackingPage from "./pages/TrackingPage/TrackingPage";
 import "./App.css";
 
 function App() {
@@ -26,8 +27,11 @@ function App() {
               <Link to="/driver" className="nav-link">
                 Driver
               </Link>
+              <Link to="/Tracking" className="nav-link">
+                Tracking
+              </Link>
               <Link to="/packer" className="nav-link">
-                Order
+                Packer
               </Link>
               <Link to="/management" className="nav-link">
                 Management
@@ -50,6 +54,7 @@ function App() {
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="/addOrder" element={<AddOrder />} />
           <Route path="/batchOrder" element={<BatchOrder />} />
+          <Route path="/Tracking" element={<TrackingPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>

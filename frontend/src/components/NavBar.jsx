@@ -8,6 +8,7 @@ import ManagementPage from "../pages/ManagementPage/ManagementPage";
 import PackerPage from "../pages/PackerUpPage/PackerPage";
 import RegistrationPage from "../pages/RegistrationPage/RegistrationPage";
 import AddOrder from "../pages/DispatchPage/AddOrder";
+import TrackingPage from "../pages/TrackingPage/TrackingPage";
 import ErrorPage from "./ErrorPage";
 
 function CustomNavbar() {
@@ -20,6 +21,9 @@ function CustomNavbar() {
         <Link to="/Driver" className="nav-link">
           Driver
         </Link>{" "}
+        <Link to="/Tracking" className="nav-link">
+          Tracking
+        </Link>
         <Link to="/Packer" className="nav-link">
           Packer
         </Link>
@@ -39,6 +43,7 @@ function CustomNavbar() {
           <Route path="/Registration" element={<RegistrationPage />} />
           <Route path="/AddOrder" element={<AddOrder />} />
           <Route path="*" element={<ErrorPage />} />
+          <Route path="/Tracking" element={<TrackingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
