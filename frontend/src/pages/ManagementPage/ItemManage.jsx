@@ -261,7 +261,7 @@ function ItemManage() {
                 >
                   <Dropdown.Item eventKey="0-1m³">0-1m&sup3;</Dropdown.Item>
                   <Dropdown.Item eventKey="1-2m³">1-2m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="2-3v">2-3m&sup3;</Dropdown.Item>
+                  <Dropdown.Item eventKey="2-3m³">2-3m&sup3;</Dropdown.Item>
                   <Dropdown.Item eventKey="3-4m³">3-4m&sup3;</Dropdown.Item>
                   <Dropdown.Item eventKey="4-5m³">4-5m&sup3;</Dropdown.Item>
                   <Dropdown.Item eventKey="5-6m³">5-6m&sup3;</Dropdown.Item>
