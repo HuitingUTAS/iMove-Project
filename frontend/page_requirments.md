@@ -64,137 +64,119 @@ Driver Order Information API
 
 司机可以通过这些 API 在前端页面上查看订单列表、更新订单状态和上传文件。
 
-# API 需求
+# API Requirement
 
-## API 名称
+## API Name
 
-Dispatch Order Management API
+Dispatch Order API
 
-## 目的
+## Aim
 
-获取未分配和已分配订单列表，用于在前端页面上展示，并允许上传、分配、添加和导出订单。
-
-## URL
-
-上传订单列表: `/DispatchPage`
-分配订单: `/DispatchPage/orders`
-添加新订单: `/AddOrder`
-导出已分配订单: `/DispatchPage/orders`
-
-## Method
-
-1. 获取未分配订单列表: GET
-2. 获取已分配订单列表: GET
-3. 上传订单列表: POST
-4. 分配订单: PUT
-5. 添加新订单: POST
-6. 导出已分配订单: GET
-
-## Data Params
-
-1. 获取未分配订单列表: 无
-2. 获取已分配订单列表: 无
-3. 上传订单列表:
-   - `orders`: array, 订单列表
-4. 分配订单:
-   - `ordersToAllocate`: array, 要分配的订单列表
-5. 添加新订单:
-   - `newOrder`: object, 新订单信息
-6. 导出已分配订单: 无
-
-## Success Response
-
-1. 获取未分配订单列表:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `unallocatedOrders`: array, 未分配订单列表
-2. 获取已分配订单列表:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `allocatedOrders`: array, 已分配订单列表
-3. 上传订单列表:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-4. 分配订单:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-5. 添加新订单:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-6. 导出已分配订单:
-   - Code: 200
-   - Content: 文件类型, 已分配订单的导出文件
-
-## Error Response
-
-- Code: 404
-- Content: JSON 格式的数据，包括：
-
-  - `message`: string, 错误消息
-
-- Code: 500
-- Content: JSON 格式的数据，包括：
-  - `message`: string, 错误消息
-
-## 备注
-
-前端可以通过这些 API 在调度页面上获取未分配和已分配订单列表、上传订单列表、分配订单、添加新订单和导出已分配订单。
-
-# API 需求
-
-## API 名称
-
-Add Order API
-
-## 目的
-
-创建新的订单，并将其添加到未分配订单列表，用于在前端页面上展示和处理。
+Adding new order with order items
+Importing new order with order items
+Allocating order based on its delivery data and postcode
+Exporting order for packing
 
 ## URL
 
-1. 添加新订单: `/AddOrder`
+Allocating Order: `/DispatchPage/DispatchPage`
+Adding new order: `/DispatchPage/AddOrder`
+Importing new order: `/DispatchPage/BatchOrder`
+Allocated Order: `/DispatchPage/AllocatedOrder`
+Unallocaed Order: `/DispatchPage/UnallocatedOrders`
 
 ## Method
 
-1. 添加新订单: POST
+1. Requesting unallocated order: GET
+2. Requesting allocated order: GET
+3. uploading order (single and batch): POST
+4. Allocating: PUT
+5. Exporting allocated order: GET
 
-## URL Params
-
-无
+6. Adding order to the order table
 
 ## Data Params
 
-1. 添加新订单:
-   - `SenderName`: string, 发件人姓名
-   - `ReciverName`: string, 收件人姓名
-   - `Address`: string, 地址
-   - `PhoneNumber`: string, 电话号码
-   - `Item`: string, 包含的物品
-   - `Requirement`: string, 特殊要求
-   - `Fridge`: boolean, 是否需要冰箱
+1. Adding order:
+
+   - `orders`: array, order Information including:
+     `OrderID`,
+     `SenderName`,
+     `ReciverName`,
+     `Address`,
+     `PhoneNumber`,
+     `Requirement`,
+     `Fridge`, //true or false
+     `DeliverDate`,
+
+2. Adding Order Item:
+
+   - `items`: array, item information including:
+     `itemName`,
+     `uom`,
+     `quantity`,
+
+3. Checking receiver:
+
+   -`ReciverName`: String , check whether there is this reciver or not
+
+4. Checking Item:
+
+   -`itemName` : String, check whether there is this item or not
+
+5. Requesting unallocated orders: no sending data param
+
+6. Allocating orders:
+
+   - `orders`: array, unallocaed orders
+
+7. Requesting allocated orders: no sending data param
 
 ## Success Response
 
-1. 添加新订单:
+1. Inserted order to the order table:
+
    - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-     - `order`: object, 新创建的订单对象
+   - Content: JSON，including：
+     - `message`: string, successful message
+     - `Order ID`: string , order number, as a attribute to be added into orderitem table
+
+2. Adding Order items to the Orderitem table:
+
+   - Code: 200
+   - Content: JSON，including:
+     - `message`: string, successful message
+
+3. Checking receiver:
+
+   - Code: 200
+   - Content: JSON，including:
+     - `message`: string, successful message
+
+4. Checking Item:
+
+   - Code: 200
+   - Content: JSON，including:
+     - `message`: string, successful message
+
+5. Requesting unallocated orders:
+
+   - Code: 200
+   - Content: JSON，including: -`Order ID`, -`Sender`, -`Revicer`, -`Requirement`
+
+6. Allocating orders:
+
+   - Code: 200
+   - Content: JSON，including:
+     - `message`: string, successful message
+
+7. Requesting allocated orders:
+   - Code: 200
+   - Content: JSON，including:
+     - `orderInfo`: array, all allocated order information, -`ItemInfom`: array, all included items information
 
 ## Error Response
 
-- Code: 404
-- Content: JSON 格式的数据，包括：
-
-  - `message`: string, 错误消息
-
-- Code: 500
-- Content: JSON 格式的数据，包括：
-  - `message`: string, 错误消息
-
-## 备注
-
-前端可以通过这个 API 在添加订单页面添加新的订单，并将其添加到未分配订单列表中。
+- Code: 400
+- Content: JSON data，inlcuding：
+  - `message`: string, error massage
