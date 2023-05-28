@@ -28,10 +28,10 @@ function UnallocatedOrders({ orders, handleAllocate }) {
       <Table title="Unlocated">
         <thead>
           <tr>
-            <th>Order Number</th>
+            <th>Order ID</th>
             <th>Sender</th>
             <th>Revicer</th>
-            <th>Items</th>
+            <th>Requirement</th>
           </tr>
         </thead>
         <tbody></tbody>
