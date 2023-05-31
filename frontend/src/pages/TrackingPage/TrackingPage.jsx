@@ -1,89 +1,170 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Dropdown, Table, Modal, Button, Container } from "react-bootstrap";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  useLoadScript,
-} from "@react-google-maps/api";
-import { FaMapMarkedAlt } from "react-icons/fa";
-import "./Tracking.css";
+import { GoogleMap, useLoadScript, InfoWindow } from "@react-google-maps/api";
+import { Icon } from "@iconify/react";
+import locationIcon from "@iconify/icons-mdi/map-marker";
 const containerStyle = {
   width: "400px",
   height: "400px",
 };
-const center = {
+
+const defaultCenter = {
   lat: -3.745,
   lng: -38.523,
 };
 const cars = ["Car 1", "Car 2", "Car 3", "Car 4"];
-const orders = [
+const initialOrders = [
   {
     id: "Order 1",
-    address: "Address 1",
+    address: "128 King street, Dynnyrne TAS 7005",
     items: ["Item 1", "Item 2"],
     parcelNumber: "Parcel 1",
   },
+  {
+    id: "Order 2",
+    address: "1 Risdon road, New Town TAS 7008",
+    items: ["Item 3", "Item 4"],
+    parcelNumber: "Parcel 2",
+  },
+  {
+    id: "Order 3",
+    address: "Lower Domain road, Hobart TAS 7000",
+    items: ["Item 5", "Item 6"],
+    parcelNumber: "Parcel 3",
+  },
 ];
+const libraries = ["places"];
 function TrackingPage() {
   const [selectedCar, setSelectedCar] = useState(null);
   const [showMap, setShowMap] = useState(false);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [center, setCenter] = useState(null);
-  const mapRef = useRef();
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [map, setMap] = useState(null);
+  const [showInfoWindow, setShowInfoWindow] = useState(false);
+  const [infoWindowPosition, setInfoWindowPosition] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: "AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY",
+    libraries,
+  });
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setCenter({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+    // This code fetches the geocode for each address in the orders
+    const fetchGeocodes = async () => {
+      const newOrders = await Promise.all(
+        initialOrders.map(async (order) => {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
+              order.address
+            )}&key=AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY`
+          );
+          const data = await response.json();
+
+          return {
+            ...order,
+            location: data.results[0].geometry.location,
+          };
+        })
+      );
+
+      console.log("Geocoded orders:", newOrders);
+      newOrders.forEach((order) => {
+        console.log(
+          `Order: ${order.id}, lat: ${order.location.lat}, lng: ${order.location.lng}`
+        );
       });
-    });
-  }, []);
+      setTimeout(() => {
+        setOrders(newOrders);
+      }, 1000);
 
-  useEffect(() => {
-    if (!mapRef.current) return;
-
-    const controlDiv = document.createElement("div");
-    controlDiv.style.backgroundColor = "#fff";
-    controlDiv.style.border = "2px solid #fff";
-    controlDiv.style.borderRadius = "3px";
-    controlDiv.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-    controlDiv.style.cursor = "pointer";
-    controlDiv.style.marginBottom = "22px";
-    controlDiv.style.textAlign = "center";
-    controlDiv.title = "Click to recenter the map";
-
-    const controlIcon = document.createElement("div");
-    controlIcon.style.margin = "10px";
-    controlIcon.style.width = "20px";
-    controlIcon.style.height = "20px";
-    controlIcon.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.852 10.055 5 9 5c-3.18 0-6 2.686-6 6 0 1.657.684 3.15 1.778 4.22l.582.59.582-.6A7.947 7.947 0 019 13c.88 0 1.72-.156 2.5-.45m0 0C13.168 12.148 13.945 12 15 12c3.18 0 6-2.686 6-6 0-1.657-.684-3.15-1.778-4.22l-.582-.59-.582.6A7.947 7.947 0 0015 6c-.88 0-1.72.156-2.5.45"></path></svg>';
-
-    controlDiv.appendChild(controlIcon);
-    controlDiv.addEventListener("click", () => {
-      mapRef.current.panTo(center);
-    });
-
-    mapRef.current.controls[
-      window.google.maps.ControlPosition.RIGHT_BOTTOM
-    ].push(controlDiv);
-
-    return () => {
-      const controlPosition =
-        mapRef.current.controls[
-          window.google.maps.ControlPosition.RIGHT_BOTTOM
-        ];
-      for (let i = 0; i < controlPosition.length; i++) {
-        if (controlPosition.getAt(i) === controlDiv) {
-          controlPosition.removeAt(i);
-          break;
-        }
+      setOrders(newOrders);
+      if (newOrders.length > 0) {
+        setMapCenter(newOrders[0].location);
       }
     };
-  }, [center, mapLoaded]);
+
+    if (isLoaded) {
+      fetchGeocodes();
+    }
+  }, [isLoaded]);
+  const handleMarkerClick = (order) => {
+    setSelectedOrder(order);
+    setInfoWindowPosition(order.location);
+    setShowInfoWindow(true);
+  };
+  useEffect(() => {
+    if (map) {
+      orders.forEach((order) => {
+        const marker = new window.google.maps.Marker({
+          position: order.location,
+          map,
+          title: `This is order: ${order.id}`,
+        });
+
+        marker.addListener("click", () => {
+          handleMarkerClick(order);
+        });
+      });
+    }
+  }, [orders, map]);
+  useEffect(() => {
+    if (map && isLoaded) {
+      const locationButtonDiv = document.createElement("div");
+      const locationButton = document.createElement("button");
+      locationButton.innerHTML = "<span><FaLocationArrow /></span>";
+      locationButtonDiv.appendChild(locationButton);
+
+      locationButton.addEventListener("click", () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const userLatLng = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              };
+              map.panTo(userLatLng);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+        }
+      });
+
+      map.controls[window.google.maps.ControlPosition.RIGHT_BOTTOM].push(
+        locationButtonDiv
+      );
+    }
+  }, [map, isLoaded]);
+  const renderMap = () => {
+    if (showMap && isLoaded) {
+      return (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={mapCenter}
+          zoom={13}
+          onLoad={(map) => {
+            setMap(map);
+          }}
+        >
+          {selectedOrder && showInfoWindow && (
+            <InfoWindow
+              position={selectedOrder.location}
+              onCloseClick={() => setShowInfoWindow(false)}
+            >
+              <div>{selectedOrder.id}</div>
+            </InfoWindow>
+          )}
+        </GoogleMap>
+      );
+    } else {
+      return <div>No Map Available</div>;
+    }
+  };
+  if (loadError) {
+    console.error("Google Maps API load error:", loadError);
+    return <div>Error loading Google Maps API</div>;
+  }
   return (
     <Container fluid>
       <h2 className="mt-5 pt-5">This is the Tracking Page</h2>
@@ -105,24 +186,12 @@ function TrackingPage() {
         <div>
           <h2>
             {selectedCar} - Driver Name{" "}
-            <FaMapMarkedAlt onClick={() => setShowMap(!showMap)} size={32} />
+            <span className="map-icon" onClick={() => setShowMap(!showMap)}>
+              <Icon icon={locationIcon} />
+            </span>
           </h2>
 
-          <div style={{ display: showMap ? "block" : "none" }}>
-            <LoadScript googleMapsApiKey="AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY">
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                center={center}
-                zoom={10}
-                onLoad={(map) => {
-                  mapRef.current = map;
-                  setMapLoaded(true);
-                }}
-              >
-                <Marker position={center} />
-              </GoogleMap>
-            </LoadScript>
-          </div>
+          <div>{renderMap()}</div>
 
           <Table striped bordered hover>
             <thead>
