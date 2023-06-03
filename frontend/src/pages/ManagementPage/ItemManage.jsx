@@ -16,27 +16,27 @@ const sampleItems = [
   {
     id: 1,
     name: "Item 1",
-    volume: "0-1m³",
+    weight: "5 kg",
   },
   {
     id: 2,
     name: "Item 2",
-    volume: "1-2m³",
+    weight: "1 kg",
   },
   {
     id: 3,
     name: "Item 3",
-    volume: "2-3m³",
+    weight: "2 kg",
   },
   {
     id: 4,
     name: "Item 4",
-    volume: "3-4m³",
+    weight: "3 kg",
   },
   {
     id: 5,
     name: "Item 5",
-    volume: "4-5m³",
+    weight: "4 kg",
   },
 ];
 function ItemManage() {
@@ -45,7 +45,7 @@ function ItemManage() {
   const [items, setItems] = useState(sampleItems);
   const [showModal, setShowModal] = useState(false);
   const [originalItem, setOriginalItem] = useState(null);
-  const [newItem, setNewItem] = useState({ id: "", name: "", volume: "" });
+  const [newItem, setNewItem] = useState({ id: "", name: "", weight: "" });
   const handleSearchChange = (e) => {
     if (e.target.value) {
       setSearch(e.target.value.toLowerCase());
@@ -61,12 +61,12 @@ function ItemManage() {
     );
   });
   const handleAdd = () => {
-    if (newItem.name && newItem.volume) {
+    if (newItem.name && parseFloat(newItem.weight) > 0) {
       setItems([...items, newItem]);
-      setNewItem({ id: "", name: "", volume: "" });
+      setNewItem({ id: "", name: "", weight: "" });
       setShowModal(false);
     } else {
-      alert("Please enter a name and select a volume.");
+      alert("Please enter a name and a weight greater than 0.");
     }
   };
   const handleEdit = (index) => {
@@ -78,15 +78,19 @@ function ItemManage() {
     newItems[index].name = e.target.value;
     setItems(newItems);
   };
-  //add button to show modal
   const handleShowModal = () => {
     const nextId = items.length > 0 ? items[items.length - 1].id + 1 : 1;
     setNewItem({ ...newItem, id: nextId });
     setShowModal(true);
   };
-  const handleVolumeChange = (newVolume, index) => {
+  const handleWeightChange = (e, index) => {
+    let newWeight = parseFloat(e.target.value);
+    if (newWeight <= 0) {
+      alert("Weight must be greater than 0.");
+      return;
+    }
     const newItems = [...items];
-    newItems[index].volume = newVolume;
+    newItems[index].weight = newWeight + " kg";
     setItems(newItems);
   };
   const handleDelete = (index) => {
@@ -103,27 +107,31 @@ function ItemManage() {
     setEditIndex(null);
   };
   return (
-    <Container fluid>
-      <Row className="mb-3">
-        <Col>
-          <InputGroup>
-            <FormControl
+    <div className="container-fluid">
+      <div className="row mb-3">
+        <div className="col">
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
               placeholder="Search by name or ID"
               onChange={handleSearchChange}
             />
-          </InputGroup>
-        </Col>
-        <Col className="ml-5">
-          <Button onClick={handleShowModal}>Add</Button>
-        </Col>
-      </Row>
-      <Row>
-        <Table striped bordered hover responsive>
+          </div>
+        </div>
+        <div className="col ml-5">
+          <button className="btn btn-primary" onClick={handleShowModal}>
+            Add
+          </button>
+        </div>
+      </div>
+      <div className="row">
+        <table className="table table-striped table-bordered table-hover table-responsive">
           <thead>
             <tr>
               <th>ID</th>
               <th>Item Name</th>
-              <th>Volume</th>
+              <th>Weight (kg)</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -135,7 +143,9 @@ function ItemManage() {
                   <td>{item.id}</td>
                   <td>
                     {isEditing ? (
-                      <FormControl
+                      <input
+                        type="text"
+                        className="form-control"
                         defaultValue={item.name}
                         onChange={(e) => handleNameChange(e, index)}
                       />
@@ -145,70 +155,52 @@ function ItemManage() {
                   </td>
                   <td>
                     {isEditing ? (
-                      <DropdownButton
-                        id="volume-dropdown"
-                        title={item.volume}
-                        onSelect={(newVolume) =>
-                          handleVolumeChange(newVolume, index)
-                        }
-                      >
-                        <Dropdown.Item eventKey="0-1m³">
-                          0-1m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="1-2m³">
-                          1-2m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2-3m³">
-                          2-3m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="3-4m³">
-                          3-4m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="4-5m³">
-                          4-5m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="5-6m³">
-                          5-6m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="6-7m³">
-                          6-7m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="7-8m³">
-                          7-8m&sup3;
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="8+m³">8+m&sup3;</Dropdown.Item>
-                      </DropdownButton>
+                      <div className="input-group">
+                        <input
+                          type="number"
+                          className="form-control"
+                          min="0"
+                          defaultValue={parseFloat(item.weight)}
+                          onChange={(e) => handleWeightChange(e, index)}
+                        />
+                        <div className="input-group-append">
+                          <span className="input-group-text">kg</span>
+                        </div>
+                      </div>
                     ) : (
-                      item.volume
+                      item.weight
                     )}
                   </td>
                   <td>
                     {isEditing ? (
                       <>
-                        <Button variant="success" onClick={handleConfirm}>
+                        <button
+                          className="btn btn-success"
+                          onClick={handleConfirm}
+                        >
                           Confirm
-                        </Button>
-                        <Button
-                          variant="warning"
+                        </button>
+                        <button
+                          className="btn btn-warning"
                           onClick={() => handleCancel(index)}
                         >
                           Cancel
-                        </Button>
+                        </button>
                       </>
                     ) : (
                       <>
-                        <Button
-                          variant="primary"
+                        <button
+                          className="btn btn-primary"
                           onClick={() => handleEdit(index)}
                         >
                           Edit
-                        </Button>
-                        <Button
-                          variant="danger"
+                        </button>
+                        <button
+                          className="btn btn-danger"
                           onClick={() => handleDelete(index)}
                         >
                           Delete
-                        </Button>
+                        </button>
                       </>
                     )}
                   </td>
@@ -216,9 +208,14 @@ function ItemManage() {
               );
             })}
           </tbody>
-        </Table>
-      </Row>
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        </table>
+      </div>
+      <div
+        className={`modal ${showModal ? "show" : ""}`}
+        tabIndex="-1"
+        style={showModal ? { display: "block" } : {}}
+        onClick={() => setShowModal(false)}
+      >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -251,24 +248,23 @@ function ItemManage() {
               </div>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                  <span className="input-group-text">Volume</span>
+                  <span className="input-group-text">Weight</span>
                 </div>
-                <DropdownButton
-                  as={InputGroup.Append}
-                  variant="outline-secondary"
-                  title={newItem.volume || "Select volume"}
-                  onSelect={(volume) => setNewItem({ ...newItem, volume })}
-                >
-                  <Dropdown.Item eventKey="0-1m³">0-1m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="1-2m³">1-2m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="2-3m³">2-3m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="3-4m³">3-4m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="4-5m³">4-5m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="5-6m³">5-6m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="6-7m³">6-7m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="7-8m³">7-8m&sup3;</Dropdown.Item>
-                  <Dropdown.Item eventKey="8+m³">8+m&sup3;</Dropdown.Item>
-                </DropdownButton>
+                <input
+                  type="number"
+                  className="form-control"
+                  min="0"
+                  value={parseFloat(newItem.weight)}
+                  onChange={(e) =>
+                    setNewItem({
+                      ...newItem,
+                      weight: parseFloat(e.target.value) + " kg",
+                    })
+                  }
+                />
+                <div className="input-group-append">
+                  <span className="input-group-text">kg</span>
+                </div>
               </div>
             </div>
             <div className="modal-footer">
@@ -289,8 +285,8 @@ function ItemManage() {
             </div>
           </div>
         </div>
-      </Modal>
-    </Container>
+      </div>
+    </div>
   );
 }
 
