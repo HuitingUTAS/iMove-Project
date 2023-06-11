@@ -763,68 +763,289 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API 需求
+# API requirement
 
-## API 名称
+## API name
 
-Driver Order Information API
+Registration page API
 
-## 目的
+## Aim
 
-获取司机的订单信息，用于在前端页面上展示，并允许司机更新订单状态和上传文件。
+Create new staffs or cars to system
 
 ## URL
 
-1. 获取司机订单列表: `/DriverPage/orders`
-2. 更新订单状态: `/DriverPage/Orderid`
-3. 上传文件: `/DriverPage/Orderid`
+Create new packer: `/RegistrationPage/packer`
+Create new dispatcher: `/RegistrationPage/dispatcher`
+Create new car: `/RegistrationPage/car`
+Create new driver: `/RegistrationPage/driver`
+Create new manager: `/RegistrationPage/manager`
+
+## method
+
+1. Create new packer: POST
+2. Create new dispatcher: POST
+3. Create new car: POST
+4. Create new driver: POST
+5. Create new manager: POST
+
+## Data Params(maybe changed in the future)
+
+1. for packer:
+
+- `name`: string
+- `gender`: string
+- `age`: int
+- `email`: string
+- `phone number`: string
+- `address`: string
+- `photo`: binary(not sure, google told me for photo, mongoDB store it as binary)
+
+2. for dispatcher:
+
+- `name`: string
+- `gender`: string
+- `age`: int
+- `email`: string
+- `phone number`: string
+- `address`: string
+- `photo`: binary
+
+3. for car:
+
+- `make`: string
+- `model`: string
+- `type`: string
+- `registration number`: string
+- `container volume`: int
+- `has fridge`: boolean
+- `is insuranced`: boolean
+- `photo`: binary
+
+4. for driver:
+
+- `name`: string
+- `gender`: string
+- `age`: int
+- `email`: string
+- `phone number`: string
+- `address`: string
+- `license number`: string
+- `license`: binary
+- `photo`: binary
+
+5. for manager:
+
+- `name`: string
+- `gender`: string
+- `age`: int
+- `email`: string
+- `phone number`: string
+- `address`: string
+- `photo`: binary
+
+# API requirement
+
+## API name
+
+Packer page API
+
+## Aim
+
+Get different orders' information
+
+## URL
+
+Get order's information: `/PackerPage/OrderID`
+Upload the needed parcel to system: `/PackerPage/OrderID`
+
+## method
+
+1. Get order's information: GET
+2. Upload the needed parcel to system: POST
+
+## Data Params(maybe changed in the future)
+
+1. Get order's information:
+
+- `order name`: string
+- `order ID`: string
+- `item`: array
+- `date`: date
+
+2. Upload the needed parcel to system:
+
+- `parcel needed`: int
+
+# API requirement
+
+## API name
+
+customer management page API
+
+## Aim
+
+Get all of the customers' information, and also edit, delete and add new.
+
+## URL
+
+Get all customers' information: `/CustomerManagementPage/customers`
+Edit customer: `/CustomerManagementPage/customerID`
+Add new: `/CustomerManagementPage/customer`
+delete customer: `/CustomerManagementPage/customerID`
+
+## method
+
+1. Get all customers' information: GET
+2. Edit customer: PUT
+3. Add new: POST
+4. delete customer: DELETE
+
+## Data Params(maybe changed in the future)
+
+1. Get all customers' information:
+
+- `customerID`: array(not sure for this, cause i want to show all of the customers on screen)
+- `customerName`: array
+- `address`: array
+
+2. Edit customer:
+
+- `customerName`: string
+- `address`: string
+
+3. Add new:
+
+- `customerName`: string
+- `address`: string
+
+4. delete customer:
+
+- `customerID`: string, delete customer
+
+# API requirement
+
+## API name
+
+Item management page API
+
+## Aim
+
+Get all of the items' information, and also edit, delete and add new.
+
+## URL
+
+Get all Items' information: `/CustomerManagementPage/customers`
+Edit item: `/CustomerManagementPage/customerID`
+Add new: `/CustomerManagementPage/customer`
+delete item: `/CustomerManagementPage/customerID`
+
+## method
+
+1. Get all items' information: GET
+2. Edit item: PUT
+3. Add new: POST
+4. delete item: DELETE
+
+## Data Params(maybe changed in the future)
+
+1. Get all items' information:
+
+- `itemID`: array(not sure for this, cause i want to show all of the items on screen)
+- `itemName`: array
+- `weight`: array
+
+2. Edit item:
+
+- `itemName`: string
+- `weight`: int
+
+3. Add new:
+
+- `itemName`: string
+- `weight`: int
+
+4. delete item:
+
+- `itemID`: string, delete item
+
+# API requirement
+
+## API name
+
+Tracking page API
+
+## Aim
+
+track the current position of the car and the position of each order.
+
+## URL
+
+Get information of each car: `/TrackingPage/carID`
+Get information of each order: `/TrackingPage/OrderID`
+
+## method
+
+1. Get information of each car: GET
+2. Get information of each order: GET
+
+## Data Params(maybe changed in the future)
+
+1.  Get information of each car:
+
+- `Car name`: string
+- `driver name`: string (every day a driver has a car)
+- `Order ID`: string
+
+2. Get information of each order:
+
+- `Order name`: string
+- `Order ID`: string
+- `address`: string
+- `items`: array
+- `parcel number`: int
+- `status`: string
+- `start time`: timestamp
+- `end time`: timestamp
+
+# API requirement
+
+## API name
+
+Driver Information API
+
+## aim
+
+get the orders' information for one driver, update status, and upload files
+
+## URL
+
+1. get the orders' information: `/DriverPage/Driverid`
+2. update status: `/DriverPage//Driverid/Orderid`
+3. upload file: `/DriverPage//Driverid/Orderid`
 
 ## Method
 
-1. 获取司机订单列表: GET
-2. 更新订单状态: PUT
-3. 上传文件: POST
-
-## URL Params
-
-- `id`: int, Order ID (仅在更新订单状态和上传文件时需要)
+1. get the orders' information: GET
+2. update status: PUT/POST
+3. upload file: POST
 
 ## Data Params
 
-1. 获取司机订单列表: 无
-2. 更新订单状态:
-   - `status`: string, 订单状态 (可选值：Waiting, In progress, Completed)
-3. 上传文件:
-   - `file`: file, 上传的文件
+1. get the orders' information:
 
-## Success Response
+- `driver name`: string
+- `order id`: string
+- `order name`: string
+- `customer name`: string
+- `address`: string
+- `parcel number`: int
+- `special requirements`: string
+- `status`: string
 
-1. 获取司机订单列表:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `orders`: array, 订单列表，包含：
-       - `order_id`: string, 订单 ID
-       - `status`: string, 订单状态
-2. 更新订单状态:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-3. 上传文件:
-   - Code: 200
-   - Content: JSON 格式的数据，包括：
-     - `message`: string, 成功消息
-
-## Error Response
-
-- Code: 404
-- Content: JSON 格式的数据，包括：
-
-  - `message`: string, 错误消息
-
-- Code: 500
-- Content: JSON 格式的数据，包括：
-  - `message`: string, 错误消息
-
-## 备注
-
-司机可以通过这些 API 在前端页面上查看订单列表、更新订单状态和上传文件。
+2. update status:
+   - `status`: string, order status (choices：Waiting, In progress, Completed)
+   - `start time`: timestamp(when the status is changed to In progress, record a time)
+   - `end time`: timestamp(when the status is changed to Completed, record a time)
+3. upload file:
+   - `file`: binary, (the photo to upload)
