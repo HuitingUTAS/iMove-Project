@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber } from "./controllers/OrderController.js"
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(express.static("views"))
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(cors())
 
 app.route("/")
     .get(function(req, res, next) {
