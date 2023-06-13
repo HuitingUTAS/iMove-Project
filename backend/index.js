@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
-import { getOrder } from "./controllers/OrderController.js"
+import { getOrderByOrderNumber } from "./controllers/OrderController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -40,7 +40,7 @@ app.route("/pwd")
     .get(getPwd)
 
 app.route("/order/:orderNumber")
-    .get(getOrder)
+    .get(getOrderByOrderNumber)
     // .post(updateOrder)
 
 app.listen(port, () => {
