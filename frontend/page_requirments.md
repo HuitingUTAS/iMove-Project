@@ -1,4 +1,4 @@
-# 1. Requesting Unallocated order API Requirement
+# 1. Requesting Unallocated order API Requirement (Done)
 
 ## API Name
 
@@ -27,7 +27,7 @@ Requesting unallocated orders:
 - Code: 200
 - Content: JSON，including all unallocated orders
 
-# 2. Requesting Allocated order API Requirement
+# 2. Requesting Allocated order API Requirement (Done)
 
 ## API Name
 

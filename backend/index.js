@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
-import { getOrderByOrderNumber } from "./controllers/OrderController.js"
+import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -44,6 +44,12 @@ app.route("/pwd")
 app.route("/order/:orderNumber")
     .get(getOrderByOrderNumber)
     // .post(updateOrder)
+
+app.route("/DispatchPage/FetchUnallocatedOrder")
+    .get(getUnallocatedOrder)
+
+app.route("/DispatchPage/FetchAllocatedOrder")
+    .get(getAllocatedOrder)  
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)
