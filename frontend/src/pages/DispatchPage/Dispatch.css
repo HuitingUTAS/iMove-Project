@@ -21,6 +21,13 @@
     box-shadow: 0 1px 10px 1px #999;
 }
 
+.column-wrap {
+    max-width: 50px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
 .allocated{
     max-width: 90%;
     padding:3rem;
@@ -38,3 +45,5 @@
     background-color: #fff;
     box-shadow: 0 1px 10px 1px #999;
 }
+
+
