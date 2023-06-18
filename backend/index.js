@@ -3,6 +3,8 @@ import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
+import { createItem } from "./controllers/ItemController.js"
+import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -35,21 +37,22 @@ app.route("/")
         res.send("Welcome iMove Backend");
     });
 
-app.route("/loginPage")
-    .post(loginUser)
+app.post("/loginPage", loginUser)
 
-app.route("/pwd")
-    .get(getPwd)
+app.get("/pwd", getPwd)
 
-app.route("/order/:orderNumber")
-    .get(getOrderByOrderNumber)
-    // .post(updateOrder)
+app.get("/order/:orderNumber", getOrderByOrderNumber)
 
-app.route("/DispatchPage/FetchUnallocatedOrder")
-    .get(getUnallocatedOrder)
+app.get("/DispatchPage/FetchUnallocatedOrder", getUnallocatedOrder)
 
-app.route("/DispatchPage/FetchAllocatedOrder")
-    .get(getAllocatedOrder)  
+app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
+
+app.post("/DispatchPage/InsertingItem", createItem)
+
+app.get("/CarManagement/FetchingCar/:CarID", getOneOrAllCar)
+app.put("/CarManagement/UpdatingCar", updateCar)
+app.post("/CarManagement/InsertingCar", createCar)
+app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

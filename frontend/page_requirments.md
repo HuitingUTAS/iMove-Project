@@ -227,7 +227,7 @@ Inserted order:
        - `message`: string, successful message
        - `OrderID`: string , it will be the attribute to be added into orderitem collection
 
-# 8. Fetching Car API Requirement
+# 8. Fetching Car API Requirement (Done)
 
 ## API Name
 
@@ -256,7 +256,7 @@ Fetching Cars:
 - Code: 200
 - Content: JSON，including all fetched cars
 
-# 9. Update Car API Requirement
+# 9. Update Car API Requirement (Done)
 
 ## API Name
 
@@ -276,7 +276,7 @@ Updating car: PUT
 
 ## Data Params
 
-- `CarID`,string, updated car ID
+- `_id`,string, updated car ID
 - `make`, string
 - `model`, string
 - `type`, string
@@ -294,7 +294,7 @@ Updating Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 10. Inserting Car API Requirement
+# 10. Inserting Car API Requirement (Done)
 
 ## API Name
 
@@ -314,7 +314,6 @@ Inserting Car: POST
 
 ## Data Params
 
-- `CarID`,string, inserted car ID
 - `make`, string
 - `model`, string
 - `type`, string
@@ -332,7 +331,7 @@ Inserting Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 11. Deleting Car API Requirement
+# 11. Deleting Car API Requirement (Done)
 
 ## API Name
 
@@ -347,6 +346,8 @@ Deleting car from car collection
 `/CarManagement/DeletingCar`
 
 ## Method
+
+DELETE
 
 ## Data Params
 

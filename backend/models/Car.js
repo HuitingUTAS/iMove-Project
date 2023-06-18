@@ -27,4 +27,7 @@ export const carSchema = new Schema({
     photo: {
         type: String,
     },
+    status: {
+        type: Boolean,
+    },
 })
