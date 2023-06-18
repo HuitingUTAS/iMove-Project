@@ -5,6 +5,7 @@ import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
 import { createItem } from "./controllers/ItemController.js"
 import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
+import { getOneOrAllDriver, updateDriver, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -53,6 +54,11 @@ app.get("/CarManagement/FetchingCar/:CarID", getOneOrAllCar)
 app.put("/CarManagement/UpdatingCar", updateCar)
 app.post("/CarManagement/InsertingCar", createCar)
 app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
+
+app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
+app.put("/DriverManagement/UpdatingDriver", updateDriver)
+app.post("/DriverManagement/InsertingDriver", createDriver)
+app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

@@ -235,11 +235,12 @@ FetchingCar
 
 ## Aim
 
-Retrieving car information from Car collection
+Retrieving car information from Car collection. 
+- `CarID`: string, if there isn't carID, fetching all car information
 
 ## URL
 
-`/CarManagement/FetchingCar`
+`/CarManagement/FetchingCar/{CarID}`
 
 ## Method
 
@@ -247,7 +248,7 @@ Fetching Car: GET
 
 ## Data Params
 
-- `CarID`: string, if there isn't carID, fetching all car information
+None
 
 ## Success Response
 
@@ -340,10 +341,11 @@ DeletingCar
 ## Aim
 
 Deleting car from car collection
+- `CarID`,string, deleting car ID
 
 ## URL
 
-`/CarManagement/DeletingCar`
+`/CarManagement/DeletingCar/{CarID}`
 
 ## Method
 
@@ -351,7 +353,7 @@ DELETE
 
 ## Data Params
 
-- `CarID`,string, deleting car ID
+None
 
 ## Success Response
 
@@ -361,7 +363,7 @@ Deleting Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 12. Fetching Driver API Requirement
+# 12. Fetching Driver API Requirement (Done)
 
 ## API Name
 
@@ -369,11 +371,12 @@ FetchingDriver
 
 ## Aim
 
-Retrieving driver information from Drivers collection
+Retrieving driver information from Drivers collection.
+- `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
 
-`/DriverManagement/FetchingDriver`
+`/DriverManagement/FetchingDriver/{DriverID}`
 
 ## Method
 
@@ -381,7 +384,7 @@ Fetching Driver: GET
 
 ## Data Params
 
-- `DriverID`: string, if there isn't DriverID, fetching all driver information
+None
 
 ## Success Response
 
@@ -390,7 +393,7 @@ Fetching Drivers:
 - Code: 200
 - Content: JSON，including all fetched drivers
 
-# 13. Update Driver API Requirement
+# 13. Update Driver API Requirement (Done)
 
 ## API Name
 
@@ -410,7 +413,7 @@ Updating driver: PUT
 
 ## Data Params
 
-- `driverID`,string, updated driver ID
+- `_id`,string, updated driver ID
 - `name`, string
 - `gender`, string
 - `email`, string
@@ -429,7 +432,7 @@ Updating driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 14. Inserting Driver API Requirement
+# 14. Inserting Driver API Requirement (Done)
 
 ## API Name
 
@@ -449,7 +452,6 @@ Inserting driver: POST
 
 ## Data Params
 
-- `driverID`,string, inserted driver ID
 - `name`, string
 - `gender`, string
 - `email`, string
@@ -468,7 +470,7 @@ Inserting Driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 15. Deleting Driver API Requirement
+# 15. Deleting Driver API Requirement (Done)
 
 ## API Name
 
@@ -477,16 +479,19 @@ DeletingDriver
 ## Aim
 
 Deleting driver
+- `DriverID`,string, deleting driver ID
 
 ## URL
 
-`/DriverManagement/DeletingDriver`
+`/DriverManagement/DeletingDriver/{DriverID}`
 
 ## Method
 
+DELETE
+
 ## Data Params
 
-- `DriverID`,string, deleting driver ID
+None
 
 ## Success Response
 
