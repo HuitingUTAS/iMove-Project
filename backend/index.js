@@ -6,6 +6,7 @@ import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from ".
 import { createItem } from "./controllers/ItemController.js"
 import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
 import { getOneOrAllDriver, updateDriver, createDriver, deleteDriver } from "./controllers/DriverController.js"
+import { getOneOrAllDispatcher, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -40,7 +41,7 @@ app.route("/")
 
 app.post("/loginPage", loginUser)
 
-app.get("/pwd", getPwd)
+app.get("/pwd/:pwd", getPwd)
 
 app.get("/order/:orderNumber", getOrderByOrderNumber)
 
@@ -59,6 +60,13 @@ app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
 app.post("/DriverManagement/InsertingDriver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
+
+app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherID", getOneOrAllDispatcher)
+app.put("/DispatcherManagement/UpdatingDispatcher", updateDispatcher)
+app.put("/DispatcherManagement/UpdatingDispatcherPassword", updateDispatcherPassword)
+app.post("/RegistrationPage/dispatcher", createDispatcher)
+app.delete("/DispatcherManagement/DeletingDispatcher/:DispatcherID", deleteDispatcher)
+
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

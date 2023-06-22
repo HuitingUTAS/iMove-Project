@@ -16,29 +16,46 @@ const Driver = mongoose.model("Driver", driverSchema)
 const saltRounds = 10;
 
 export const getPwd = async(req, res) => {
-    
-    const myPlaintextPassword = '123456';
-    var created_hash = '';
-    var message = {
-        'hash':'',
-        'created_hash':'',
-        'compare':false,
-    }
-
-    bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
-        created_hash = hash;
-        message['hash'] = hash;
-        message['created_hash'] = created_hash;
-        res.send(message);
-
-        // bcrypt.compare(myPlaintextPassword, created_hash, function(err, result) {
-        //     message['compare'] = true;
-        //     res.send(message);
-        // });
-    });
-
-    
+    const created_hash = await cryptPwd(req.params.pwd);
+    res.send(created_hash);    
 }
+
+// function cryptPwd(pwd) {
+//     const myPlaintextPassword = pwd;
+//     var created_hash = 'no';
+//     var message = {
+//         'hash':'',
+//         'created_hash':'',
+//         'compare':false,
+//     }
+
+//     // bcrypt.hash(myPlaintextPassword, saltRounds, function(err, hash) {
+//     //     created_hash = hash;
+//     //     message['hash'] = hash;
+//     //     message['created_hash'] = created_hash;
+//     //     return 'asdgrth';
+
+//     //     // bcrypt.compare(myPlaintextPassword, created_hash, function(err, result) {
+//     //     //     message['compare'] = true;
+//     //     //     res.send(message);
+//     //     // });
+//     // });
+
+//     bcrypt
+//     .hash(myPlaintextPassword, saltRounds)
+//     .then(hash => {
+//         return hash;
+//     })
+//     .catch(err => console.error(err.message))
+    
+// }
+
+
+export const cryptPwd = async(plainPwd) => {
+    const hash = await bcrypt.hash(plainPwd, saltRounds);
+    return hash;
+}
+
 
 export const loginUser = async(req, res) => {
     try {

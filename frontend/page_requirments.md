@@ -501,7 +501,7 @@ Deleting Driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 16. Fetching Dispatcher API Requirement
+# 16. Fetching Dispatcher API Requirement (Done)
 
 ## API Name
 
@@ -509,11 +509,12 @@ FetchingDispatcher
 
 ## Aim
 
-Retrieving dispatcher information from Dispatchers collection
+Retrieving dispatcher information from Dispatchers collection.
+- `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
 
 ## URL
 
-`/DispatcherManagement/FetchingDispatcher`
+`/DispatcherManagement/FetchingDispatcher/{DispatcherID}`
 
 ## Method
 
@@ -521,7 +522,7 @@ Fetching Dispatcher: GET
 
 ## Data Params
 
-- `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
+None
 
 ## Success Response
 
@@ -530,7 +531,7 @@ Fetching Dispatchers:
 - Code: 200
 - Content: JSON，including all fetched Dispatchers
 
-# 17. Update Dispatcher API Requirement
+# 17. Update Dispatcher API Requirement (Done)
 
 ## API Name
 
@@ -550,15 +551,44 @@ Updating dispatcher: PUT
 
 ## Data Params
 
-- `dispatcherID`,string, updated dispatcher ID
+- `_id`,string, updated dispatcher ID
 - `name`, string
 - `gender`, string
 - `email`, string
 - `phone`, string
 - `address`, string
-- `password`, string
-- `username`, string
 - `status`, boolean, whether is using or not
+
+## Success Response
+
+Updating dispatcher:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
+# Update Dispatcher Password API Requirement (Done)
+
+## API Name
+
+Updating Dispatcher password
+
+## Aim
+
+Updating Dispatcher password
+
+## URL
+
+`/DriverManagement/UpdatingDispatcherPassword`
+
+## Method
+
+Updating dispatcher: PUT
+
+## Data Params
+
+- `_id`,string, updated dispatcher ID
+- `password`, string
 
 ## Success Response
 
@@ -769,7 +799,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement
+# API requirement (dispatcher Done)
 
 ## API name
 
@@ -781,16 +811,16 @@ Create new staffs or cars to system
 
 ## URL
 
-Create new packer: `/RegistrationPage/packer`
-Create new dispatcher: `/RegistrationPage/dispatcher`
-Create new car: `/RegistrationPage/car`
-Create new driver: `/RegistrationPage/driver`
-Create new manager: `/RegistrationPage/manager`
+- Create new packer: `/RegistrationPage/packer`
+- Create new dispatcher: `/RegistrationPage/dispatcher`
+- Create new car: `/RegistrationPage/car`
+- Create new driver: `/RegistrationPage/driver`
+- Create new manager: `/RegistrationPage/manager`
 
 ## method
 
 1. Create new packer: POST
-2. Create new dispatcher: POST
+2. Create new dispatcher: POST (Done)
 3. Create new car: POST
 4. Create new driver: POST
 5. Create new manager: POST
@@ -809,11 +839,13 @@ Create new manager: `/RegistrationPage/manager`
 
 2. for dispatcher:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary
 
