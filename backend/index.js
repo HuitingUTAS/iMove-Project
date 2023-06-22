@@ -58,7 +58,7 @@ app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
 app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
-app.post("/DriverManagement/InsertingDriver", createDriver)
+app.post("/RegistrationPage/driver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 
 app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherID", getOneOrAllDispatcher)

@@ -432,7 +432,7 @@ Updating driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 14. Inserting Driver API Requirement (Done)
+# 14. Inserting Driver API Requirement
 
 ## API Name
 
@@ -799,7 +799,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement (dispatcher Done)
+# API requirement (dispatcher/driver Done)
 
 ## API name
 
@@ -862,14 +862,16 @@ Create new staffs or cars to system
 
 4. for driver:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
-- `license number`: string
-- `license`: binary
+- `licenseNumber`: string
+- `licensePhoto`: binary
 - `photo`: binary
 
 5. for manager:
