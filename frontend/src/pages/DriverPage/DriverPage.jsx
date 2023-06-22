@@ -15,7 +15,7 @@ function DriverPage() {
 
   const [selectedOrder, setSelectedPacker] = useState(orders[0]);
 
-  const [selectedStatus, setSelectedStatus] = useState("Waiting");
+  const [selectedStatus, setSelectedStatus] = useState("In Progress");
 
   const [orderData, setOrderData] = useState(null); // Store the received order data
 
@@ -52,12 +52,6 @@ function DriverPage() {
   return (
     <div className="drivertest">
       <h1>This is Driver Page</h1>
-      {orderData && (
-        <div>
-          <h2>Order Data:</h2>
-          <pre>{JSON.stringify(orderData, null, 2)}</pre>
-        </div>
-      )}
       <Row className="mt-5">
         <Col md={{ span: 4, offset: 1 }}>
           <Dropdown
@@ -123,11 +117,11 @@ function DriverPage() {
                   {selectedStatus}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => handleSelect("Waiting")}>
-                    Waiting
+                  <Dropdown.Item onClick={() => handleSelect("In Progress")}>
+                    In Progress
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleSelect("In progress")}>
-                    In progress
+                  <Dropdown.Item onClick={() => handleSelect("Shipping")}>
+                    Shipping
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSelect("Completed")}>
                     Completed
