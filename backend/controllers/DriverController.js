@@ -48,6 +48,23 @@ export const updateDriver = (req, res) => {
     })
 }
 
+export const updateDriverPassword = async (req, res) => {
+    let oldDriver = new Driver(req.body)
+    if (oldDriver.password) {
+        oldDriver.password = await cryptPwd(oldDriver.password)
+    }
+    Driver.findOneAndUpdate({ _id: req.body._id }, oldDriver, { new: false, useFindAndModify: false }, (err, driver) => {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        } else {
+            res.json({ message: "Successfully updated the driver password." })
+        }
+    })
+}
+
+
 export const createDriver = (req, res) => {
     let newDriver = new Driver(req.body)
     newDriver.save()

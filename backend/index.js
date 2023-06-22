@@ -5,7 +5,7 @@ import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
 import { createItem } from "./controllers/ItemController.js"
 import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
-import { getOneOrAllDriver, updateDriver, createDriver, deleteDriver } from "./controllers/DriverController.js"
+import { getOneOrAllDriver, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import { getOneOrAllDispatcher, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
@@ -58,6 +58,7 @@ app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
 app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
+app.put("/DriverManagement/UpdatingDriverPassword", updateDriverPassword)
 app.post("/RegistrationPage/driver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 

@@ -432,6 +432,37 @@ Updating driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
+# Update Driver Password API Requirement (Done)
+
+## API Name
+
+Updating Driver password
+
+## Aim
+
+Updating Driver password
+
+## URL
+
+`/DriverManagement/UpdatingDriverPassword`
+
+## Method
+
+Updating Driver: PUT
+
+## Data Params
+
+- `_id`,string, updated Driver ID
+- `password`, string
+
+## Success Response
+
+Updating Driver:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
 # 14. Inserting Driver API Requirement
 
 ## API Name
