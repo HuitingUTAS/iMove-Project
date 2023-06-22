@@ -79,6 +79,7 @@ function LoginPage() {
         } else {
           // 登录失败，执行相应操作
           console.log("Login failed");
+          alert("Login failed, please check your username, password, and role");
         }
       } else {
         console.log("Failed to fetch data");
