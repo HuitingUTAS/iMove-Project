@@ -4,9 +4,11 @@ import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
 import { createItem } from "./controllers/ItemController.js"
-import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
-import { getOneOrAllDriver, updateDriver, createDriver, deleteDriver } from "./controllers/DriverController.js"
-import { getOneOrAllDispatcher, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
+import { getCarByRegistrationNumber, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
+import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
+import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
+import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
+import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager } from "./controllers/ManagerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -51,21 +53,34 @@ app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
 
 app.post("/DispatchPage/InsertingItem", createItem)
 
-app.get("/CarManagement/FetchingCar/:CarID", getOneOrAllCar)
+app.get("/CarManagement/FetchingCar/:RegistrationNumber", getCarByRegistrationNumber)
 app.put("/CarManagement/UpdatingCar", updateCar)
-app.post("/CarManagement/InsertingCar", createCar)
+app.post("/RegistrationPage/car", createCar)
 app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
-app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
+app.get("/DriverManagement/FetchingDriver/:DriverName", getDriverByNumber)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
+app.put("/DriverManagement/UpdatingDriverPassword", updateDriverPassword)
 app.post("/RegistrationPage/driver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 
-app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherID", getOneOrAllDispatcher)
+app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherName", getDispatcherByNumber)
 app.put("/DispatcherManagement/UpdatingDispatcher", updateDispatcher)
 app.put("/DispatcherManagement/UpdatingDispatcherPassword", updateDispatcherPassword)
 app.post("/RegistrationPage/dispatcher", createDispatcher)
 app.delete("/DispatcherManagement/DeletingDispatcher/:DispatcherID", deleteDispatcher)
+
+app.get("/PackerManagement/FetchingPacker/:PackerName", getPackerByName)
+app.put("/PackerManagement/UpdatingPacker", updatePacker)
+app.put("/PackerManagement/UpdatingPackerPassword", updatePackerPassword)
+app.post("/RegistrationPage/packer", createPacker)
+app.delete("/PackerManagement/DeletingPacker/:PackerID", deletePacker)
+
+app.get("/ManagerManagement/FetchingManager/:ManagerName", getManagerByName)
+app.put("/ManagerManagement/UpdatingManager", updateManager)
+app.put("/ManagerManagement/UpdatingManagerPassword", updateManagerPassword)
+app.post("/RegistrationPage/manager", createManager)
+app.delete("/ManagerManagement/DeletingManager/:ManagerID", deleteManager)
 
 
 app.listen(port, () => {

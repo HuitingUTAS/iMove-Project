@@ -235,13 +235,14 @@ FetchingCar
 
 ## Aim
 
+
 Retrieving car information from Car collection.
 
-- `CarID`: string, if there isn't carID, fetching all car information
 
 ## URL
 
-`/CarManagement/FetchingCar/{CarID}`
+`/CarManagement/FetchingCar/{RegistrationNumber}`
+- `RegistrationNumber`: find all cars by registrationNumber keyword
 
 ## Method
 
@@ -296,7 +297,7 @@ Updating Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 10. Inserting Car API Requirement (Done)
+# 10. Inserting Car API Requirement
 
 ## API Name
 
@@ -375,11 +376,11 @@ FetchingDriver
 
 Retrieving driver information from Drivers collection.
 
-- `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
 
-`/DriverManagement/FetchingDriver/{DriverID}`
+`/DriverManagement/FetchingDriver/{DriverName}`
+- `DriverName`: find all drivers by name keyword
 
 ## Method
 
@@ -430,6 +431,37 @@ Updating driver: PUT
 ## Success Response
 
 Updating driver:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
+# Update Driver Password API Requirement (Done)
+
+## API Name
+
+Updating Driver password
+
+## Aim
+
+Updating Driver password
+
+## URL
+
+`/DriverManagement/UpdatingDriverPassword`
+
+## Method
+
+Updating Driver: PUT
+
+## Data Params
+
+- `_id`,string, updated Driver ID
+- `password`, string
+
+## Success Response
+
+Updating Driver:
 
 - Code: 200
      - Content: JSON，including：
@@ -515,11 +547,11 @@ FetchingDispatcher
 
 Retrieving dispatcher information from Dispatchers collection.
 
-- `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
 
 ## URL
 
-`/DispatcherManagement/FetchingDispatcher/{DispatcherID}`
+`/DispatcherManagement/FetchingDispatcher/{DispatcherName}`
+- `DispatcherName`: find all dispatchers by name keyword
 
 ## Method
 
@@ -548,7 +580,7 @@ Updating Dispatcher infromation
 
 ## URL
 
-`/DriverManagement/UpdatingDispatcher`
+`/DispatcherManagement/UpdatingDispatcher`
 
 ## Method
 
@@ -584,7 +616,7 @@ Updating Dispatcher password
 
 ## URL
 
-`/DriverManagement/UpdatingDispatcherPassword`
+`/DispatcherManagement/UpdatingDispatcherPassword`
 
 ## Method
 
@@ -669,7 +701,7 @@ Deleting Dispatcher:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 20. Fetching Packer API Requirement
+# 20. Fetching Packer API Requirement (Done)
 
 ## API Name
 
@@ -677,11 +709,12 @@ FetchingPacker
 
 ## Aim
 
-Retrieving packer information from packers collection
+Retrieving packer information from packers collection By name
 
 ## URL
 
-`/PackerManagement/FetchingPacker`
+`/PackerManagement/FetchingPacker/{PackerName}`
+- `PackerName`: string, find all packers by name keyword
 
 ## Method
 
@@ -689,7 +722,7 @@ Fetching Packer: GET
 
 ## Data Params
 
-- `PackerID`: string, if there isn't PackerID, fetching all packer information
+None
 
 ## Success Response
 
@@ -698,7 +731,7 @@ Fetching Packers:
 - Code: 200
 - Content: JSON，including all fetched Packers
 
-# 21. Update Packer API Requirement
+# 21. Update Packer API Requirement (Done)
 
 ## API Name
 
@@ -718,14 +751,12 @@ Updating packer: PUT
 
 ## Data Params
 
-- `packerID`,string, updated packer ID
+- `_id`,string, updated packer ID
 - `name`, string
 - `gender`, string
 - `email`, string
 - `phone`, string
 - `address`, string
-- `password`, string
-- `username`, string
 - `photo`, string
 - `status`, boolean, whether is using or not
 
@@ -736,6 +767,38 @@ Updating packer:
 - Code: 200
      - Content: JSON，including：
        - `message`: string, successful message
+
+# Update Packer Password API Requirement (Done)
+
+## API Name
+
+Updating Packer password
+
+## Aim
+
+Updating Packer password
+
+## URL
+
+`/PackerManagement/UpdatingPackerPassword`
+
+## Method
+
+Updating Packer: PUT
+
+## Data Params
+
+- `_id`,string, updated Packer ID
+- `password`, string
+
+## Success Response
+
+Updating Packer:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
 
 # 21. Inserting Packer API Requirement
 
@@ -776,7 +839,7 @@ Inserting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 22. Deleting Packer API Requirement
+# 22. Deleting Packer API Requirement (Done)
 
 ## API Name
 
@@ -788,13 +851,16 @@ Deleting packer
 
 ## URL
 
-`/PackerManagement/DeletingPacker`
+`/PackerManagement/DeletingPacker/{PackerID}`
+- `PackerID`,string, deleting packer ID
 
 ## Method
 
+DELTE
+
 ## Data Params
 
-- `PackerID`,string, deleting packer ID
+None
 
 ## Success Response
 
@@ -804,7 +870,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement (dispatcher/driver Done)
+# API requirement (dispatcher/driver/packer/car/manager Done)
 
 ## API name
 
@@ -824,21 +890,23 @@ Create new staffs or cars to system
 
 ## method
 
-1. Create new packer: POST
+1. Create new packer: POST (Done)
 2. Create new dispatcher: POST (Done)
-3. Create new car: POST
-4. Create new driver: POST
-5. Create new manager: POST
+3. Create new car: POST (Done)
+4. Create new driver: POST (Done)
+5. Create new manager: POST (Done)
 
 ## Data Params(maybe changed in the future)
 
 1. for packer:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary(not sure, google told me for photo, mongoDB store it as binary)
 
@@ -859,10 +927,10 @@ Create new staffs or cars to system
 - `make`: string
 - `model`: string
 - `type`: string
-- `registration number`: string
-- `container volume`: int
-- `has fridge`: boolean
-- `is insuranced`: boolean
+- `registrationNumber`: string
+- `volume`: int
+- `hasFridge`: boolean
+- `isInsuranced`: boolean
 - `photo`: binary
 
 4. for driver:
@@ -881,11 +949,12 @@ Create new staffs or cars to system
 
 5. for manager:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
-- `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary
 
