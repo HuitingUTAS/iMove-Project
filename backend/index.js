@@ -7,6 +7,7 @@ import { createItem } from "./controllers/ItemController.js"
 import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
 import { getOneOrAllDriver, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import { getOneOrAllDispatcher, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
+import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -67,6 +68,12 @@ app.put("/DispatcherManagement/UpdatingDispatcher", updateDispatcher)
 app.put("/DispatcherManagement/UpdatingDispatcherPassword", updateDispatcherPassword)
 app.post("/RegistrationPage/dispatcher", createDispatcher)
 app.delete("/DispatcherManagement/DeletingDispatcher/:DispatcherID", deleteDispatcher)
+
+app.get("/PackerManagement/FetchingPacker/:PackerName", getPackerByName)
+app.put("/PackerManagement/UpdatingPacker", updatePacker)
+app.put("/PackerManagement/UpdatingPackerPassword", updatePackerPassword)
+app.post("/RegistrationPage/packer", createPacker)
+app.delete("/PackerManagement/DeletingPacker/:PackerID", deletePacker)
 
 
 app.listen(port, () => {

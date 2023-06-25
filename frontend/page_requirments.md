@@ -574,7 +574,7 @@ Updating Dispatcher infromation
 
 ## URL
 
-`/DriverManagement/UpdatingDispatcher`
+`/DispatcherManagement/UpdatingDispatcher`
 
 ## Method
 
@@ -610,7 +610,7 @@ Updating Dispatcher password
 
 ## URL
 
-`/DriverManagement/UpdatingDispatcherPassword`
+`/DispatcherManagement/UpdatingDispatcherPassword`
 
 ## Method
 
@@ -695,7 +695,7 @@ Deleting Dispatcher:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 20. Fetching Packer API Requirement
+# 20. Fetching Packer API Requirement (Done)
 
 ## API Name
 
@@ -703,11 +703,12 @@ FetchingPacker
 
 ## Aim
 
-Retrieving packer information from packers collection
+Retrieving packer information from packers collection By name
 
 ## URL
 
-`/PackerManagement/FetchingPacker`
+`/PackerManagement/FetchingPacker/{PackerName}`
+- `PackerName`: string, find all packers by name keyword
 
 ## Method
 
@@ -715,7 +716,7 @@ Fetching Packer: GET
 
 ## Data Params
 
-- `PackerID`: string, if there isn't PackerID, fetching all packer information
+None
 
 ## Success Response
 
@@ -724,7 +725,7 @@ Fetching Packers:
 - Code: 200
 - Content: JSON，including all fetched Packers
 
-# 21. Update Packer API Requirement
+# 21. Update Packer API Requirement (Done)
 
 ## API Name
 
@@ -744,14 +745,12 @@ Updating packer: PUT
 
 ## Data Params
 
-- `packerID`,string, updated packer ID
+- `_id`,string, updated packer ID
 - `name`, string
 - `gender`, string
 - `email`, string
 - `phone`, string
 - `address`, string
-- `password`, string
-- `username`, string
 - `photo`, string
 - `status`, boolean, whether is using or not
 
@@ -762,6 +761,38 @@ Updating packer:
 - Code: 200
      - Content: JSON，including：
        - `message`: string, successful message
+
+# Update Packer Password API Requirement (Done)
+
+## API Name
+
+Updating Packer password
+
+## Aim
+
+Updating Packer password
+
+## URL
+
+`/PackerManagement/UpdatingPackerPassword`
+
+## Method
+
+Updating Packer: PUT
+
+## Data Params
+
+- `_id`,string, updated Packer ID
+- `password`, string
+
+## Success Response
+
+Updating Packer:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
 
 # 21. Inserting Packer API Requirement
 
@@ -802,7 +833,7 @@ Inserting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 22. Deleting Packer API Requirement
+# 22. Deleting Packer API Requirement (Done)
 
 ## API Name
 
@@ -814,13 +845,16 @@ Deleting packer
 
 ## URL
 
-`/PackerManagement/DeletingPacker`
+`/PackerManagement/DeletingPacker/{PackerID}`
+- `PackerID`,string, deleting packer ID
 
 ## Method
 
+DELTE
+
 ## Data Params
 
-- `PackerID`,string, deleting packer ID
+None
 
 ## Success Response
 
@@ -830,7 +864,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement (dispatcher/driver Done)
+# API requirement (dispatcher/driver/packer Done)
 
 ## API name
 
@@ -850,21 +884,23 @@ Create new staffs or cars to system
 
 ## method
 
-1. Create new packer: POST
+1. Create new packer: POST (Done)
 2. Create new dispatcher: POST (Done)
 3. Create new car: POST
-4. Create new driver: POST
+4. Create new driver: POST (Done)
 5. Create new manager: POST
 
 ## Data Params(maybe changed in the future)
 
 1. for packer:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary(not sure, google told me for photo, mongoDB store it as binary)
 
