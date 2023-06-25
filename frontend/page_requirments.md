@@ -295,7 +295,7 @@ Updating Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 10. Inserting Car API Requirement (Done)
+# 10. Inserting Car API Requirement
 
 ## API Name
 
@@ -864,7 +864,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement (dispatcher/driver/packer Done)
+# API requirement (dispatcher/driver/packer/car/manager Done)
 
 ## API name
 
@@ -886,9 +886,9 @@ Create new staffs or cars to system
 
 1. Create new packer: POST (Done)
 2. Create new dispatcher: POST (Done)
-3. Create new car: POST
+3. Create new car: POST (Done)
 4. Create new driver: POST (Done)
-5. Create new manager: POST
+5. Create new manager: POST (Done)
 
 ## Data Params(maybe changed in the future)
 
@@ -921,10 +921,10 @@ Create new staffs or cars to system
 - `make`: string
 - `model`: string
 - `type`: string
-- `registration number`: string
-- `container volume`: int
-- `has fridge`: boolean
-- `is insuranced`: boolean
+- `registrationNumber`: string
+- `volume`: int
+- `hasFridge`: boolean
+- `isInsuranced`: boolean
 - `photo`: binary
 
 4. for driver:
@@ -943,11 +943,12 @@ Create new staffs or cars to system
 
 5. for manager:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
-- `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary
 

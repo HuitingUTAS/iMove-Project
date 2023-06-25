@@ -8,6 +8,7 @@ import { getCarByRegistrationNumber, updateCar, createCar, deleteCar } from "./c
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
+import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager } from "./controllers/ManagerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -54,7 +55,7 @@ app.post("/DispatchPage/InsertingItem", createItem)
 
 app.get("/CarManagement/FetchingCar/:RegistrationNumber", getCarByRegistrationNumber)
 app.put("/CarManagement/UpdatingCar", updateCar)
-app.post("/CarManagement/InsertingCar", createCar)
+app.post("/RegistrationPage/car", createCar)
 app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
 app.get("/DriverManagement/FetchingDriver/:DriverName", getDriverByNumber)
@@ -74,6 +75,12 @@ app.put("/PackerManagement/UpdatingPacker", updatePacker)
 app.put("/PackerManagement/UpdatingPackerPassword", updatePackerPassword)
 app.post("/RegistrationPage/packer", createPacker)
 app.delete("/PackerManagement/DeletingPacker/:PackerID", deletePacker)
+
+app.get("/ManagerManagement/FetchingManager/:ManagerName", getManagerByName)
+app.put("/ManagerManagement/UpdatingManager", updateManager)
+app.put("/ManagerManagement/UpdatingManagerPassword", updateManagerPassword)
+app.post("/RegistrationPage/manager", createManager)
+app.delete("/ManagerManagement/DeletingManager/:ManagerID", deleteManager)
 
 
 app.listen(port, () => {
