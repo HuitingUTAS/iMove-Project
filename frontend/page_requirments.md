@@ -235,7 +235,8 @@ FetchingCar
 
 ## Aim
 
-Retrieving car information from Car collection. 
+Retrieving car information from Car collection.
+
 - `CarID`: string, if there isn't carID, fetching all car information
 
 ## URL
@@ -341,6 +342,7 @@ DeletingCar
 ## Aim
 
 Deleting car from car collection
+
 - `CarID`,string, deleting car ID
 
 ## URL
@@ -372,6 +374,7 @@ FetchingDriver
 ## Aim
 
 Retrieving driver information from Drivers collection.
+
 - `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
@@ -479,6 +482,7 @@ DeletingDriver
 ## Aim
 
 Deleting driver
+
 - `DriverID`,string, deleting driver ID
 
 ## URL
@@ -510,6 +514,7 @@ FetchingDispatcher
 ## Aim
 
 Retrieving dispatcher information from Dispatchers collection.
+
 - `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
 
 ## URL
@@ -888,7 +893,29 @@ Create new staffs or cars to system
 
 ## API name
 
-Packer page API
+Get orders API
+
+## Aim
+
+fetch all orders when the status = allocated
+
+## URL
+
+Get all orders: `/PackerPage/GetAllOrders`
+
+## method
+
+Get all orders: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Get order's information API
 
 ## Aim
 
@@ -897,25 +924,116 @@ Get different orders' information
 ## URL
 
 Get order's information: `/PackerPage/OrderID`
-Upload the needed parcel to system: `/PackerPage/OrderID`
 
 ## method
 
 1. Get order's information: GET
-2. Upload the needed parcel to system: POST
+
+## Data Params
+
+Get order's information:
+
+- `order ID`: string
+
+# API requirement
+
+## API name
+
+update parcel number API
+
+## Aim
+
+update parcel number
+
+## URL
+
+update parcel number: `/PackerPage/UpdateParcel`
+
+## method
+
+Upload the needed parcel to system: POST
+
+## Data Params
+
+Upload the needed parcel to system:
+
+- `order ID`: string
+- `parcel needed`: int
+
+# API requirement
+
+## API name
+
+Get all customers' information API
+
+## Aim
+
+Get all of the customers' information
+
+## URL
+
+Get all customers' information: `/CustomerManagementPage/GetAllCustomers`
+
+## method
+
+1. Get all customers' information: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Edit customer API
+
+## Aim
+
+Edit the selected customer
+
+## URL
+
+Edit customer: `/CustomerManagementPage/EditCustomer`
+
+## method
+
+Edit customer: PUT
 
 ## Data Params(maybe changed in the future)
 
-1. Get order's information:
+Edit customer:
 
-- `order name`: string
-- `order ID`: string
-- `item`: array
-- `date`: date
+- `customerID`: string(the ID in database)
+- `code`: string
+- `customerName`: string
+- `address`: string
 
-2. Upload the needed parcel to system:
+# API requirement
 
-- `parcel needed`: int
+## API name
+
+Add new customer API
+
+## Aim
+
+Add new customer
+
+## URL
+
+Add new: `/CustomerManagementPage/AddCustomer`
+
+## method
+
+Add new: POST
+
+## Data Params(maybe changed in the future)
+
+Add new:
+
+- `code`: string
+- `customerName`: string
+- `address`: string
 
 # API requirement
 
@@ -925,43 +1043,94 @@ customer management page API
 
 ## Aim
 
-Get all of the customers' information, and also edit, delete and add new.
+delete the selected customer
 
 ## URL
 
-Get all customers' information: `/CustomerManagementPage/customers`
-Edit customer: `/CustomerManagementPage/customerID`
-Add new: `/CustomerManagementPage/customer`
-delete customer: `/CustomerManagementPage/customerID`
+delete customer: `/CustomerManagementPage/DeleteCustomer`
 
 ## method
 
-1. Get all customers' information: GET
-2. Edit customer: PUT
-3. Add new: POST
-4. delete customer: DELETE
+delete customer: DELETE
 
 ## Data Params(maybe changed in the future)
 
-1. Get all customers' information:
-
-- `customerID`: array(not sure for this, cause i want to show all of the customers on screen)
-- `customerName`: array
-- `address`: array
-
-2. Edit customer:
-
-- `customerName`: string
-- `address`: string
-
-3. Add new:
-
-- `customerName`: string
-- `address`: string
-
-4. delete customer:
+delete customer:
 
 - `customerID`: string, delete customer
+
+# API requirement
+
+## API name
+
+Get all items' information API
+
+## Aim
+
+Get all of the items' information
+
+## URL
+
+Get all customers' information: `/ItemManagementPage/GetAllItems`
+
+## method
+
+1. Get all Items' information: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Edit Item API
+
+## Aim
+
+Edit selected Item
+
+## URL
+
+Edit customer: `/ItemManagementPage/EditItem`
+
+## method
+
+Edit customer: PUT
+
+## Data Params(maybe changed in the future)
+
+Edit customer:
+
+- `itemID`: string
+- `itemName`: string
+- `weight`: double
+
+# API requirement
+
+## API name
+
+Add new Item API
+
+## Aim
+
+Add new Item
+
+## URL
+
+Add new: `/ItemManagementPage/AddItem`
+
+## method
+
+Add new: POST
+
+## Data Params
+
+Add new:
+
+- `itemName`: string
+- `weight`: double
 
 # API requirement
 
@@ -971,88 +1140,98 @@ Item management page API
 
 ## Aim
 
-Get all of the items' information, and also edit, delete and add new.
+delete the selected Item
 
 ## URL
 
-Get all Items' information: `/CustomerManagementPage/customers`
-Edit item: `/CustomerManagementPage/customerID`
-Add new: `/CustomerManagementPage/customer`
-delete item: `/CustomerManagementPage/customerID`
+delete customer: `/ItemManagementPage/DeleteItem`
 
 ## method
 
-1. Get all items' information: GET
-2. Edit item: PUT
-3. Add new: POST
-4. delete item: DELETE
+delete customer: DELETE
 
-## Data Params(maybe changed in the future)
+## Data Params
 
-1. Get all items' information:
+delete customer:
 
-- `itemID`: array(not sure for this, cause i want to show all of the items on screen)
-- `itemName`: array
-- `weight`: array
-
-2. Edit item:
-
-- `itemName`: string
-- `weight`: int
-
-3. Add new:
-
-- `itemName`: string
-- `weight`: int
-
-4. delete item:
-
-- `itemID`: string, delete item
+- `itemID`: string, delete customer
 
 # API requirement
 
 ## API name
 
-Tracking page API
+Get all avaliable cars API
 
 ## Aim
 
-track the current position of the car and the position of each order.
+Get all cars when status = avaliable(database does not have this para, pls add it)
 
 ## URL
 
-Get information of each car: `/TrackingPage/carID`
-Get information of each order: `/TrackingPage/OrderID`
+Get all avaliable cars: `/TrackingPage/GetCars`
 
 ## method
 
-1. Get information of each car: GET
-2. Get information of each order: GET
+Get all avaliable cars: GET
 
-## Data Params(maybe changed in the future)
+## Data Params
 
-1.  Get information of each car:
-
-- `Car name`: string
-- `driver name`: string (every day a driver has a car)
-- `Order ID`: string
-
-2. Get information of each order:
-
-- `Order name`: string
-- `Order ID`: string
-- `address`: string
-- `items`: array
-- `parcel number`: int
-- `status`: string
-- `start time`: timestamp
-- `end time`: timestamp
+None
 
 # API requirement
 
 ## API name
 
-Driver Information API
+Get orders of each car API
+
+## Aim
+
+Get all orders of each car
+
+## URL
+
+Get orders of each car: `/TrackingPage/GetOrders`
+
+## method
+
+Get orders of each car: GET
+
+## Data Params
+
+Get orders of each car:
+
+- `carID`: string
+
+# API requirement
+
+## API name
+
+Get driver of each car API
+
+## Aim
+
+Get driver name of each car
+
+## URL
+
+Get driver name of each car: `/TrackingPage/GetDriver`
+
+## method
+
+Get driver name of each car: GET
+
+## Data Params
+
+Get driver of each car:
+
+- `orderID`: string (I see database, in order, there is a driver ID para, so i can only use order ID here, if you can link the driver and car,
+  it is better to use car ID here, please edit this part if you make any change).
+
+# API requirement
+
+## API name
+
+Driver Information API (has no changed, will edit after discussion)
 
 ## aim
 
