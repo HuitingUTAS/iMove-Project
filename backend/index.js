@@ -4,9 +4,9 @@ import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
 import { createItem } from "./controllers/ItemController.js"
-import { getOneOrAllCar, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
-import { getOneOrAllDriver, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
-import { getOneOrAllDispatcher, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
+import { getCarByRegistrationNumber, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
+import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
+import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
@@ -52,18 +52,18 @@ app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
 
 app.post("/DispatchPage/InsertingItem", createItem)
 
-app.get("/CarManagement/FetchingCar/:CarID", getOneOrAllCar)
+app.get("/CarManagement/FetchingCar/:RegistrationNumber", getCarByRegistrationNumber)
 app.put("/CarManagement/UpdatingCar", updateCar)
 app.post("/CarManagement/InsertingCar", createCar)
 app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
-app.get("/DriverManagement/FetchingDriver/:DriverID", getOneOrAllDriver)
+app.get("/DriverManagement/FetchingDriver/:DriverName", getDriverByNumber)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
 app.put("/DriverManagement/UpdatingDriverPassword", updateDriverPassword)
 app.post("/RegistrationPage/driver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 
-app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherID", getOneOrAllDispatcher)
+app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherName", getDispatcherByNumber)
 app.put("/DispatcherManagement/UpdatingDispatcher", updateDispatcher)
 app.put("/DispatcherManagement/UpdatingDispatcherPassword", updateDispatcherPassword)
 app.post("/RegistrationPage/dispatcher", createDispatcher)

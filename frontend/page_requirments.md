@@ -236,11 +236,11 @@ FetchingCar
 ## Aim
 
 Retrieving car information from Car collection. 
-- `CarID`: string, if there isn't carID, fetching all car information
 
 ## URL
 
-`/CarManagement/FetchingCar/{CarID}`
+`/CarManagement/FetchingCar/{RegistrationNumber}`
+- `RegistrationNumber`: find all cars by registrationNumber keyword
 
 ## Method
 
@@ -372,11 +372,11 @@ FetchingDriver
 ## Aim
 
 Retrieving driver information from Drivers collection.
-- `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
 
-`/DriverManagement/FetchingDriver/{DriverID}`
+`/DriverManagement/FetchingDriver/{DriverName}`
+- `DriverName`: find all drivers by name keyword
 
 ## Method
 
@@ -541,11 +541,11 @@ FetchingDispatcher
 ## Aim
 
 Retrieving dispatcher information from Dispatchers collection.
-- `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
 
 ## URL
 
-`/DispatcherManagement/FetchingDispatcher/{DispatcherID}`
+`/DispatcherManagement/FetchingDispatcher/{DispatcherName}`
+- `DispatcherName`: find all dispatchers by name keyword
 
 ## Method
 
