@@ -235,13 +235,11 @@ FetchingCar
 
 ## Aim
 
-Retrieving car information from Car collection.
-
-- `CarID`: string, if there isn't carID, fetching all car information
-
 ## URL
 
-`/CarManagement/FetchingCar/{CarID}`
+`/CarManagement/FetchingCar/{RegistrationNumber}`
+
+- `RegistrationNumber`: find all cars by registrationNumber keyword
 
 ## Method
 
@@ -296,7 +294,7 @@ Updating Car:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 10. Inserting Car API Requirement (Done)
+# 10. Inserting Car API Requirement
 
 ## API Name
 
@@ -375,11 +373,11 @@ FetchingDriver
 
 Retrieving driver information from Drivers collection.
 
-- `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
 
-`/DriverManagement/FetchingDriver/{DriverID}`
+`/DriverManagement/FetchingDriver/{DriverName}`
+- `DriverName`: find all drivers by name keyword
 
 ## Method
 
@@ -435,7 +433,38 @@ Updating driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 14. Inserting Driver API Requirement (Done)
+# Update Driver Password API Requirement (Done)
+
+## API Name
+
+Updating Driver password
+
+## Aim
+
+Updating Driver password
+
+## URL
+
+`/DriverManagement/UpdatingDriverPassword`
+
+## Method
+
+Updating Driver: PUT
+
+## Data Params
+
+- `_id`,string, updated Driver ID
+- `password`, string
+
+## Success Response
+
+Updating Driver:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
+# 14. Inserting Driver API Requirement
 
 ## API Name
 
@@ -506,7 +535,7 @@ Deleting Driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 16. Fetching Dispatcher API Requirement
+# 16. Fetching Dispatcher API Requirement (Done)
 
 ## API Name
 
@@ -514,11 +543,13 @@ FetchingDispatcher
 
 ## Aim
 
-Retrieving dispatcher information from Dispatchers collection
+Retrieving dispatcher information from Dispatchers collection.
+
 
 ## URL
 
-`/DispatcherManagement/FetchingDispatcher`
+`/DispatcherManagement/FetchingDispatcher/{DispatcherName}`
+- `DispatcherName`: find all dispatchers by name keyword
 
 ## Method
 
@@ -526,7 +557,7 @@ Fetching Dispatcher: GET
 
 ## Data Params
 
-- `DispatcherID`: string, if there isn't DispatcherID, fetching all dispatcher information
+None
 
 ## Success Response
 
@@ -535,7 +566,7 @@ Fetching Dispatchers:
 - Code: 200
 - Content: JSON，including all fetched Dispatchers
 
-# 17. Update Dispatcher API Requirement
+# 17. Update Dispatcher API Requirement (Done)
 
 ## API Name
 
@@ -547,7 +578,7 @@ Updating Dispatcher infromation
 
 ## URL
 
-`/DriverManagement/UpdatingDispatcher`
+`/DispatcherManagement/UpdatingDispatcher`
 
 ## Method
 
@@ -555,15 +586,44 @@ Updating dispatcher: PUT
 
 ## Data Params
 
-- `dispatcherID`,string, updated dispatcher ID
+- `_id`,string, updated dispatcher ID
 - `name`, string
 - `gender`, string
 - `email`, string
 - `phone`, string
 - `address`, string
-- `password`, string
-- `username`, string
 - `status`, boolean, whether is using or not
+
+## Success Response
+
+Updating dispatcher:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
+# Update Dispatcher Password API Requirement (Done)
+
+## API Name
+
+Updating Dispatcher password
+
+## Aim
+
+Updating Dispatcher password
+
+## URL
+
+`/DispatcherManagement/UpdatingDispatcherPassword`
+
+## Method
+
+Updating dispatcher: PUT
+
+## Data Params
+
+- `_id`,string, updated dispatcher ID
+- `password`, string
 
 ## Success Response
 
@@ -639,7 +699,7 @@ Deleting Dispatcher:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 20. Fetching Packer API Requirement
+# 20. Fetching Packer API Requirement (Done)
 
 ## API Name
 
@@ -647,11 +707,12 @@ FetchingPacker
 
 ## Aim
 
-Retrieving packer information from packers collection
+Retrieving packer information from packers collection By name
 
 ## URL
 
-`/PackerManagement/FetchingPacker`
+`/PackerManagement/FetchingPacker/{PackerName}`
+- `PackerName`: string, find all packers by name keyword
 
 ## Method
 
@@ -659,7 +720,7 @@ Fetching Packer: GET
 
 ## Data Params
 
-- `PackerID`: string, if there isn't PackerID, fetching all packer information
+None
 
 ## Success Response
 
@@ -668,7 +729,7 @@ Fetching Packers:
 - Code: 200
 - Content: JSON，including all fetched Packers
 
-# 21. Update Packer API Requirement
+# 21. Update Packer API Requirement (Done)
 
 ## API Name
 
@@ -688,14 +749,12 @@ Updating packer: PUT
 
 ## Data Params
 
-- `packerID`,string, updated packer ID
+- `_id`,string, updated packer ID
 - `name`, string
 - `gender`, string
 - `email`, string
 - `phone`, string
 - `address`, string
-- `password`, string
-- `username`, string
 - `photo`, string
 - `status`, boolean, whether is using or not
 
@@ -706,6 +765,38 @@ Updating packer:
 - Code: 200
      - Content: JSON，including：
        - `message`: string, successful message
+
+# Update Packer Password API Requirement (Done)
+
+## API Name
+
+Updating Packer password
+
+## Aim
+
+Updating Packer password
+
+## URL
+
+`/PackerManagement/UpdatingPackerPassword`
+
+## Method
+
+Updating Packer: PUT
+
+## Data Params
+
+- `_id`,string, updated Packer ID
+- `password`, string
+
+## Success Response
+
+Updating Packer:
+
+- Code: 200
+     - Content: JSON，including：
+       - `message`: string, successful message
+
 
 # 21. Inserting Packer API Requirement
 
@@ -746,7 +837,7 @@ Inserting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# 22. Deleting Packer API Requirement
+# 22. Deleting Packer API Requirement (Done)
 
 ## API Name
 
@@ -758,13 +849,16 @@ Deleting packer
 
 ## URL
 
-`/PackerManagement/DeletingPacker`
+`/PackerManagement/DeletingPacker/{PackerID}`
+- `PackerID`,string, deleting packer ID
 
 ## Method
 
+DELTE
+
 ## Data Params
 
-- `PackerID`,string, deleting packer ID
+None
 
 ## Success Response
 
@@ -774,7 +868,7 @@ Deleting Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-# API requirement
+# API requirement (dispatcher/driver/packer/car/manager Done)
 
 ## API name
 
@@ -786,39 +880,43 @@ Create new staffs or cars to system
 
 ## URL
 
-Create new packer: `/RegistrationPage/packer`
-Create new dispatcher: `/RegistrationPage/dispatcher`
-Create new car: `/RegistrationPage/car`
-Create new driver: `/RegistrationPage/driver`
-Create new manager: `/RegistrationPage/manager`
+- Create new packer: `/RegistrationPage/packer`
+- Create new dispatcher: `/RegistrationPage/dispatcher`
+- Create new car: `/RegistrationPage/car`
+- Create new driver: `/RegistrationPage/driver`
+- Create new manager: `/RegistrationPage/manager`
 
 ## method
 
-1. Create new packer: POST
-2. Create new dispatcher: POST
-3. Create new car: POST
-4. Create new driver: POST
-5. Create new manager: POST
+1. Create new packer: POST (Done)
+2. Create new dispatcher: POST (Done)
+3. Create new car: POST (Done)
+4. Create new driver: POST (Done)
+5. Create new manager: POST (Done)
 
 ## Data Params(maybe changed in the future)
 
 1. for packer:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary(not sure, google told me for photo, mongoDB store it as binary)
 
 2. for dispatcher:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary
 
@@ -827,31 +925,34 @@ Create new manager: `/RegistrationPage/manager`
 - `make`: string
 - `model`: string
 - `type`: string
-- `registration number`: string
-- `container volume`: int
-- `has fridge`: boolean
-- `is insuranced`: boolean
+- `registrationNumber`: string
+- `volume`: int
+- `hasFridge`: boolean
+- `isInsuranced`: boolean
 - `photo`: binary
 
 4. for driver:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
 - `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
-- `license number`: string
-- `license`: binary
+- `licenseNumber`: string
+- `licensePhoto`: binary
 - `photo`: binary
 
 5. for manager:
 
+- `username`: string
+- `password`: string
 - `name`: string
 - `gender`: string
-- `age`: int
 - `email`: string
-- `phone number`: string
+- `phone`: string
 - `address`: string
 - `photo`: binary
 
@@ -859,7 +960,29 @@ Create new manager: `/RegistrationPage/manager`
 
 ## API name
 
-Packer page API
+Get orders API
+
+## Aim
+
+fetch all orders when the status = allocated
+
+## URL
+
+Get all orders: `/PackerPage/GetAllOrders`
+
+## method
+
+Get all orders: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Get order's information API
 
 ## Aim
 
@@ -868,25 +991,116 @@ Get different orders' information
 ## URL
 
 Get order's information: `/PackerPage/OrderID`
-Upload the needed parcel to system: `/PackerPage/OrderID`
 
 ## method
 
 1. Get order's information: GET
-2. Upload the needed parcel to system: POST
+
+## Data Params
+
+Get order's information:
+
+- `order ID`: string
+
+# API requirement
+
+## API name
+
+update parcel number API
+
+## Aim
+
+update parcel number
+
+## URL
+
+update parcel number: `/PackerPage/UpdateParcel`
+
+## method
+
+Upload the needed parcel to system: POST
+
+## Data Params
+
+Upload the needed parcel to system:
+
+- `order ID`: string
+- `parcel needed`: int
+
+# API requirement
+
+## API name
+
+Get all customers' information API
+
+## Aim
+
+Get all of the customers' information
+
+## URL
+
+Get all customers' information: `/CustomerManagementPage/GetAllCustomers`
+
+## method
+
+1. Get all customers' information: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Edit customer API
+
+## Aim
+
+Edit the selected customer
+
+## URL
+
+Edit customer: `/CustomerManagementPage/EditCustomer`
+
+## method
+
+Edit customer: PUT
 
 ## Data Params(maybe changed in the future)
 
-1. Get order's information:
+Edit customer:
 
-- `order name`: string
-- `order ID`: string
-- `item`: array
-- `date`: date
+- `customerID`: string(the ID in database)
+- `code`: string
+- `customerName`: string
+- `address`: string
 
-2. Upload the needed parcel to system:
+# API requirement
 
-- `parcel needed`: int
+## API name
+
+Add new customer API
+
+## Aim
+
+Add new customer
+
+## URL
+
+Add new: `/CustomerManagementPage/AddCustomer`
+
+## method
+
+Add new: POST
+
+## Data Params(maybe changed in the future)
+
+Add new:
+
+- `code`: string
+- `customerName`: string
+- `address`: string
 
 # API requirement
 
@@ -896,43 +1110,94 @@ customer management page API
 
 ## Aim
 
-Get all of the customers' information, and also edit, delete and add new.
+delete the selected customer
 
 ## URL
 
-Get all customers' information: `/CustomerManagementPage/customers`
-Edit customer: `/CustomerManagementPage/customerID`
-Add new: `/CustomerManagementPage/customer`
-delete customer: `/CustomerManagementPage/customerID`
+delete customer: `/CustomerManagementPage/DeleteCustomer`
 
 ## method
 
-1. Get all customers' information: GET
-2. Edit customer: PUT
-3. Add new: POST
-4. delete customer: DELETE
+delete customer: DELETE
 
 ## Data Params(maybe changed in the future)
 
-1. Get all customers' information:
-
-- `customerID`: array(not sure for this, cause i want to show all of the customers on screen)
-- `customerName`: array
-- `address`: array
-
-2. Edit customer:
-
-- `customerName`: string
-- `address`: string
-
-3. Add new:
-
-- `customerName`: string
-- `address`: string
-
-4. delete customer:
+delete customer:
 
 - `customerID`: string, delete customer
+
+# API requirement
+
+## API name
+
+Get all items' information API
+
+## Aim
+
+Get all of the items' information
+
+## URL
+
+Get all customers' information: `/ItemManagementPage/GetAllItems`
+
+## method
+
+1. Get all Items' information: GET
+
+## Data Params
+
+None
+
+# API requirement
+
+## API name
+
+Edit Item API
+
+## Aim
+
+Edit selected Item
+
+## URL
+
+Edit customer: `/ItemManagementPage/EditItem`
+
+## method
+
+Edit customer: PUT
+
+## Data Params(maybe changed in the future)
+
+Edit customer:
+
+- `itemID`: string
+- `itemName`: string
+- `weight`: double
+
+# API requirement
+
+## API name
+
+Add new Item API
+
+## Aim
+
+Add new Item
+
+## URL
+
+Add new: `/ItemManagementPage/AddItem`
+
+## method
+
+Add new: POST
+
+## Data Params
+
+Add new:
+
+- `itemName`: string
+- `weight`: double
 
 # API requirement
 
@@ -942,88 +1207,98 @@ Item management page API
 
 ## Aim
 
-Get all of the items' information, and also edit, delete and add new.
+delete the selected Item
 
 ## URL
 
-Get all Items' information: `/CustomerManagementPage/customers`
-Edit item: `/CustomerManagementPage/customerID`
-Add new: `/CustomerManagementPage/customer`
-delete item: `/CustomerManagementPage/customerID`
+delete customer: `/ItemManagementPage/DeleteItem`
 
 ## method
 
-1. Get all items' information: GET
-2. Edit item: PUT
-3. Add new: POST
-4. delete item: DELETE
+delete customer: DELETE
 
-## Data Params(maybe changed in the future)
+## Data Params
 
-1. Get all items' information:
+delete customer:
 
-- `itemID`: array(not sure for this, cause i want to show all of the items on screen)
-- `itemName`: array
-- `weight`: array
-
-2. Edit item:
-
-- `itemName`: string
-- `weight`: int
-
-3. Add new:
-
-- `itemName`: string
-- `weight`: int
-
-4. delete item:
-
-- `itemID`: string, delete item
+- `itemID`: string, delete customer
 
 # API requirement
 
 ## API name
 
-Tracking page API
+Get all avaliable cars API
 
 ## Aim
 
-track the current position of the car and the position of each order.
+Get all cars when status = avaliable(database does not have this para, pls add it)
 
 ## URL
 
-Get information of each car: `/TrackingPage/carID`
-Get information of each order: `/TrackingPage/OrderID`
+Get all avaliable cars: `/TrackingPage/GetCars`
 
 ## method
 
-1. Get information of each car: GET
-2. Get information of each order: GET
+Get all avaliable cars: GET
 
-## Data Params(maybe changed in the future)
+## Data Params
 
-1.  Get information of each car:
-
-- `Car name`: string
-- `driver name`: string (every day a driver has a car)
-- `Order ID`: string
-
-2. Get information of each order:
-
-- `Order name`: string
-- `Order ID`: string
-- `address`: string
-- `items`: array
-- `parcel number`: int
-- `status`: string
-- `start time`: timestamp
-- `end time`: timestamp
+None
 
 # API requirement
 
 ## API name
 
-Driver Information API
+Get orders of each car API
+
+## Aim
+
+Get all orders of each car
+
+## URL
+
+Get orders of each car: `/TrackingPage/GetOrders`
+
+## method
+
+Get orders of each car: GET
+
+## Data Params
+
+Get orders of each car:
+
+- `carID`: string
+
+# API requirement
+
+## API name
+
+Get driver of each car API
+
+## Aim
+
+Get driver name of each car
+
+## URL
+
+Get driver name of each car: `/TrackingPage/GetDriver`
+
+## method
+
+Get driver name of each car: GET
+
+## Data Params
+
+Get driver of each car:
+
+- `orderID`: string (I see database, in order, there is a driver ID para, so i can only use order ID here, if you can link the driver and car,
+  it is better to use car ID here, please edit this part if you make any change).
+
+# API requirement
+
+## API name
+
+Driver Information API (has no changed, will edit after discussion)
 
 ## aim
 

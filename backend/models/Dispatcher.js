@@ -27,4 +27,7 @@ export const dispatcherSchema = new Schema({
     photo: {
         type: String,
     },
+    status: {
+        type: Boolean,
+    },
 })
