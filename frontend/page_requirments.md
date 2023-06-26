@@ -373,10 +373,10 @@ FetchingDriver
 
 Retrieving driver information from Drivers collection.
 
-
 ## URL
 
 `/DriverManagement/FetchingDriver/{DriverName}`
+
 - `DriverName`: find all drivers by name keyword
 
 ## Method
@@ -545,10 +545,10 @@ FetchingDispatcher
 
 Retrieving dispatcher information from Dispatchers collection.
 
-
 ## URL
 
 `/DispatcherManagement/FetchingDispatcher/{DispatcherName}`
+
 - `DispatcherName`: find all dispatchers by name keyword
 
 ## Method
@@ -712,6 +712,7 @@ Retrieving packer information from packers collection By name
 ## URL
 
 `/PackerManagement/FetchingPacker/{PackerName}`
+
 - `PackerName`: string, find all packers by name keyword
 
 ## Method
@@ -797,7 +798,6 @@ Updating Packer:
      - Content: JSON，including：
        - `message`: string, successful message
 
-
 # 21. Inserting Packer API Requirement
 
 ## API Name
@@ -850,6 +850,7 @@ Deleting packer
 ## URL
 
 `/PackerManagement/DeletingPacker/{PackerID}`
+
 - `PackerID`,string, deleting packer ID
 
 ## Method
@@ -1298,40 +1299,92 @@ Get driver of each car:
 
 ## API name
 
-Driver Information API (has no changed, will edit after discussion)
+Get orders info in driver page API
 
 ## aim
 
-get the orders' information for one driver, update status, and upload files
+get the orders' information for one driver
 
 ## URL
 
-1. get the orders' information: `/DriverPage/Driverid`
-2. update status: `/DriverPage//Driverid/Orderid`
-3. upload file: `/DriverPage//Driverid/Orderid`
+get the orders' information: `/DriverPage/GetOrders/{driverID}`
 
 ## Method
 
-1. get the orders' information: GET
-2. update status: PUT/POST
-3. upload file: POST
+get the orders' information: GET
 
 ## Data Params
 
-1. get the orders' information:
+get the orders' information:
 
-- `driver name`: string
-- `order id`: string
-- `order name`: string
-- `customer name`: string
-- `address`: string
-- `parcel number`: int
-- `special requirements`: string
-- `status`: string
+- `driverID` : string
 
-2. update status:
-   - `status`: string, order status (choices：Waiting, In progress, Completed)
-   - `start time`: timestamp(when the status is changed to In progress, record a time)
-   - `end time`: timestamp(when the status is changed to Completed, record a time)
+# API requirement
+
+## API name
+
+update status API
+
+## aim
+
+update order status record needed time
+
+## URL
+
+update status : `/DriverPage/UpdateStatus/{orderID}`
+
+## Method
+
+update status and record: PUT
+
+## Data Params
+
+update status:
+
+- `orderID`: string
+- `status`: string, order status (choices：In progress, shipping, Completed)
+
+## API name
+
+add start and end time API
+
+## aim
+
+Add start and end time
+
+## URL
+
+Add start and end time: `/DriverPage/AddTime/{orderID}`
+
+## Method
+
+Add start and end time: POST
+
+## Data Params
+
+- `orderID`: string
+- `start time`: timestamp(when the status is changed to In progress, record a time)
+- `end time`: timestamp(when the status is changed to Completed, record a time)
+
+## API name
+
+upload file API
+
+## aim
+
+upload completed files
+
+## URL
+
+upload file: `/DriverPage/UploadFile/{orderID}`
+
+## Method
+
+upload file: POST
+
+## Data Params
+
 3. upload file:
-   - `file`: binary, (the photo to upload)
+
+- `orderID`: string
+- `file`: binary, (the photo to upload)
