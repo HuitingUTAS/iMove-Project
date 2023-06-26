@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
 function DispatcherManage() {
   const [dispatcherData, setDispatcherData] = useState([]);
   const [dispatcherName, setDispatcherName] = useState(
-    `${BASE_URL}/DispatcherManagement/FetchingDispatcher/{123}`
+    `${BASE_URL}/DispatcherManagement/FetchingDispatcher/123`
   );
   const [isEditing, setIsEditing] = useState(false);
 
@@ -33,6 +33,18 @@ function DispatcherManage() {
   const handleDeleteDispatcher = (index) => {
     // Code to handle deleting a dispatcher entry based on index
     console.log("Deleting dispatcher:", index);
+  };
+
+  //confirming updated car
+  const handleConfirm = () => {
+    console.log("confirm updating");
+    setIsEditing(false);
+  };
+
+  // cancling change
+
+  const handleCancel = (index) => {
+    setIsEditing(false);
   };
 
   return (
@@ -145,11 +157,11 @@ function DispatcherManage() {
                   <FormControl
                     as="password"
                     rows={1}
-                    defaultValue={dispatcher.password}
+                    defaultValue={""}
                     onChange={(e) => handleChange(e, index)}
                   />
                 ) : (
-                  dispatcher.password
+                  "******"
                 )}
               </td>
               <td>
@@ -177,18 +189,34 @@ function DispatcherManage() {
                 )}
               </td>
               <td>
-                <Button
-                  variant="primary"
-                  onClick={() => handleEditDispatcher()}
-                >
-                  Edit
-                </Button>{" "}
-                <Button
-                  variant="danger"
-                  onClick={() => handleDeleteDispatcher(index)}
-                >
-                  Delete
-                </Button>
+                {isEditing ? (
+                  <>
+                    <Button variant="success" onClick={handleConfirm}>
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="warning"
+                      onClick={() => handleCancel(index)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEditDispatcher()}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteDispatcher(index)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

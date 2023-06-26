@@ -42,5 +42,7 @@ npm install yup
 
 npm install @react-google-maps/api
 
+npm install axios
+
 3. Run `npm run dev` to start the app.
 4. Open `http://localhost:5173/` to check if the app is on.
