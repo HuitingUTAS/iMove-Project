@@ -4,6 +4,7 @@ import UnallocatedOrders from "./UnallocatedOrders";
 import AllocatedOrders from "./AllocatedOrders";
 import "./Dispatch.css";
 import axios from "axios";
+import { BASE_URL } from "../../../config";
 
 function DispatchPage() {
   const [unallocatedOrders, setUnallocatedOrders] = useState([]);
@@ -15,10 +16,9 @@ function DispatchPage() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3002/order/SOF003101"
+          `${BASE_URL}/DispatchPage/FetchUnallocatedOrder`
         );
         setUnallocatedOrders(response.data);
-        // console.log("useEffect unallocatedOrders", response.data);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -40,10 +40,7 @@ function DispatchPage() {
           <UnallocatedOrders orders={unallocatedOrders} />
         </div>
         <div className="col-md-6">
-          <AllocatedOrders
-            orders={allocatedOrders}
-            onExportAllocatedOrders={handleExportAllocatedOrders}
-          />
+          <AllocatedOrders />
         </div>
       </div>
     </div>

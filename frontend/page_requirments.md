@@ -235,13 +235,10 @@ FetchingCar
 
 ## Aim
 
-
-Retrieving car information from Car collection.
-
-
 ## URL
 
 `/CarManagement/FetchingCar/{RegistrationNumber}`
+
 - `RegistrationNumber`: find all cars by registrationNumber keyword
 
 ## Method
@@ -495,6 +492,7 @@ Inserting driver: POST
 - `licenseNumber`, string
 - `licensePhoto`, string
 - `photo`, string
+- `password`, string
 - `status`, boolean, whether is using or not
 
 ## Success Response

@@ -44,7 +44,7 @@ function AddOrder() {
       [name]: value,
     });
   };
-
+  // Predictive selecting receiver name and address from database when it changed
   const handleChange = (event) => {
     const { name, value } = event.target;
     setOrderDetails((prevState) => ({
@@ -52,7 +52,14 @@ function AddOrder() {
       [name]: value,
     }));
   };
-
+  //Predictiv selecting item name when it changed
+  const changeItem = (event) => {
+    const { name, value } = event.target;
+    setOrderDetails((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     // Code to submit form data goes here
@@ -64,19 +71,6 @@ function AddOrder() {
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col md={5}>
-            <Form.Group controlId="orderID">
-              <Form.Label>orderID</Form.Label>
-              <Form.Control
-                type="text"
-                name="OrderID"
-                value={orderDetails.OrderID}
-                onChange={handleChange}
-                placeholder="Enter Order ID"
-                required
-              />
-            </Form.Group>
-          </Col>
-          <Col>
             <Form.Group controlId="senderName">
               <Form.Label>Sender Name</Form.Label>
               <Form.Control
@@ -89,13 +83,8 @@ function AddOrder() {
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={5}>
-            <Form.Group
-              controlId="reciverName"
-              style={{ margin: "1.5rem auto" }}
-            >
+          <Col>
+            <Form.Group controlId="reciverName">
               <Form.Label>Reciver Name</Form.Label>
               <Form.Control
                 type="text"
@@ -107,7 +96,9 @@ function AddOrder() {
               />
             </Form.Group>
           </Col>
-          <Col>
+        </Row>
+        <Row>
+          <Col md={5}>
             <Form.Group controlId="address" style={{ margin: "1.5rem auto" }}>
               <Form.Label>Address</Form.Label>
               <Form.Control
@@ -116,14 +107,16 @@ function AddOrder() {
                 value={orderDetails.Address}
                 onChange={handleChange}
                 placeholder="Enter address"
+                disabled
                 required
               />
             </Form.Group>
           </Col>
-        </Row>
-        <Row>
-          <Col md={5}>
-            <Form.Group controlId="phoneNumber">
+          <Col>
+            <Form.Group
+              controlId="phoneNumber"
+              style={{ margin: "1.5rem auto" }}
+            >
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
                 type="tel"
@@ -135,7 +128,9 @@ function AddOrder() {
               />
             </Form.Group>
           </Col>
-          <Col md={3}>
+        </Row>
+        <Row>
+          <Col md={5}>
             <Form.Group controlId="deliverdate">
               <Form.Label>Deliver Date</Form.Label>
               <Form.Control
@@ -181,6 +176,7 @@ function AddOrder() {
                 name="Requirement"
                 value={orderDetails.Requirement}
                 onChange={handleChange}
+                rows={2}
                 placeholder="Enter special requirement"
               />
             </Form.Group>
@@ -197,9 +193,7 @@ function AddOrder() {
                   type="text"
                   name="itemName"
                   value={newItem.itemName}
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, itemName: e.target.value })
-                  }
+                  onChange={changeItem}
                   placeholder="Enter item name"
                   required
                 />
