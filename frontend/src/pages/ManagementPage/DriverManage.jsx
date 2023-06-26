@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
 function DriverManage() {
   const [driverData, setDriverData] = useState([]);
-  const [driverName, setdriverName] = useState(
-    `${BASE_URL}/DriverManagement/FetchingDriver/{123}`
+  const [driverName, setDriverName] = useState(
+    `${BASE_URL}"/DriverManagement/FetchingDriver/123`
   );
   const [isEditing, setIsEditing] = useState(false);
 
@@ -17,7 +17,9 @@ function DriverManage() {
   const fetchData = async () => {
     try {
       const response = await axios.get(driverName);
+      console.log(driverName);
       setDriverData(response.data);
+      console.log("driver info:", response.data);
     } catch (error) {
       // console.log("Error fetching data:", error.message);
       // alert(error.message);
@@ -34,6 +36,18 @@ function DriverManage() {
     console.log("Deleting Driver:", index);
   };
 
+  //confirming updated car
+  const handleConfirm = () => {
+    console.log("confirm updating");
+    setIsEditing(false);
+  };
+
+  // cancling change
+
+  const handleCancel = (index) => {
+    setIsEditing(false);
+  };
+
   return (
     <div>
       <Form onSubmit={() => {}}>
@@ -46,8 +60,8 @@ function DriverManage() {
               type="text"
               name="dispatcherName"
               onChange={(e) =>
-                setDispatcherName(
-                  `${BASE_URL}/DriverManagement/FetchingDriver/{${e.target.value}}`
+                setDriverName(
+                  `${BASE_URL}/DriverManagement/FetchingDriver/${e.target.value}`
                 )
               }
               placeholder="Search driver"
@@ -180,13 +194,13 @@ function DriverManage() {
               <td>
                 {isEditing ? (
                   <FormControl
-                    as="password"
+                    as="textarea"
                     rows={1}
-                    defaultValue={driver.password}
+                    defaultValue={""}
                     onChange={(e) => handleChange(e, index)}
                   />
                 ) : (
-                  driver.password
+                  "******"
                 )}
               </td>
               <td>
@@ -202,15 +216,35 @@ function DriverManage() {
                 )}
               </td>
               <td>
-                <Button variant="primary" onClick={() => handleEditDriver()}>
-                  Edit
-                </Button>{" "}
-                <Button
-                  variant="danger"
-                  onClick={() => handleDeleteDriver(index)}
-                >
-                  Delete
-                </Button>
+                {" "}
+                {isEditing ? (
+                  <>
+                    <Button variant="success" onClick={handleConfirm}>
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="warning"
+                      onClick={() => handleCancel(index)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEditDriver()}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteDriver(index)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

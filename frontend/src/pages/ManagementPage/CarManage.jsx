@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
@@ -20,6 +20,8 @@ function CarManage() {
     try {
       const response = await axios.get(searchCarID);
       setCarData(response.data);
+      // console.log("search car ID:", searchCarID);
+      // console.log("fetched car: ", carData);
     } catch (error) {
       console.log("Error fetching data:", error.message);
       // alert(error.message);
@@ -35,6 +37,18 @@ function CarManage() {
   const handleDeleteCar = (carID) => {
     // Code to handle deleting a car entry based on carID
     console.log("Deleting car:", carID);
+  };
+
+  //confirming updated car
+  const handleConfirm = () => {
+    console.log("confirm updating");
+    setIsEditing(false);
+  };
+
+  // cancling change
+
+  const handleCancel = (index) => {
+    setIsEditing(false);
   };
 
   return (
@@ -150,8 +164,10 @@ function CarManage() {
                     defaultValue={car.hasFridge}
                     onChange={(e) => handleChange(e, index)}
                   />
+                ) : car.hasFridge ? (
+                  "ture"
                 ) : (
-                  car.hasFridge
+                  "false"
                 )}
               </td>
               <td>
@@ -162,8 +178,10 @@ function CarManage() {
                     defaultValue={car.isInsuranced}
                     onChange={(e) => handleChange(e, index)}
                   />
+                ) : car.isInsuranced ? (
+                  "ture"
                 ) : (
-                  car.isInsuranced
+                  "false"
                 )}
               </td>
               <td>
@@ -179,15 +197,34 @@ function CarManage() {
                 )}
               </td>
               <td>
-                <Button variant="primary" onClick={() => handleEditCar(index)}>
-                  Edit
-                </Button>{" "}
-                <Button
-                  variant="danger"
-                  onClick={() => handleDeleteCar(car.registrationNumber)}
-                >
-                  Delete
-                </Button>
+                {isEditing ? (
+                  <>
+                    <Button variant="success" onClick={handleConfirm}>
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="warning"
+                      onClick={() => handleCancel(index)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEditCar(index)}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeleteCar(car.registrationNumber)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

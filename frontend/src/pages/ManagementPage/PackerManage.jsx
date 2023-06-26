@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
 function PackerManage() {
   const [packerData, setPackerData] = useState([]);
   const [packerName, setPackerName] = useState(
-    `${BASE_URL}/PackerManagement/FetchingPacker/{123}`
+    `${BASE_URL}/PackerManagement/FetchingPacker/123`
   );
   const [isEditing, setIsEditing] = useState(false);
 
@@ -34,7 +34,17 @@ function PackerManage() {
     // Code to handle deleting a packer entry based on index
     console.log("Deleting dispatcher:", index);
   };
+  //confirming updated car
+  const handleConfirm = () => {
+    console.log("confirm updating");
+    setIsEditing(false);
+  };
 
+  // cancling change
+
+  const handleCancel = (index) => {
+    setIsEditing(false);
+  };
   return (
     <div>
       <Form>
@@ -145,11 +155,11 @@ function PackerManage() {
                   <FormControl
                     as="password"
                     rows={1}
-                    defaultValue={packer.password}
+                    defaultValue={""}
                     onChange={(e) => handleChange(e, index)}
                   />
                 ) : (
-                  packer.password
+                  "******"
                 )}
               </td>
               <td>
@@ -177,15 +187,35 @@ function PackerManage() {
                 )}
               </td>
               <td>
-                <Button variant="primary" onClick={() => handleEditPacker()}>
-                  Edit
-                </Button>{" "}
-                <Button
-                  variant="danger"
-                  onClick={() => handleDeletePacker(index)}
-                >
-                  Delete
-                </Button>
+                {" "}
+                {isEditing ? (
+                  <>
+                    <Button variant="success" onClick={handleConfirm}>
+                      Confirm
+                    </Button>
+                    <Button
+                      variant="warning"
+                      onClick={() => handleCancel(index)}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      onClick={() => handleEditPacker()}
+                    >
+                      Edit
+                    </Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={() => handleDeletePacker(index)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
