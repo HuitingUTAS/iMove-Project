@@ -235,7 +235,8 @@ FetchingCar
 
 ## Aim
 
-Retrieving car information from Car collection. 
+Retrieving car information from Car collection.
+
 - `CarID`: string, if there isn't carID, fetching all car information
 
 ## URL
@@ -341,6 +342,7 @@ DeletingCar
 ## Aim
 
 Deleting car from car collection
+
 - `CarID`,string, deleting car ID
 
 ## URL
@@ -372,6 +374,7 @@ FetchingDriver
 ## Aim
 
 Retrieving driver information from Drivers collection.
+
 - `DriverID`: string, if there isn't DriverID, fetching all driver information
 
 ## URL
@@ -460,6 +463,7 @@ Inserting driver: POST
 - `licenseNumber`, string
 - `licensePhoto`, string
 - `photo`, string
+- `password`, string
 - `status`, boolean, whether is using or not
 
 ## Success Response
@@ -479,6 +483,7 @@ DeletingDriver
 ## Aim
 
 Deleting driver
+
 - `DriverID`,string, deleting driver ID
 
 ## URL
