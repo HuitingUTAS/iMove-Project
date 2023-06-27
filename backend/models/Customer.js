@@ -3,16 +3,52 @@ import mongoose from "mongoose"
 const Schema = mongoose.Schema
 
 export const customerSchema = new Schema({
-    customerPO: {
+    companyName: {
         type: String,
-        required: "CustomerPO is required."
     },
-    customerName: {
+    code: {
         type: String,
-        required: "Customer Name is required."
+    },
+    website: {
+        type: String,
+    },
+    firstName: {
+        type: String,
+    },
+    lastName: {
+        type: String,
+    },
+    email: {
+        type: String,
+    },
+    contactOffice: {
+        type: String,
+    },
+    contactMobile: {
+        type: String,
+    },
+    description: {
+        type: String,
+    },
+    building: {
+        type: String,
     },
     address: {
         type: String,
-        required: "Address is required."
+    },
+    country: {
+        type: String,
+    },
+    state: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    postal: {
+        type: String,
+    },
+    tags: {
+        type: String,
     },
 })

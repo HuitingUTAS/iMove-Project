@@ -9,6 +9,7 @@ import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, de
 import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
 import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager } from "./controllers/ManagerController.js"
+import { createCustomer, deleteCustomer, getAllCustomers, updateCustomer } from "./controllers/CustomerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
@@ -81,6 +82,11 @@ app.put("/ManagerManagement/UpdatingManager", updateManager)
 app.put("/ManagerManagement/UpdatingManagerPassword", updateManagerPassword)
 app.post("/RegistrationPage/manager", createManager)
 app.delete("/ManagerManagement/DeletingManager/:ManagerID", deleteManager)
+
+app.get("/CustomerManagementPage/GetAllCustomers", getAllCustomers)
+app.put("/CustomerManagementPage/EditCustomer", updateCustomer)
+app.post("/CustomerManagementPage/AddCustomer", createCustomer)
+app.delete("/CustomerManagementPage/DeleteCustomer/:CustomerID", deleteCustomer)
 
 
 app.listen(port, () => {

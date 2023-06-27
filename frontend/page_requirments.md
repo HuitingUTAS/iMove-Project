@@ -1028,7 +1028,7 @@ Upload the needed parcel to system:
 - `order ID`: string
 - `parcel needed`: int
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1050,7 +1050,7 @@ Get all customers' information: `/CustomerManagementPage/GetAllCustomers`
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1072,12 +1072,12 @@ Edit customer: PUT
 
 Edit customer:
 
-- `customerID`: string(the ID in database)
+- `_id`: string(the ID in database)
 - `code`: string
-- `customerName`: string
+- `companyName`: string
 - `address`: string
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1100,10 +1100,10 @@ Add new: POST
 Add new:
 
 - `code`: string
-- `customerName`: string
+- `companyName`: string
 - `address`: string
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1115,7 +1115,8 @@ delete the selected customer
 
 ## URL
 
-delete customer: `/CustomerManagementPage/DeleteCustomer`
+delete customer: `/CustomerManagementPage/DeleteCustomer/{CustomerID}`
+- `CustomerID`: string, delete customer
 
 ## method
 
@@ -1123,9 +1124,7 @@ delete customer: DELETE
 
 ## Data Params(maybe changed in the future)
 
-delete customer:
-
-- `customerID`: string, delete customer
+None
 
 # API requirement
 
