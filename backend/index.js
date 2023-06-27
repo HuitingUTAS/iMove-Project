@@ -3,7 +3,7 @@ import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
-import { createItem } from "./controllers/ItemController.js"
+import { createItem, deleteItem, getAllItems, updateItem } from "./controllers/ItemController.js"
 import { getCarByRegistrationNumber, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
@@ -88,6 +88,9 @@ app.put("/CustomerManagementPage/EditCustomer", updateCustomer)
 app.post("/CustomerManagementPage/AddCustomer", createCustomer)
 app.delete("/CustomerManagementPage/DeleteCustomer/:CustomerID", deleteCustomer)
 
+app.get("/ItemManagementPage/GetAllItems", getAllItems)
+app.put("/ItemManagementPage/EditItem", updateItem)
+app.delete("/ItemManagementPage/DeleteItem/:ItemID", deleteItem)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

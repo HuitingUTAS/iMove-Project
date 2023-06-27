@@ -1126,7 +1126,7 @@ delete customer: DELETE
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1148,7 +1148,7 @@ Get all customers' information: `/ItemManagementPage/GetAllItems`
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1170,11 +1170,11 @@ Edit customer: PUT
 
 Edit customer:
 
-- `itemID`: string
+- `_id`: string
 - `itemName`: string
 - `weight`: double
 
-# API requirement
+# API requirement (Reduplicate with Huiting's API)
 
 ## API name
 
@@ -1211,7 +1211,8 @@ delete the selected Item
 
 ## URL
 
-delete customer: `/ItemManagementPage/DeleteItem`
+delete customer: `/ItemManagementPage/DeleteItem/{ItemID}`
+- `ItemID`: string, delete customer
 
 ## method
 
@@ -1219,9 +1220,7 @@ delete customer: DELETE
 
 ## Data Params
 
-delete customer:
-
-- `itemID`: string, delete customer
+None
 
 # API requirement
 

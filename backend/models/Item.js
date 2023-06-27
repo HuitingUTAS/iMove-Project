@@ -29,5 +29,8 @@ export const itemSchema = new Schema({
     },
     value: {
         type: Number,
+    },
+    weight: {
+        type: Number,
     }
 })
