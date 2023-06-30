@@ -28,6 +28,6 @@ export const dispatcherSchema = new Schema({
         type: String,
     },
     status: {
-        type: Boolean,
+        type: String,
     },
 })

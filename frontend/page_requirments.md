@@ -957,7 +957,7 @@ Create new staffs or cars to system
 - `address`: string
 - `photo`: binary
 
-# API requirement
+# API requirement (Duplicate with Huiting's API)
 
 ## API name
 
@@ -979,7 +979,7 @@ Get all orders: GET
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -991,7 +991,8 @@ Get different orders' information
 
 ## URL
 
-Get order's information: `/PackerPage/OrderID`
+Get order's information: `/PackerPage/{OrderID}`
+- `OrderID`: string
 
 ## method
 
@@ -999,11 +1000,9 @@ Get order's information: `/PackerPage/OrderID`
 
 ## Data Params
 
-Get order's information:
+None
 
-- `order ID`: string
-
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1025,8 +1024,8 @@ Upload the needed parcel to system: POST
 
 Upload the needed parcel to system:
 
-- `order ID`: string
-- `parcel needed`: int
+- `_id`: string
+- `parcelQty`: int
 
 # API requirement (Done)
 
@@ -1199,7 +1198,7 @@ Add new:
 - `itemName`: string
 - `weight`: double
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1222,7 +1221,7 @@ delete customer: DELETE
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1244,7 +1243,7 @@ Get all avaliable cars: GET
 
 None
 
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1256,7 +1255,8 @@ Get all orders of each car
 
 ## URL
 
-Get orders of each car: `/TrackingPage/GetOrders`
+Get orders of each car: `/TrackingPage/GetOrders/{CarID}`
+- `CarID`: string
 
 ## method
 
@@ -1264,9 +1264,7 @@ Get orders of each car: GET
 
 ## Data Params
 
-Get orders of each car:
-
-- `carID`: string
+None
 
 # API requirement
 
@@ -1305,7 +1303,8 @@ get the orders' information for one driver
 
 ## URL
 
-get the orders' information: `/DriverPage/GetOrders/{driverID}`
+get the orders' information: `/DriverPage/GetOrders/{DriverID}`
+- `DriverID` : string
 
 ## Method
 
@@ -1313,11 +1312,9 @@ get the orders' information: GET
 
 ## Data Params
 
-get the orders' information:
+None
 
-- `driverID` : string
-
-# API requirement
+# API requirement (Done)
 
 ## API name
 
@@ -1325,19 +1322,19 @@ update status API
 
 ## aim
 
-update order status record needed time
+update order shipment status record needed time
 
 ## URL
 
-update status : `/DriverPage/UpdateStatus/{orderID}`
+update shipment status : `/DriverPage/UpdateStatus`
 
 ## Method
 
-update status and record: PUT
+update shipment status and record: PUT
 
 ## Data Params
 
-update status:
+update shipment status:
 
 - `orderID`: string
 - `status`: string, order status (choices：In progress, shipping, Completed)

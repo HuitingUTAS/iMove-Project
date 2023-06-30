@@ -8,15 +8,35 @@ const shipmentStatus = Object.freeze({
     Delivered: 'delivered',
     Received: 'received',
 });
-const paymentStatus = Object.freeze({
-    Unpaid: 'unpaid',
-    InProgress: 'inProgress',
-    Paid: 'Paid',
-});
 const currencyCode = Object.freeze({
     AUD: 'AUD',
     USD: 'USD',
 });
+
+const shipmentStatusSchema = new Schema(
+    { 
+        status:{
+            type: String,
+            enum: Object.values(shipmentStatus),
+        },
+        date: Date
+    },
+    {
+        _id: false
+    }
+)
+
+const orderStatusSchema = new Schema(
+    { 
+        status:{
+            type: String,
+        },
+        date: Date
+    },
+    {
+        _id: false
+    }
+)
 
 export const orderSchema = new Schema({
     orderNumber: {
@@ -32,22 +52,10 @@ export const orderSchema = new Schema({
         default: Date.now()
     },
     shipmentStatus:[
-        { 
-            status:{
-                type: String,
-                enum: Object.values(shipmentStatus),
-            },
-            date: Date
-        },
+        shipmentStatusSchema
     ],
-    paymentStatus:[
-        { 
-            status:{
-                type: String,
-                enum: Object.values(paymentStatus),
-            },
-            date: Date
-        },
+    orderStatus:[
+        orderStatusSchema
     ],
     currencyCode: {
         type: String,
@@ -89,5 +97,5 @@ export const orderSchema = new Schema({
 
 //Refre: https://rclayton.silvrback.com/export-enumerations-as-static-mongoose-properties
 Object.assign(orderSchema.statics, {
-    shipmentStatus, paymentStatus, currencyCode
+    shipmentStatus, currencyCode
 });

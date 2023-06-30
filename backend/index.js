@@ -2,9 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
-import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder } from "./controllers/OrderController.js"
+import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderShipmentStatus } from "./controllers/OrderController.js"
 import { createItem, deleteItem, getAllItems, updateItem } from "./controllers/ItemController.js"
-import { getCarByRegistrationNumber, updateCar, createCar, deleteCar } from "./controllers/CarController.js"
+import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliableCars } from "./controllers/CarController.js"
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
 import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
 import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
@@ -91,6 +91,15 @@ app.delete("/CustomerManagementPage/DeleteCustomer/:CustomerID", deleteCustomer)
 app.get("/ItemManagementPage/GetAllItems", getAllItems)
 app.put("/ItemManagementPage/EditItem", updateItem)
 app.delete("/ItemManagementPage/DeleteItem/:ItemID", deleteItem)
+
+app.get("/PackerPage/:OrderID", getOrderByID)
+app.put("/PackerPage/UpdateParcel", updateOrder)
+
+app.get("/TrackingPage/GetCars", getAvaliableCars)
+app.get("/TrackingPage/GetOrders/:CarID", getOrderByCar)
+
+app.get("/DriverPage/GetOrders/:DriverID", getOrderByDriver)
+app.put("/DriverPage/UpdateStatus", updateOrderShipmentStatus)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

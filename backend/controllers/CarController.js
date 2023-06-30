@@ -21,6 +21,20 @@ export const getCarByRegistrationNumber = (req, res) => {
     });
 };
 
+export const getAvaliableCars = (req, res) => {
+    Car.find({ status: 'available'} ,
+    function(err, car) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(car)
+        }
+    });
+};
+
 
 export const updateCar = (req, res) => {
     Car.findOneAndUpdate({ _id: req.body._id }, req.body, { new: false, useFindAndModify: false }, (err, car) => {

@@ -37,6 +37,6 @@ export const driverSchema = new Schema({
         type: String,
     },
     status: {
-        type: Boolean,
+        type: String,
     },
 })
