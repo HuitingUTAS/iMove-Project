@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -9,37 +9,11 @@ import {
   FormControl,
   Modal,
 } from "react-bootstrap";
-const sampleCustomers = [
-  {
-    id: 1,
-    name: "Customer 1",
-    address: "xxxxxxxxxxxxx",
-  },
-  {
-    id: 2,
-    name: "Customer 2",
-    address: "sssssssssssss",
-  },
-  {
-    id: 3,
-    name: "Customer 3",
-    address: "dddddddddddddd",
-  },
-  {
-    id: 4,
-    name: "Customer 4",
-    address: "fffffffffffff",
-  },
-  {
-    id: 5,
-    name: "Customer 5",
-    address: "ggggggggggggg",
-  },
-];
+import { BASE_URL } from "../../../config";
 function CustomerManage() {
   const [search, setSearch] = useState("");
   const [editIndex, setEditIndex] = useState(null);
-  const [customers, setCustomers] = useState(sampleCustomers);
+  const [customers, setCustomers] = useState([]);
   const [originalCustomer, setOriginalCustomer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
@@ -47,15 +21,34 @@ function CustomerManage() {
     name: "",
     address: "",
   });
+  const fetchCustomerData = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/CustomerManagementPage/GetAllCustomers`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setCustomers(data);
+        console.log(data);
+      } else {
+        console.log("Error response:", response.status);
+      }
+    } catch (error) {
+      console.log("Error fetching order data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchCustomerData();
+  }, []);
+
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
   const filteredCustomers = customers.filter((customer) => {
-    const keyword = search.toLowerCase();
-    return (
-      customer.name.toLowerCase().includes(keyword) ||
-      customer.id.toString().toLowerCase().includes(keyword)
-    );
+    const keyword = search;
+    const customerName = customer.name || "";
+    const customerId = customer.id ? customer.id.toString() : "";
+    return customerName.includes(keyword) || customerId.includes(keyword);
   });
   const handleAdd = () => {
     if (newCustomer.name && newCustomer.address) {
@@ -118,26 +111,26 @@ function CustomerManage() {
         <Table striped bordered hover responsive>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Code</th>
               <th>Customer Name</th>
               <th>Address</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map((Customer, index) => {
+            {filteredCustomers.map((customer, index) => {
               const isEditing = editIndex === index;
               return (
-                <tr key={Customer.id}>
-                  <td>{Customer.id}</td>
+                <tr key={customer.code}>
+                  <td>{customer.code}</td>
                   <td>
                     {isEditing ? (
                       <FormControl
-                        defaultValue={Customer.name}
+                        defaultValue={customer.companyName}
                         onChange={(e) => handleNameChange(e, index)}
                       />
                     ) : (
-                      Customer.name
+                      customer.companyName
                     )}
                   </td>
                   <td>
@@ -145,11 +138,11 @@ function CustomerManage() {
                       <FormControl
                         as="textarea"
                         rows={1}
-                        defaultValue={Customer.address}
+                        defaultValue={customer.address}
                         onChange={(e) => handleAddressChange(e, index)}
                       />
                     ) : (
-                      Customer.address
+                      customer.address
                     )}
                   </td>
                   <td>
@@ -203,7 +196,7 @@ function CustomerManage() {
             </div>
             <div className="modal-body">
               <p>
-                Customer ID: <strong>{newCustomer.id}</strong>
+                Code: <strong>{newCustomer.id}</strong>
               </p>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
