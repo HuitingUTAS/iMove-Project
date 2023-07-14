@@ -1,6 +1,7 @@
 import dotenv  from "dotenv"
 import mongoose from "mongoose"
 import { driverSchema } from "../models/Driver.js"
+import { cryptPwd } from "./UserController.js"
 
 dotenv.config() // load env file
 
