@@ -3,6 +3,7 @@ import { Dropdown, Table, Modal, Button, Container } from "react-bootstrap";
 import { GoogleMap, useLoadScript, InfoWindow } from "@react-google-maps/api";
 import { Icon } from "@iconify/react";
 import locationIcon from "@iconify/icons-mdi/map-marker";
+import { BASE_URL } from "../../../config";
 const containerStyle = {
   width: "400px",
   height: "400px",
@@ -12,47 +13,81 @@ const defaultCenter = {
   lat: -3.745,
   lng: -38.523,
 };
-const cars = ["Car 1", "Car 2", "Car 3", "Car 4"];
-const initialOrders = [
-  {
-    id: "Order 1",
-    address: "128 King street, Dynnyrne TAS 7005",
-    items: ["Item 1", "Item 2"],
-    parcelNumber: "Parcel 1",
-  },
-  {
-    id: "Order 2",
-    address: "1 Risdon road, New Town TAS 7008",
-    items: ["Item 3", "Item 4"],
-    parcelNumber: "Parcel 2",
-  },
-  {
-    id: "Order 3",
-    address: "Lower Domain road, Hobart TAS 7000",
-    items: ["Item 5", "Item 6"],
-    parcelNumber: "Parcel 3",
-  },
-];
+
 const libraries = ["places"];
 function TrackingPage() {
+  const [cars, setCars] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [selectedCar, setSelectedCar] = useState(null);
-  const [showMap, setShowMap] = useState(false);
-  const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showMap, setShowMap] = useState(false);
   const [map, setMap] = useState(null);
   const [showInfoWindow, setShowInfoWindow] = useState(false);
   const [infoWindowPosition, setInfoWindowPosition] = useState(null);
-  const [orders, setOrders] = useState([]);
+  const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY",
     libraries,
   });
   useEffect(() => {
+    const getCars = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/TrackingPage/GetCars`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setCars(data);
+        } else {
+          console.log("Failed to fetch car data");
+        }
+      } catch (error) {
+        console.log("Error occurred while fetching car data:", error);
+      }
+    };
+
+    getCars();
+  }, []);
+
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/TrackingPage/GetOrders/${selectedCar._id}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setOrders(data);
+          console.log("Updated Orders:", orders);
+        } else {
+          console.log("Failed to fetch order data");
+        }
+      } catch (error) {
+        console.log("Error occurred while fetching order data:", error);
+      }
+    };
+
+    if (selectedCar) {
+      getOrders();
+    }
+  }, [selectedCar]);
+
+  useEffect(() => {
+    // 当订单数据更新时执行其他逻辑
+    if (orders && orders.length > 0) {
+      console.log(
+        "Orders data has been fetched. Perform additional logic here."
+      );
+      // 其他操作...
+    }
+  }, [orders]);
+
+  useEffect(() => {
     // This code fetches the geocode for each address in the orders
     const fetchGeocodes = async () => {
       const newOrders = await Promise.all(
-        initialOrders.map(async (order) => {
+        orders.map(async (order) => {
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
               order.address
@@ -168,15 +203,21 @@ function TrackingPage() {
   return (
     <Container fluid>
       <h2 className="mt-5 pt-5">This is the Tracking Page</h2>
-      <Dropdown onSelect={(key) => setSelectedCar(cars[key])}>
+      <Dropdown
+        onSelect={(selectedCarId) => {
+          const selectedCar = cars.find((car) => car._id === selectedCarId);
+          console.log("Selected Car:", selectedCar);
+          setSelectedCar(selectedCar);
+        }}
+      >
         <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {selectedCar || "Select a car"}
+          {selectedCar ? selectedCar.registrationNumber : "Select a car"}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          {cars.map((car, index) => (
-            <Dropdown.Item key={index} eventKey={index}>
-              {car}
+          {cars.map((car) => (
+            <Dropdown.Item key={car._id} eventKey={car._id}>
+              {car.registrationNumber}
             </Dropdown.Item>
           ))}
         </Dropdown.Menu>
@@ -185,7 +226,7 @@ function TrackingPage() {
       {selectedCar && (
         <div>
           <h2>
-            {selectedCar} - Driver Name{" "}
+            {selectedCar.registrationNumber} - Driver Name{" "}
             <span className="map-icon" onClick={() => setShowMap(!showMap)}>
               <Icon icon={locationIcon} />
             </span>
@@ -202,21 +243,29 @@ function TrackingPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, index) => (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    setSelectedOrder(order);
-                    setShowOrderDetails(true);
-                  }}
-                >
-                  <td>{order.id}</td>
-                  <td>In progress</td>
-                  <td>
-                    Start Time： <br></br>End Time：
-                  </td>
+              {orders && orders.length > 0 ? (
+                orders.map((order, index) => (
+                  <tr
+                    key={index}
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setShowOrderDetails(true);
+                    }}
+                  >
+                    <td>{order.orderNumber}</td>
+                    <td>{order.shipmentStatus}</td>
+                    <td>
+                      Start Time：
+                      <br />
+                      End Time：
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="3">No orders available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </Table>
         </div>

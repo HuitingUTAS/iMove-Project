@@ -77,7 +77,15 @@ function LoginPage() {
           console.log("Login successful");
           localStorage.setItem("user", JSON.stringify(data.user));
           localStorage.setItem("role", selectedRole);
-          window.location.href = "/packer"; // 根据角色跳转到相应页面
+          if (selectedRole === "packer") {
+            window.location.href = "/packer";
+          } else if (selectedRole === "driver") {
+            window.location.href = "/driver";
+          } else if (selectedRole === "dispatcher") {
+            window.location.href = "/dispatcher";
+          } else if (selectedRole === "manager") {
+            window.location.href = "/manager";
+          }
         } else {
           // 登录失败，执行相应操作
           console.log("Login failed");
