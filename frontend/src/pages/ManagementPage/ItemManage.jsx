@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -11,100 +11,154 @@ import {
   DropdownButton,
   Modal,
 } from "react-bootstrap";
-
-const sampleItems = [
-  {
-    id: 1,
-    name: "Item 1",
-    weight: "5 kg",
-  },
-  {
-    id: 2,
-    name: "Item 2",
-    weight: "1 kg",
-  },
-  {
-    id: 3,
-    name: "Item 3",
-    weight: "2 kg",
-  },
-  {
-    id: 4,
-    name: "Item 4",
-    weight: "3 kg",
-  },
-  {
-    id: 5,
-    name: "Item 5",
-    weight: "4 kg",
-  },
-];
+import axios from "axios";
+import { BASE_URL } from "../../../config";
 function ItemManage() {
   const [search, setSearch] = useState("");
   const [editIndex, setEditIndex] = useState(null);
-  const [items, setItems] = useState(sampleItems);
+  const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [originalItem, setOriginalItem] = useState(null);
-  const [newItem, setNewItem] = useState({ id: "", name: "", weight: "" });
+  const [newItem, setNewItem] = useState({ uom: "", itemName: "", qty: "" });
   const handleSearchChange = (e) => {
-    if (e.target.value) {
-      setSearch(e.target.value.toLowerCase());
-    } else {
-      setSearch("");
+    setSearch(e.target.value);
+  };
+  const fetchItemData = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/ItemManagementPage/GetAllItems`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data);
+        console.log(data);
+      } else {
+        console.log("Error response:", response.status);
+      }
+    } catch (error) {
+      console.log("Error fetching order data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchItemData();
+  }, []);
+
   const filteredItems = items.filter((item) => {
-    const keyword = search.toLowerCase();
-    return (
-      item.name.toLowerCase().includes(keyword) ||
-      item.id.toString().toLowerCase().includes(keyword)
-    );
+    const keyword = search.trim();
+    const itemName = item.name || "";
+    const itemUom = item.uom || "";
+
+    const nameMatch = itemName.toLocaleLowerCase().includes(keyword);
+    const codeMatch = new RegExp(keyword, "i").test(itemUom);
+
+    return nameMatch || codeMatch;
   });
-  const handleAdd = () => {
-    if (newItem.name && parseFloat(newItem.weight) > 0) {
-      setItems([...items, newItem]);
-      setNewItem({ id: "", name: "", weight: "" });
-      setShowModal(false);
+  const handleAdd = async () => {
+    if (newItem.itemName && newItem.qty && newItem.uom) {
+      try {
+        const response = await fetch(`${BASE_URL}/DispatchPage/InsertingItem`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            uom: newItem.uom,
+            itemName: newItem.itemName,
+            qty: newItem.qty,
+          }),
+        });
+
+        if (response.ok) {
+          const addedItem = await response.json();
+          setItems([...items, addedItem]);
+          setNewItem({ uom: "", itemName: "", qty: "" });
+          setShowModal(false);
+        } else {
+          console.log("Error response:", response.status);
+        }
+      } catch (error) {
+        console.log("Error adding item:", error);
+      }
     } else {
-      alert("Please enter a name and a weight greater than 0.");
+      alert("Please enter a name and a weight.");
     }
   };
-  const handleEdit = (index) => {
-    setOriginalItem(JSON.parse(JSON.stringify(items[index])));
-    setEditIndex(index);
+  const handleEdit = (_id) => {
+    setOriginalItem(
+      JSON.parse(JSON.stringify(items.find((item) => item._id === _id)))
+    );
+    setEditIndex(_id);
   };
-  const handleNameChange = (e, index) => {
+  const handleNameChange = (e, _id) => {
     const newItems = [...items];
-    newItems[index].name = e.target.value;
+    const itemIndex = newItems.findIndex((item) => item._id === _id);
+    newItems[itemIndex].name = e.target.value;
     setItems(newItems);
   };
   const handleShowModal = () => {
-    const nextId = items.length > 0 ? items[items.length - 1].id + 1 : 1;
-    setNewItem({ ...newItem, id: nextId });
+    setNewItem({ ...newItem, uom: "", name: "", qty: "" });
     setShowModal(true);
   };
-  const handleWeightChange = (e, index) => {
-    let newWeight = parseFloat(e.target.value);
-    if (newWeight <= 0) {
+  const handleQtyChange = (e, _id) => {
+    let newQty = parseFloat(e.target.value);
+    if (newQty <= 0) {
       alert("Weight must be greater than 0.");
       return;
     }
     const newItems = [...items];
-    newItems[index].weight = newWeight + " kg";
+    const itemIndex = newItems.findIndex((item) => item._id === _id);
+    newItems[itemIndex].qty = newQty + " kg";
     setItems(newItems);
   };
-  const handleDelete = (index) => {
-    const newItems = items.filter((_, i) => i !== index);
-    setItems(newItems);
+  const handleDelete = (_id) => {
+    const selectedItem = items.find((item) => item._id === _id);
+    console.log(selectedItem._id);
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      axios
+        .delete(
+          `${BASE_URL}/ItemManagementPage/DeleteItem/${selectedItem._id}`,
+          {}
+        )
+        .then((response) => {
+          // 处理成功响应
+          console.log(response.data);
+          // 更新 customers 列表，从中删除已删除的 customer
+          const updatedItems = items.filter(
+            (item) => item._id !== selectedItem._id
+          );
+          setItems(updatedItems);
+        })
+        .catch((error) => {
+          // 处理错误
+          console.error(error);
+        });
+    }
   };
-  const handleConfirm = () => {
-    setEditIndex(null);
+  const handleConfirm = (_id) => {
+    const selectedItem = items.find((item) => item._id === _id);
+    console.log(selectedItem._id);
+    axios
+      .put(`${BASE_URL}/ItemManagementPage/EditItem`, {
+        _id: selectedItem._id,
+        ItemName: selectedItem.ItemName,
+        qty: selectedItem.qty,
+      })
+      .then((response) => {
+        // 处理成功响应
+        console.log(response.data);
+        setEditIndex(null);
+      })
+      .catch((error) => {
+        // 处理错误
+        console.error(error);
+      });
   };
   const handleCancel = (index) => {
     const newItems = [...items];
     newItems[index] = originalItem;
     setItems(newItems);
-    setEditIndex(null);
+    setEditItemId(null);
   };
   return (
     <div className="container-fluid">
@@ -129,28 +183,39 @@ function ItemManage() {
         <table className="table table-striped table-bordered table-hover table-responsive">
           <thead>
             <tr>
-              <th>ID</th>
+              <th>UOM</th>
               <th>Item Name</th>
               <th>Weight (kg)</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item, index) => {
-              const isEditing = editIndex === index;
+            {filteredItems.map((item) => {
+              const isEditing = editIndex === item._id;
               return (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
+                <tr key={item._id}>
                   <td>
                     {isEditing ? (
                       <input
                         type="text"
                         className="form-control"
-                        defaultValue={item.name}
-                        onChange={(e) => handleNameChange(e, index)}
+                        defaultValue={item.uom}
+                        onChange={(e) => handleNameChange(e, item._id)}
                       />
                     ) : (
-                      item.name
+                      item.uom
+                    )}
+                  </td>
+                  <td>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className="form-control"
+                        defaultValue={item.itemName}
+                        onChange={(e) => handleNameChange(e, item._id)}
+                      />
+                    ) : (
+                      item.itemName
                     )}
                   </td>
                   <td>
@@ -160,15 +225,15 @@ function ItemManage() {
                           type="number"
                           className="form-control"
                           min="0"
-                          defaultValue={parseFloat(item.weight)}
-                          onChange={(e) => handleWeightChange(e, index)}
+                          defaultValue={parseFloat(item.qty)}
+                          onChange={(e) => handleQtyChange(e, item._id)}
                         />
                         <div className="input-group-append">
                           <span className="input-group-text">kg</span>
                         </div>
                       </div>
                     ) : (
-                      item.weight
+                      item.qty
                     )}
                   </td>
                   <td>
@@ -176,13 +241,13 @@ function ItemManage() {
                       <>
                         <button
                           className="btn btn-success"
-                          onClick={handleConfirm}
+                          onClick={() => handleConfirm(item._id)}
                         >
                           Confirm
                         </button>
                         <button
                           className="btn btn-warning"
-                          onClick={() => handleCancel(index)}
+                          onClick={() => handleCancel(item._id)}
                         >
                           Cancel
                         </button>
@@ -191,13 +256,13 @@ function ItemManage() {
                       <>
                         <button
                           className="btn btn-primary"
-                          onClick={() => handleEdit(index)}
+                          onClick={() => handleEdit(item._id)}
                         >
                           Edit
                         </button>
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(index)}
+                          onClick={() => handleDelete(item._id)}
                         >
                           Delete
                         </button>
@@ -228,60 +293,75 @@ function ItemManage() {
                 <span>&times;</span>
               </button>
             </div>
-            <div className="modal-body">
-              <p>
-                Item ID: <strong>{newItem.id}</strong>
-              </p>
+
+            <div className="modal-body" onClick={(e) => e.stopPropagation()}>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
-                  <span className="input-group-text">Item Name</span>
+                  <span className="input-group-text">Item UOM</span>
                 </div>
                 <textarea
                   className="form-control"
-                  value={newItem.name}
+                  value={newItem.uom}
                   onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
+                    setNewItem({ ...newItem, uom: e.target.value })
                   }
                   rows="1"
                   style={{ resize: "none" }}
                 />
-              </div>
-              <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">Weight</span>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">Item Name</span>
+                  </div>
+                  <textarea
+                    className="form-control"
+                    value={newItem.itemName}
+                    onChange={(e) =>
+                      setNewItem({ ...newItem, itemName: e.target.value })
+                    }
+                    rows="1"
+                    style={{ resize: "none" }}
+                  />
                 </div>
-                <input
-                  type="number"
-                  className="form-control"
-                  min="0"
-                  value={parseFloat(newItem.weight)}
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      weight: parseFloat(e.target.value) + " kg",
-                    })
-                  }
-                />
-                <div className="input-group-append">
-                  <span className="input-group-text">kg</span>
+                <div
+                  className="input-group mb-3"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="input-group-prepend">
+                    <span className="input-group-text">Weight</span>
+                  </div>
+                  <input
+                    type="number"
+                    className="form-control"
+                    min="0"
+                    value={parseFloat(newItem.qty)}
+                    onChange={(e) =>
+                      setNewItem({
+                        ...newItem,
+                        qty: parseFloat(e.target.value) + " kg",
+                      })
+                    }
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text">kg</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleAdd}
-              >
-                Confirm
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={handleAdd}
+                >
+                  Confirm
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
