@@ -9,6 +9,7 @@ import {
   FormControl,
   Modal,
 } from "react-bootstrap";
+import axios from "axios";
 import { BASE_URL } from "../../../config";
 function CustomerManage() {
   const [search, setSearch] = useState("");
@@ -17,8 +18,8 @@ function CustomerManage() {
   const [originalCustomer, setOriginalCustomer] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
-    id: "",
-    name: "",
+    code: "",
+    companyName: "",
     address: "",
   });
   const fetchCustomerData = async () => {
@@ -26,6 +27,7 @@ function CustomerManage() {
       const response = await fetch(
         `${BASE_URL}/CustomerManagementPage/GetAllCustomers`
       );
+
       if (response.ok) {
         const data = await response.json();
         setCustomers(data);
@@ -45,47 +47,133 @@ function CustomerManage() {
     setSearch(e.target.value);
   };
   const filteredCustomers = customers.filter((customer) => {
-    const keyword = search;
-    const customerName = customer.name || "";
-    const customerId = customer.id ? customer.id.toString() : "";
-    return customerName.includes(keyword) || customerId.includes(keyword);
+    const keyword = search.trim();
+    const customerName = customer.companyName || "";
+    const customerCode = customer.code || "";
+
+    const nameMatch = customerName.toLocaleLowerCase().includes(keyword);
+    const codeMatch = new RegExp(keyword, "i").test(customerCode);
+
+    return nameMatch || codeMatch;
   });
-  const handleAdd = () => {
-    if (newCustomer.name && newCustomer.address) {
-      setCustomers([...customers, newCustomer]);
-      setNewCustomer({ id: "", name: "", address: "" });
-      setShowModal(false);
+  const handleAdd = async () => {
+    if (newCustomer.companyName && newCustomer.address) {
+      try {
+        const response = await fetch(
+          `${BASE_URL}/CustomerManagementPage/AddCustomer`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              code: newCustomer.code,
+              companyName: newCustomer.companyName,
+              address: newCustomer.address,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          const addedCustomer = await response.json();
+          setCustomers([...customers, addedCustomer]);
+          setNewCustomer({ code: "", companyName: "", address: "" });
+          setShowModal(false);
+        } else {
+          console.log("Error response:", response.status);
+        }
+      } catch (error) {
+        console.log("Error adding customer:", error);
+      }
     } else {
       alert("Please enter a name and an address.");
     }
   };
-  const handleEdit = (index) => {
-    setOriginalCustomer(JSON.parse(JSON.stringify(customers[index])));
-    setEditIndex(index);
+  const handleEdit = (_id) => {
+    setOriginalCustomer(
+      JSON.parse(
+        JSON.stringify(customers.find((customer) => customer._id === _id))
+      )
+    );
+    setEditIndex(_id);
   };
-  const handleNameChange = (e, index) => {
+  const handleCodeChange = (e, _id) => {
     const newCustomers = [...customers];
-    newCustomers[index].name = e.target.value;
+    const customerIndex = newCustomers.findIndex(
+      (customer) => customer._id === _id
+    );
+    newCustomers[customerIndex].code = e.target.value;
+    setCustomers(newCustomers);
+  };
+  const handleNameChange = (e, _id) => {
+    const newCustomers = [...customers];
+    const customerIndex = newCustomers.findIndex(
+      (customer) => customer._id === _id
+    );
+    newCustomers[customerIndex].companyName = e.target.value;
     setCustomers(newCustomers);
   };
   const handleShowModal = () => {
-    const nextId =
-      customers.length > 0 ? customers[customers.length - 1].id + 1 : 1; //set next id
-    setNewCustomer({ ...newCustomer, id: nextId });
+    setNewCustomer({ ...newCustomer, code: "", name: "", address: "" });
     setShowModal(true);
   };
-  const handleAddressChange = (e, index) => {
+  const handleAddressChange = (e, _id) => {
     const newCustomers = [...customers];
-    newCustomers[index].address = e.target.value;
+    const customerIndex = newCustomers.findIndex(
+      (customer) => customer._id === _id
+    );
+    newCustomers[customerIndex].address = e.target.value;
     setCustomers(newCustomers);
   };
-  const handleDelete = (index) => {
-    const newCustomers = customers.filter((_, i) => i !== index);
-    setCustomers(newCustomers);
+  const handleDelete = (code) => {
+    const selectedCustomer = customers.find(
+      (customer) => customer.code === code
+    );
+
+    if (window.confirm("Are you sure you want to delete this customer?")) {
+      axios
+        .delete(
+          `${BASE_URL}/CustomerManagementPage/DeleteCustomer/${selectedCustomer._id}`,
+          {}
+        )
+        .then((response) => {
+          // 处理成功响应
+          console.log(response.data);
+          // 更新 customers 列表，从中删除已删除的 customer
+          const updatedCustomers = customers.filter(
+            (customer) => customer._id !== selectedCustomer._id
+          );
+          setCustomers(updatedCustomers);
+        })
+        .catch((error) => {
+          // 处理错误
+          console.error(error);
+        });
+    }
   };
-  const handleConfirm = () => {
-    setEditIndex(null);
+
+  const handleConfirm = (code) => {
+    const selectedCustomer = customers.find(
+      (customer) => customer.code === code
+    );
+    axios
+      .put(`${BASE_URL}/CustomerManagementPage/EditCustomer`, {
+        _id: selectedCustomer._id,
+        code: selectedCustomer.code,
+        companyName: selectedCustomer.companyName,
+        address: selectedCustomer.address,
+      })
+      .then((response) => {
+        // 处理成功响应
+        console.log(response.data);
+        setEditIndex(null);
+      })
+      .catch((error) => {
+        // 处理错误
+        console.error(error);
+      });
   };
+
   const handleCancel = (index) => {
     const newCustomers = [...customers];
     newCustomers[index] = originalCustomer;
@@ -118,16 +206,25 @@ function CustomerManage() {
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map((customer, index) => {
-              const isEditing = editIndex === index;
+            {filteredCustomers.map((customer) => {
+              const isEditing = editIndex === customer._id;
               return (
                 <tr key={customer.code}>
-                  <td>{customer.code}</td>
+                  <td>
+                    {isEditing ? (
+                      <FormControl
+                        defaultValue={customer.code}
+                        onChange={(e) => handleCodeChange(e, customer._id)}
+                      />
+                    ) : (
+                      customer.code
+                    )}
+                  </td>
                   <td>
                     {isEditing ? (
                       <FormControl
                         defaultValue={customer.companyName}
-                        onChange={(e) => handleNameChange(e, index)}
+                        onChange={(e) => handleNameChange(e, customer._id)}
                       />
                     ) : (
                       customer.companyName
@@ -139,7 +236,7 @@ function CustomerManage() {
                         as="textarea"
                         rows={1}
                         defaultValue={customer.address}
-                        onChange={(e) => handleAddressChange(e, index)}
+                        onChange={(e) => handleAddressChange(e, customer._id)}
                       />
                     ) : (
                       customer.address
@@ -148,12 +245,15 @@ function CustomerManage() {
                   <td>
                     {isEditing ? (
                       <>
-                        <Button variant="success" onClick={handleConfirm}>
+                        <Button
+                          variant="success"
+                          onClick={() => handleConfirm(customer.code)}
+                        >
                           Confirm
                         </Button>
                         <Button
                           variant="warning"
-                          onClick={() => handleCancel(index)}
+                          onClick={() => handleCancel(customer._id)}
                         >
                           Cancel
                         </Button>
@@ -162,13 +262,13 @@ function CustomerManage() {
                       <>
                         <Button
                           variant="primary"
-                          onClick={() => handleEdit(index)}
+                          onClick={() => handleEdit(customer._id)}
                         >
                           Edit
                         </Button>
                         <Button
                           variant="danger"
-                          onClick={() => handleDelete(index)}
+                          onClick={() => handleDelete(customer.code)}
                         >
                           Delete
                         </Button>
@@ -195,18 +295,32 @@ function CustomerManage() {
               </button>
             </div>
             <div className="modal-body">
-              <p>
-                Code: <strong>{newCustomer.id}</strong>
-              </p>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">Code</span>
+                </div>
+                <textarea
+                  className="form-control"
+                  value={newCustomer.code}
+                  onChange={(e) =>
+                    setNewCustomer({ ...newCustomer, code: e.target.value })
+                  }
+                  rows="1"
+                  style={{ resize: "none" }}
+                />
+              </div>
               <div className="input-group mb-3">
                 <div className="input-group-prepend">
                   <span className="input-group-text">Customer Name</span>
                 </div>
                 <textarea
                   className="form-control"
-                  value={newCustomer.name}
+                  value={newCustomer.companyName}
                   onChange={(e) =>
-                    setNewCustomer({ ...newCustomer, name: e.target.value })
+                    setNewCustomer({
+                      ...newCustomer,
+                      companyName: e.target.value,
+                    })
                   }
                   rows="1"
                   style={{ resize: "none" }}
