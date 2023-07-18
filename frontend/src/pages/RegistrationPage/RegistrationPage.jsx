@@ -600,6 +600,7 @@ function RegistrationPage() {
                       name="isInsuranced"
                       id="isInsurancedNo"
                       value="no"
+                      onChange={handleIsInsurancedChange}
                     />
                     <label
                       className="form-check-label"

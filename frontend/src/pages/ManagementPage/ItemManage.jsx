@@ -55,7 +55,7 @@ function ItemManage() {
     return nameMatch || codeMatch;
   });
   const handleAdd = async () => {
-    if (newItem.itemName && newItem.qty && newItem.uom) {
+    if (newItem.itemName && newItem.qty) {
       try {
         const response = await fetch(`${BASE_URL}/DispatchPage/InsertingItem`, {
           method: "POST",
@@ -93,7 +93,7 @@ function ItemManage() {
   const handleNameChange = (e, _id) => {
     const newItems = [...items];
     const itemIndex = newItems.findIndex((item) => item._id === _id);
-    newItems[itemIndex].name = e.target.value;
+    newItems[itemIndex].itemName = e.target.value;
     setItems(newItems);
   };
   const handleShowModal = () => {
@@ -108,7 +108,7 @@ function ItemManage() {
     }
     const newItems = [...items];
     const itemIndex = newItems.findIndex((item) => item._id === _id);
-    newItems[itemIndex].qty = newQty + " kg";
+    newItems[itemIndex].qty = newQty;
     setItems(newItems);
   };
   const handleDelete = (_id) => {
@@ -141,7 +141,7 @@ function ItemManage() {
     axios
       .put(`${BASE_URL}/ItemManagementPage/EditItem`, {
         _id: selectedItem._id,
-        ItemName: selectedItem.ItemName,
+        itemName: selectedItem.itemName,
         qty: selectedItem.qty,
       })
       .then((response) => {
@@ -158,7 +158,7 @@ function ItemManage() {
     const newItems = [...items];
     newItems[index] = originalItem;
     setItems(newItems);
-    setEditItemId(null);
+    setEditIndex(null);
   };
   return (
     <div className="container-fluid">
@@ -225,7 +225,7 @@ function ItemManage() {
                           type="number"
                           className="form-control"
                           min="0"
-                          defaultValue={parseFloat(item.qty)}
+                          defaultValue={item.qty}
                           onChange={(e) => handleQtyChange(e, item._id)}
                         />
                         <div className="input-group-append">
@@ -333,11 +333,11 @@ function ItemManage() {
                     type="number"
                     className="form-control"
                     min="0"
-                    value={parseFloat(newItem.qty)}
+                    value={newItem.qty}
                     onChange={(e) =>
                       setNewItem({
                         ...newItem,
-                        qty: parseFloat(e.target.value) + " kg",
+                        qty: e.target.value,
                       })
                     }
                   />
