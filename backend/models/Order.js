@@ -2,11 +2,12 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const shipmentStatus = Object.freeze({
-    Prepared: 'prepared',
-    InProgress: 'inProgress',
-    Delivered: 'delivered',
-    Received: 'received',
+const orderStatus = Object.freeze({
+    1: 'unallocated',
+    2: 'allocated',
+    3: 'inProgress',
+    4: 'delivered',
+    5: '',
 });
 const currencyCode = Object.freeze({
     AUD: 'AUD',
@@ -29,7 +30,7 @@ const shipmentStatusSchema = new Schema(
 const orderStatusSchema = new Schema(
     { 
         status:{
-            type: String,
+            type: Number,
         },
         date: Date
     },

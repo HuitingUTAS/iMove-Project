@@ -72,7 +72,7 @@ export const getUnallocatedOrder = (req, res) => {
         },
         { 
             $match: { 
-                'lastOrderStatus.status': 'unallocated' 
+                'lastOrderStatus.status': 1 
             } 
         }
       ],
@@ -106,7 +106,7 @@ export const getAllocatedOrder = (req, res) => {
         },
         { 
             $match: { 
-                'lastOrderStatus.status': 'allocated' 
+                'lastOrderStatus.status': 2 
             } 
         }
       ],
