@@ -992,6 +992,7 @@ Get different orders' information
 ## URL
 
 Get order's information: `/PackerPage/{OrderID}`
+
 - `OrderID`: string
 
 ## method
@@ -1115,6 +1116,7 @@ delete the selected customer
 ## URL
 
 delete customer: `/CustomerManagementPage/DeleteCustomer/{CustomerID}`
+
 - `CustomerID`: string, delete customer
 
 ## method
@@ -1211,6 +1213,7 @@ delete the selected Item
 ## URL
 
 delete customer: `/ItemManagementPage/DeleteItem/{ItemID}`
+
 - `ItemID`: string, delete customer
 
 ## method
@@ -1256,6 +1259,7 @@ Get all orders of each car
 ## URL
 
 Get orders of each car: `/TrackingPage/GetOrders/{CarID}`
+
 - `CarID`: string
 
 ## method
@@ -1304,6 +1308,7 @@ get the orders' information for one driver
 ## URL
 
 get the orders' information: `/DriverPage/GetOrders/{DriverID}`
+
 - `DriverID` : string
 
 ## Method
@@ -1383,3 +1388,25 @@ upload file: POST
 
 - `orderID`: string
 - `file`: binary, (the photo to upload)
+
+## API name
+
+fetch Address API
+
+## aim
+
+fetch customer information when the order is known
+
+## URL
+
+fetch customer: `/TrackingPage/FetchCustomer/{orderID}`
+
+## method
+
+fetch customer: GET
+
+## Data Params
+
+fetch customer:
+
+- `orderID`
