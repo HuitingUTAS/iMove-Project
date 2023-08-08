@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dropdown, Table, Modal, Button, Container } from "react-bootstrap";
 import { GoogleMap, useLoadScript, InfoWindow } from "@react-google-maps/api";
 import { Icon } from "@iconify/react";
 import locationIcon from "@iconify/icons-mdi/map-marker";
+// import useCars from "./getCars";
+// import useOrders from "./getOrders";
+// import fetchGeocodes from "./fetchGeocodes";
 import { BASE_URL } from "../../../config";
 const containerStyle = {
   width: "400px",
@@ -16,8 +19,8 @@ const defaultCenter = {
 
 const libraries = ["places"];
 function TrackingPage() {
-  const [cars, setCars] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [cars, setCars] = useState([]);
   const [selectedCar, setSelectedCar] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showMap, setShowMap] = useState(false);
@@ -26,10 +29,12 @@ function TrackingPage() {
   const [infoWindowPosition, setInfoWindowPosition] = useState(null);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
   const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [geocodes, setGeocodes] = useState([]);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY",
     libraries,
   });
+
   useEffect(() => {
     const getCars = async () => {
       try {
@@ -58,8 +63,7 @@ function TrackingPage() {
         if (response.ok) {
           const data = await response.json();
           console.log(data);
-          setOrders(data);
-          console.log("Updated Orders:", orders);
+          setOrders([data]);
         } else {
           console.log("Failed to fetch order data");
         }
@@ -73,15 +77,9 @@ function TrackingPage() {
     }
   }, [selectedCar]);
 
-  useEffect(() => {
-    // 当订单数据更新时执行其他逻辑
-    if (orders && orders.length > 0) {
-      console.log(
-        "Orders data has been fetched. Perform additional logic here."
-      );
-      // 其他操作...
-    }
-  }, [orders]);
+  // useEffect(() => {
+  //   console.log("Updated Orders:", orders);
+  // }, [orders]);
 
   useEffect(() => {
     // This code fetches the geocode for each address in the orders
@@ -133,7 +131,7 @@ function TrackingPage() {
         const marker = new window.google.maps.Marker({
           position: order.location,
           map,
-          title: `This is order: ${order.id}`,
+          title: `This is order: ${order._id}`,
         });
 
         marker.addListener("click", () => {
@@ -200,6 +198,7 @@ function TrackingPage() {
     console.error("Google Maps API load error:", loadError);
     return <div>Error loading Google Maps API</div>;
   }
+  console.log("update", orders);
   return (
     <Container fluid>
       <h2 className="mt-5 pt-5">This is the Tracking Page</h2>
@@ -243,17 +242,19 @@ function TrackingPage() {
               </tr>
             </thead>
             <tbody>
-              {orders && orders.length > 0 ? (
-                orders.map((order, index) => (
+              {orders.length > 0 ? (
+                orders.map((order) => (
                   <tr
-                    key={index}
+                    key={order._id}
                     onClick={() => {
                       setSelectedOrder(order);
                       setShowOrderDetails(true);
                     }}
                   >
                     <td>{order.orderNumber}</td>
-                    <td>{order.shipmentStatus}</td>
+                    <td>
+                      {order.shipmentStatus.map((status) => `${status.status}`)}
+                    </td>
                     <td>
                       Start Time：
                       <br />
@@ -279,7 +280,7 @@ function TrackingPage() {
           {selectedOrder && (
             <div>
               <p>
-                <b>Order ID:</b> {selectedOrder.id}
+                <b>Order ID:</b> {selectedOrder._id}
               </p>
               <p>
                 <b>Address:</b> {selectedOrder.address}

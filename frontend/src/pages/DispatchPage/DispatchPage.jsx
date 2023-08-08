@@ -19,6 +19,7 @@ function DispatchPage() {
           `${BASE_URL}/DispatchPage/FetchUnallocatedOrder`
         );
         setUnallocatedOrders(response.data);
+        console.log(response.data);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
