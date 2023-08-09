@@ -14,19 +14,6 @@ const currencyCode = Object.freeze({
     USD: 'USD',
 });
 
-const shipmentStatusSchema = new Schema(
-    { 
-        status:{
-            type: String,
-            enum: Object.values(shipmentStatus),
-        },
-        date: Date
-    },
-    {
-        _id: false
-    }
-)
-
 const orderStatusSchema = new Schema(
     { 
         status:{
@@ -52,9 +39,6 @@ export const orderSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    shipmentStatus:[
-        shipmentStatusSchema
-    ],
     orderStatus:[
         orderStatusSchema
     ],
@@ -98,5 +82,5 @@ export const orderSchema = new Schema({
 
 //Refre: https://rclayton.silvrback.com/export-enumerations-as-static-mongoose-properties
 Object.assign(orderSchema.statics, {
-    shipmentStatus, currencyCode
+    currencyCode
 });

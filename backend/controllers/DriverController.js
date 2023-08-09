@@ -8,6 +8,20 @@ dotenv.config() // load env file
 const Driver = mongoose.model("Driver", driverSchema);
 
 
+export const getAllDrivers = (req, res) => {
+    Driver.find({} ,
+    function(err, driver) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(driver)
+        }
+    });
+};
+
 export const getDriverByNumber = (req, res) => {
     Driver.find({ name:{$regex : new RegExp(req.params.DriverName, 'i')}} ,
     function(err, driver) {

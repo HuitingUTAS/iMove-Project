@@ -8,6 +8,20 @@ dotenv.config() // load env file
 const Packer = mongoose.model("Packer", packerSchema);
 
 
+export const getAllPackers = (req, res) => {
+    Packer.find({} ,
+    function(err, packer) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(packer)
+        }
+    });
+};
+
 export const getPackerByName = (req, res) => {
     Packer.find({ name:{$regex : new RegExp(req.params.PackerName, 'i')}} ,
     function(err, packer) {

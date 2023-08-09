@@ -7,6 +7,20 @@ dotenv.config() // load env file
 const Car = mongoose.model("Car", carSchema);
 
 
+export const getAllCars = (req, res) => {
+    Car.find({ } ,
+    function(err, car) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(car)
+        }
+    });
+};
+
 export const getCarByRegistrationNumber = (req, res) => {
     Car.find({ registrationNumber:{$regex : new RegExp(req.params.RegistrationNumber, 'i')}} ,
     function(err, car) {

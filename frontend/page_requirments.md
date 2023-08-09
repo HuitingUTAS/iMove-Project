@@ -227,6 +227,34 @@ Inserted order:
        - `message`: string, successful message
        - `OrderID`: string , it will be the attribute to be added into orderitem collection
 
+# Fetching All Cars API (Done)
+
+## API Name
+
+FetchingAllCars
+
+## Aim
+
+## URL
+
+`/CarManagement/FetchingAllCars/`
+
+## Method
+
+Fetching Car: GET
+
+## Data Params
+
+None
+
+## Success Response
+
+Fetching Cars:
+
+- Code: 200
+- Content: JSON，including all fetched cars
+
+
 # 8. Fetching Car API Requirement (Done)
 
 ## API Name
@@ -362,6 +390,35 @@ Deleting Car:
 - Code: 200
      - Content: JSON，including：
        - `message`: string, successful message
+
+# Fetching All Drivers API (Done)
+
+## API Name
+
+FetchingAllDrivers
+
+## Aim
+
+Retrieving driver information from Drivers collection.
+
+## URL
+
+`/DriverManagement/FetchingAllDrivers`
+
+## Method
+
+Fetching Driver: GET
+
+## Data Params
+
+None
+
+## Success Response
+
+Fetching Drivers:
+
+- Code: 200
+- Content: JSON，including all fetched drivers
 
 # 12. Fetching Driver API Requirement (Done)
 
@@ -535,6 +592,35 @@ Deleting Driver:
      - Content: JSON，including：
        - `message`: string, successful message
 
+# Fetching All Dispatchers API (Done)
+
+## API Name
+
+FetchingAllDispatchers
+
+## Aim
+
+Retrieving dispatcher information from Dispatchers collection.
+
+## URL
+
+`/DispatcherManagement/FetchingAllDispatchers`
+
+## Method
+
+Fetching Dispatcher: GET
+
+## Data Params
+
+None
+
+## Success Response
+
+Fetching Dispatchers:
+
+- Code: 200
+- Content: JSON，including all fetched Dispatchers
+
 # 16. Fetching Dispatcher API Requirement (Done)
 
 ## API Name
@@ -698,6 +784,35 @@ Deleting Dispatcher:
 - Code: 200
      - Content: JSON，including：
        - `message`: string, successful message
+
+# Fetching All Packers API (Done)
+
+## API Name
+
+FetchingAllPackers
+
+## Aim
+
+Retrieving packer information from packers collection By name
+
+## URL
+
+`/PackerManagement/FetchingAllPackers`
+
+## Method
+
+Fetching Packer: GET
+
+## Data Params
+
+None
+
+## Success Response
+
+Fetching Packers:
+
+- Code: 200
+- Content: JSON，including all fetched Packers
 
 # 20. Fetching Packer API Requirement (Done)
 

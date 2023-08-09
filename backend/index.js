@@ -4,10 +4,10 @@ import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
 import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderShipmentStatus } from "./controllers/OrderController.js"
 import { createItem, deleteItem, getAllItems, updateItem } from "./controllers/ItemController.js"
-import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliableCars } from "./controllers/CarController.js"
-import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver } from "./controllers/DriverController.js"
-import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher } from "./controllers/DispatcherController.js"
-import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker } from "./controllers/PackerController.js"
+import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliableCars, getAllCars } from "./controllers/CarController.js"
+import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver, getAllDrivers } from "./controllers/DriverController.js"
+import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher, getAllDispatchers } from "./controllers/DispatcherController.js"
+import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker, getAllPackers } from "./controllers/PackerController.js"
 import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager } from "./controllers/ManagerController.js"
 import { createCustomer, deleteCustomer, getAllCustomers, updateCustomer } from "./controllers/CustomerController.js"
 import mongoose from "mongoose"
@@ -54,23 +54,27 @@ app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
 
 app.post("/DispatchPage/InsertingItem", createItem)
 
+app.get("/CarManagement/FetchingAllCars", getAllCars)
 app.get("/CarManagement/FetchingCar/:RegistrationNumber", getCarByRegistrationNumber)
 app.put("/CarManagement/UpdatingCar", updateCar)
 app.post("/RegistrationPage/car", createCar)
 app.delete("/CarManagement/DeletingCar/:CarID", deleteCar)
 
+app.get("/DriverManagement/FetchingAllDrivers", getAllDrivers)
 app.get("/DriverManagement/FetchingDriver/:DriverName", getDriverByNumber)
 app.put("/DriverManagement/UpdatingDriver", updateDriver)
 app.put("/DriverManagement/UpdatingDriverPassword", updateDriverPassword)
 app.post("/RegistrationPage/driver", createDriver)
 app.delete("/DriverManagement/DeletingDriver/:DriverID", deleteDriver)
 
+app.get("/DispatcherManagement/FetchingAllDispatchers", getAllDispatchers)
 app.get("/DispatcherManagement/FetchingDispatcher/:DispatcherName", getDispatcherByNumber)
 app.put("/DispatcherManagement/UpdatingDispatcher", updateDispatcher)
 app.put("/DispatcherManagement/UpdatingDispatcherPassword", updateDispatcherPassword)
 app.post("/RegistrationPage/dispatcher", createDispatcher)
 app.delete("/DispatcherManagement/DeletingDispatcher/:DispatcherID", deleteDispatcher)
 
+app.get("/PackerManagement/FetchingAllPackers", getAllPackers)
 app.get("/PackerManagement/FetchingPacker/:PackerName", getPackerByName)
 app.put("/PackerManagement/UpdatingPacker", updatePacker)
 app.put("/PackerManagement/UpdatingPackerPassword", updatePackerPassword)

@@ -8,6 +8,20 @@ dotenv.config() // load env file
 const Dispatcher = mongoose.model("Dispatcher", dispatcherSchema);
 
 
+export const getAllDispatchers = (req, res) => {
+    Dispatcher.find({} ,
+    function(err, dispatcher) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(dispatcher)
+        }
+    });
+};
+
 export const getDispatcherByNumber = (req, res) => {
     Dispatcher.find({ name:{$regex : new RegExp(req.params.DispatcherName, 'i')}} ,
     function(err, dispatcher) {
