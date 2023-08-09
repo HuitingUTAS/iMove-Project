@@ -7,10 +7,40 @@ dotenv.config() // load env file
 
 const Order = mongoose.model("Order", orderSchema);
 const OrderItem = mongoose.model("OrderItem", orderItemSchema);
+const ObjectId = mongoose.Types.ObjectId;
 
 
 export const getOrderByID = (req, res) => {
-    Order.findOne({ "_id": req.params.OrderID },
+    Order.aggregate([
+        { $match: { "_id": ObjectId(req.params.OrderID) } },
+        { $lookup:
+            {
+                from: "customers",
+                localField: "customer",
+                foreignField: "_id",
+                as: "customer"
+            }
+        },
+        { $unwind: "$customer" },
+        { $lookup:
+            {
+                from: "cars",
+                localField: "car",
+                foreignField: "_id",
+                as: "car"
+            }
+        },
+        { $unwind: "$car" },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
     function(err, orders) {
         if (err) {
             res.status(400).json({
@@ -23,7 +53,36 @@ export const getOrderByID = (req, res) => {
 }
 
 export const getOrderByOrderNumber = (req, res) => {
-    Order.findOne({ "orderNumber": req.params.orderNumber },
+    Order.aggregate([
+        { $match: { "orderNumber": req.params.orderNumber } },
+        { $lookup:
+            {
+                from: "customers",
+                localField: "customer",
+                foreignField: "_id",
+                as: "customer"
+            }
+        },
+        { $unwind: "$customer" },
+        { $lookup:
+            {
+                from: "cars",
+                localField: "car",
+                foreignField: "_id",
+                as: "car"
+            }
+        },
+        { $unwind: "$car" },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
     function(err, orders) {
         if (err) {
             res.status(400).json({
@@ -36,7 +95,36 @@ export const getOrderByOrderNumber = (req, res) => {
 }
 
 export const getOrderByCar = (req, res) => {
-    Order.findOne({ "car": req.params.CarID },
+    Order.aggregate([
+        { $match: { "car": ObjectId(req.params.CarID) } },
+        { $lookup:
+            {
+                from: "customers",
+                localField: "customer",
+                foreignField: "_id",
+                as: "customer"
+            }
+        },
+        { $unwind: "$customer" },
+        { $lookup:
+            {
+                from: "cars",
+                localField: "car",
+                foreignField: "_id",
+                as: "car"
+            }
+        },
+        { $unwind: "$car" },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
     function(err, orders) {
         if (err) {
             res.status(400).json({
@@ -49,7 +137,36 @@ export const getOrderByCar = (req, res) => {
 }
 
 export const getOrderByDriver = (req, res) => {
-    Order.findOne({ "driver": req.params.DriverID },
+    Order.aggregate([
+        { $match: { "driver": ObjectId(req.params.DriverID) } },
+        { $lookup:
+            {
+                from: "customers",
+                localField: "customer",
+                foreignField: "_id",
+                as: "customer"
+            }
+        },
+        { $unwind: "$customer" },
+        { $lookup:
+            {
+                from: "cars",
+                localField: "car",
+                foreignField: "_id",
+                as: "car"
+            }
+        },
+        { $unwind: "$car" },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
     function(err, orders) {
         if (err) {
             res.status(400).json({
