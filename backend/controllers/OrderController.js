@@ -250,7 +250,7 @@ export const updateOrder = (req, res) => {
     })
 }
 
-export const updateOrderShipmentStatus = (req, res) => {
+export const updateOrderStatus = (req, res) => {
     const newDate = new Date().toLocaleString('en-US', {
         timeZone: process.env.TZ
     });
@@ -258,7 +258,7 @@ export const updateOrderShipmentStatus = (req, res) => {
 
     Order.updateOne(
         { _id: req.body._id },
-        { $push: { shipmentStatus: status } },
+        { $push: { orderStatus: status } },
         (err, order) => {
             if (err) {
                 res.status(400).json({

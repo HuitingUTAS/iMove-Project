@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
-import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderShipmentStatus } from "./controllers/OrderController.js"
+import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderStatus } from "./controllers/OrderController.js"
 import { createItem, deleteItem, getAllItems, updateItem } from "./controllers/ItemController.js"
 import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliableCars, getAllCars } from "./controllers/CarController.js"
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver, getAllDrivers } from "./controllers/DriverController.js"
@@ -103,7 +103,12 @@ app.get("/TrackingPage/GetCars", getAvaliableCars)
 app.get("/TrackingPage/GetOrders/:CarID", getOrderByCar)
 
 app.get("/DriverPage/GetOrders/:DriverID", getOrderByDriver)
-app.put("/DriverPage/UpdateStatus", updateOrderShipmentStatus)
+app.put("/DriverPage/UpdateStatus", updateOrderStatus)
+
+// Mobile App API
+app.post("/login", loginUser)
+app.get("/orders/driver/:DriverID", getOrderByDriver)
+app.get("/orders/:OrderID", getOrderByID)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)
