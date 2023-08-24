@@ -39,6 +39,13 @@ export const orderSchema = new Schema({
         type: Date,
         default: Date.now()
     },
+    startTime: {
+        type: Date,
+        default: Date.now()
+    },
+    endTime: {
+        type: Date,
+    },
     orderStatus:[
         orderStatusSchema
     ],
