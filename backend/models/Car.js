@@ -30,4 +30,8 @@ export const carSchema = new Schema({
     status: {
         type: String,
     },
+    driver: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Driver' 
+    },
 })
