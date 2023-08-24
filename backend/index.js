@@ -109,6 +109,8 @@ app.put("/DriverPage/UpdateStatus", updateOrderStatus)
 app.post("/login", loginUser)
 app.get("/orders/driver/:DriverID", getOrderByDriver)
 app.get("/orders/:OrderID", getOrderByID)
+app.post("/orders/status", updateOrderStatus)
+app.post("/drivers/location/update", updateDriver)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)
