@@ -117,7 +117,7 @@ function CarManage() {
     try {
       const response = await axios.put(
         `${BASE_URL}/CarManagement/UpdatingCar`,
-        editedData // Send only the edited data for the specific carID
+        editedData[carID] // Send only the edited data for the specific carID
       );
 
       console.log("Updated car:", response.data);
@@ -297,7 +297,7 @@ function CarManage() {
                   <>
                     <Button
                       variant="success"
-                      onClick={() => handleConfirm(car._id)}
+                      onClick={() => handleConfirm(index)}
                     >
                       Confirm
                     </Button>
