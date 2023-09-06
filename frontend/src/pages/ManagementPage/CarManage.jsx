@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Table,
+  FormControl,
+  Dropdown,
+} from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
@@ -8,11 +16,14 @@ function CarManage() {
   const [searchCarID, setSearchCarID] = useState(
     `${BASE_URL}/CarManagement/FetchingCar/123`
   );
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState("-1"); // representing no row is being edited
+  const [editedData, setEditedData] = useState({}); // to hold edited data
+  const [drivers, setDrivers] = useState([]); // Store the list of drivers from the database
 
   //Initialization page
   useEffect(() => {
     fetchData();
+    fetchDrivers();
   }, []);
 
   // Fetching car data from MangoDB
@@ -21,16 +32,43 @@ function CarManage() {
       const response = await axios.get(searchCarID);
       setCarData(response.data);
       // console.log("search car ID:", searchCarID);
-      // console.log("fetched car: ", carData);
+      console.log("fetched car: ", carData);
     } catch (error) {
       console.log("Error fetching data:", error.message);
       // alert(error.message);
     }
   };
 
+  //Fetching driver information
+  const fetchDrivers = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/DriverManagement/FetchingAllDrivers`
+      );
+      setDrivers(response.data);
+    } catch (error) {
+      console.log("Error fetching drivers:", error.message);
+    }
+  };
+
+  //
+  const handleDriverSelect = (index, selectedDriver) => {
+    const updatedCarData = [...carData];
+    updatedCarData[index].driver.username = selectedDriver;
+
+    setCarData(updatedCarData);
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [index]: {
+        ...prevEditedData[index],
+        driver: { username: selectedDriver },
+      },
+    }));
+  };
+
   const handleEditCar = (carID) => {
     // Code to handle editing a car entry based on carID
-    setIsEditing(true);
+    setIsEditing(carID);
     console.log("Editing car:", carID);
   };
 
@@ -39,16 +77,61 @@ function CarManage() {
     console.log("Deleting car:", carID);
   };
 
-  //confirming updated car
-  const handleConfirm = () => {
-    console.log("confirm updating");
-    setIsEditing(false);
-  };
-
   // cancling change
 
   const handleCancel = (index) => {
-    setIsEditing(false);
+    setIsEditing("-1");
+  };
+
+  // updating if there is any change
+  const handleChange = (e, index, field) => {
+    const { value } = e.target;
+    const updatedCarData = [...carData];
+    const editedCar = { ...editedData[index] }; // Get the edited data for the specific row
+
+    if (field === "driverUsername") {
+      console.log("changing drivername:", value);
+      console.log("updatedCarData: ", updatedCarData[index]);
+      updatedCarData[index].driver.username = value;
+      editedCar.driver.username = value; // Update the edited driver username
+    } else {
+      updatedCarData[index][field] = value;
+      editedCar[field] = value; // Update the edited field
+    }
+    editedCar["_id"] = carData[index]["_id"]; // updated car's id
+    setCarData(updatedCarData);
+
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [index]: editedCar, // Update the edited data for the specific row
+    }));
+
+    console.log("changed data:", updatedCarData);
+  };
+
+  //confirming updated car
+  const handleConfirm = async (carID) => {
+    console.log("----------------------------------");
+    console.log("confirmed edited data", editedData);
+    console.log("editedData carID:", editedData[carID]);
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/CarManagement/UpdatingCar`,
+        editedData // Send only the edited data for the specific carID
+      );
+
+      console.log("Updated car:", response.data);
+
+      // Clear edited data and reset editing state
+      setEditedData((prevEditedData) => ({
+        ...prevEditedData,
+        [carID]: {}, // Clear the edited data for the specific carID
+      }));
+      setIsEditing("-1");
+      fetchData();
+    } catch (error) {
+      console.log("Error updating car:", error.message);
+    }
   };
 
   return (
@@ -56,7 +139,7 @@ function CarManage() {
       <Form onSubmit={() => {}}>
         <Row className="align-items-center">
           <Col xs="auto">
-            <Form.Label className="mr-sm-4">Registration Number</Form.Label>
+            <Form.Label className="mr-sm-4">Rego Plate</Form.Label>
           </Col>
           <Col xs={2}>
             <Form.Control
@@ -84,11 +167,11 @@ function CarManage() {
           <tr>
             <th>Make</th>
             <th>Model</th>
-            <th>Type</th>
-            <th>Registration Number</th>
+            <th>Rego Plate</th>
             <th>Volume</th>
-            <th>Has Fridge</th>
-            <th>Is Insuranced</th>
+            <th>Fridge</th>
+            <th>Insuranced</th>
+            <th>Driver</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
@@ -97,72 +180,62 @@ function CarManage() {
           {carData.map((car, index) => (
             <tr key={index}>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.make}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "make")}
                   />
                 ) : (
                   car.make
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.model}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "model")}
                   />
                 ) : (
                   car.model
                 )}
               </td>
               <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={car.type}
-                    onChange={(e) => handleChange(e, index)}
-                  />
-                ) : (
-                  car.type
-                )}
-              </td>
-              <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.registrationNumber}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) =>
+                      handleChange(e, index, "registrationNumber")
+                    }
                   />
                 ) : (
                   car.registrationNumber
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.volume}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "volume")}
                   />
                 ) : (
                   car.volume
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.hasFridge}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "hasFridge")}
                   />
                 ) : car.hasFridge ? (
                   "ture"
@@ -171,12 +244,12 @@ function CarManage() {
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.isInsuranced}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "isInsuranced")}
                   />
                 ) : car.isInsuranced ? (
                   "ture"
@@ -185,21 +258,47 @@ function CarManage() {
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
+                  <Dropdown>
+                    <Dropdown.Toggle id="driver-dropdown">
+                      {car.driver.username}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      {drivers.map((driver) => (
+                        <Dropdown.Item
+                          key={driver._id}
+                          onClick={() =>
+                            handleDriverSelect(index, driver.username)
+                          }
+                        >
+                          {driver.username}
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                ) : (
+                  car.driver.username
+                )}
+              </td>
+              <td>
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={car.status}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "status")}
                   />
                 ) : (
                   car.status
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <>
-                    <Button variant="success" onClick={handleConfirm}>
+                    <Button
+                      variant="success"
+                      onClick={() => handleConfirm(car._id)}
+                    >
                       Confirm
                     </Button>
                     <Button
