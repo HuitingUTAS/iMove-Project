@@ -250,7 +250,7 @@ function TrackingPage() {
                   >
                     <td>{order.orderNumber}</td>
                     <td>
-                      {order.shipmentStatus.map((shipment, index) => (
+                      {order.orderStatus.map((shipment, index) => (
                         <div key={index}>{shipment.status}</div>
                       ))}
                     </td>
