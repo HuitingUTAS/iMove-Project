@@ -2,6 +2,20 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
+const locationSchema = new Schema(
+    { 
+        lat:{
+            type: Number,
+        },
+        lng:{
+            type: Number,
+        },
+    },
+    {
+        _id: false
+    }
+)
+
 export const driverSchema = new Schema({
     username: {
         type: String,
@@ -39,4 +53,10 @@ export const driverSchema = new Schema({
     status: {
         type: String,
     },
+    location: {
+        type: locationSchema,
+    },
+    
+
+    
 })

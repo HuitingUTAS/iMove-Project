@@ -95,8 +95,8 @@ export const loginUser = async(req, res) => {
                 resContent['message'] = 'login successfully';
                 resContent['user'] = foundUser;
             }
-            res.send(resContent);
         }
+        res.send(resContent);
 
     } catch (err) {
         res.status(400).json({

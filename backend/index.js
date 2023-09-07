@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv  from "dotenv"
 import { loginUser, getPwd } from "./controllers/UserController.js"
-import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderStatus } from "./controllers/OrderController.js"
+import { getOrderByOrderNumber, getUnallocatedOrder, getAllocatedOrder, getOrderByID, updateOrder, getOrderByDriver, getOrderByCar, updateOrderStatus, createBatchOrders } from "./controllers/OrderController.js"
 import { createItem, deleteItem, getAllItems, updateItem } from "./controllers/ItemController.js"
 import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliableCars, getAllCars } from "./controllers/CarController.js"
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver, getAllDrivers } from "./controllers/DriverController.js"
@@ -51,6 +51,7 @@ app.get("/order/:orderNumber", getOrderByOrderNumber)
 app.get("/DispatchPage/FetchUnallocatedOrder", getUnallocatedOrder)
 
 app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
+app.post("/DispatchPage/InsertingOrder", createBatchOrders)
 
 app.post("/DispatchPage/InsertingItem", createItem)
 
@@ -109,6 +110,8 @@ app.put("/DriverPage/UpdateStatus", updateOrderStatus)
 app.post("/login", loginUser)
 app.get("/orders/driver/:DriverID", getOrderByDriver)
 app.get("/orders/:OrderID", getOrderByID)
+app.post("/orders/status", updateOrderStatus)
+app.post("/drivers/location/update", updateDriver)
 
 app.listen(port, () => {
     console.log(`iMove Backend is listening on port: ${port}`)

@@ -26,6 +26,23 @@ const orderStatusSchema = new Schema(
     }
 )
 
+const itemsSchema = new Schema(
+    { 
+        itemName:{
+            type: String,
+        },
+        UOM:{
+            type: String,
+        },
+        quantity:{
+            type: Number,
+        },
+    },
+    {
+        _id: false
+    }
+)
+
 export const orderSchema = new Schema({
     orderNumber: {
         type: String,
@@ -33,14 +50,23 @@ export const orderSchema = new Schema({
     },
     consignmentID: {
         type: String,
-        required: "consignmentID is required."
     },
     createDate: {
         type: Date,
         default: Date.now()
     },
+    startTime: {
+        type: Date,
+        default: Date.now()
+    },
+    endTime: {
+        type: Date,
+    },
     orderStatus:[
         orderStatusSchema
+    ],
+    items:[
+        itemsSchema
     ],
     currencyCode: {
         type: String,

@@ -8,43 +8,72 @@ const Car = mongoose.model("Car", carSchema);
 
 
 export const getAllCars = (req, res) => {
-    Car.find({ } ,
-    function(err, car) {
+    Car.aggregate([
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
+    function(err, cars) {
         if (err) {
             res.status(400).json({
                 message: err.toString()
             })
-        }
-        else {
-            res.send(car)
+        } else {
+            res.send(cars)
         }
     });
 };
 
 export const getCarByRegistrationNumber = (req, res) => {
-    Car.find({ registrationNumber:{$regex : new RegExp(req.params.RegistrationNumber, 'i')}} ,
-    function(err, car) {
+    Car.aggregate([
+        { $match: { registrationNumber:{$regex : new RegExp(req.params.RegistrationNumber, 'i')} } },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
+    function(err, cars) {
         if (err) {
             res.status(400).json({
                 message: err.toString()
             })
-        }
-        else {
-            res.send(car)
+        } else {
+            res.send(cars)
         }
     });
 };
 
 export const getAvaliableCars = (req, res) => {
-    Car.find({ status: 'available'} ,
-    function(err, car) {
+    Car.aggregate([
+        { $match: { status: 'available' } },
+        { $lookup:
+            {
+                from: "drivers",
+                localField: "driver",
+                foreignField: "_id",
+                as: "driver"
+            }
+        },
+        { $unwind: "$driver" },
+    ],
+    function(err, cars) {
         if (err) {
             res.status(400).json({
                 message: err.toString()
             })
-        }
-        else {
-            res.send(car)
+        } else {
+            res.send(cars)
         }
     });
 };

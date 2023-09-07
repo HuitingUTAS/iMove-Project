@@ -217,6 +217,8 @@ Adding order:
        `Requirement`, string
        `Fridge`, boolean //true or false
        `DeliverDate`, string
+       `OrderStatus`, Arry // status: 1
+    `Items`, Arry itemName, String ; UOM, String; Quantity : Int
 
 ## Success Response
 
@@ -253,7 +255,6 @@ Fetching Cars:
 
 - Code: 200
 - Content: JSON，including all fetched cars
-
 
 # 8. Fetching Car API Requirement (Done)
 

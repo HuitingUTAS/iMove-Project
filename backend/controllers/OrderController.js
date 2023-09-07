@@ -238,6 +238,20 @@ export const getAllocatedOrder = (req, res) => {
       });
 }
 
+export const createBatchOrders = (req, res) => {
+    let newOrder = new Order(req.body)
+    newOrder.save()
+        .then(order => {
+            res.send(order)
+        })
+        .catch(err => {
+            res.status(400).json({
+                message: err.toString()
+            });
+        })
+};
+
+
 export const updateOrder = (req, res) => {
     Order.findOneAndUpdate({ _id: req.body._id }, req.body, { new: false, useFindAndModify: false }, (err, order) => {
         if (err) {
