@@ -46,7 +46,6 @@ const itemsSchema = new Schema(
 export const orderSchema = new Schema({
     orderNumber: {
         type: String,
-        required: "Order Number is required."
     },
     consignmentID: {
         type: String,
