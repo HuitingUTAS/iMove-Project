@@ -314,6 +314,7 @@ Updating car: PUT
 - `hasFridge`, string
 - `isInsuranced`, string
 - `status`, boolean, whether is using or not
+- `driver`, string, driver id
 
 ## Success Response
 
