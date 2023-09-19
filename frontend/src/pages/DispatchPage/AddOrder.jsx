@@ -191,20 +191,15 @@ function AddOrder() {
   };
 
   //add order
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Code to submit form data goes here
     console.log("order details:", orderDetails);
 
     try {
-      const response = axios.post(`${BASE_URL}/DispatchPage/InsertingOrder`, {
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
-        body: JSON.stringify(orderDetails),
-      });
-
-      if (response.ok) {
+      const response = await axios.post(`${BASE_URL}/DispatchPage/InsertingOrder`, orderDetails);
+      
+      if (response.status === 200) {
         // Reset state variables to empty values
         setOrderDetails({
           OrderID: "",
@@ -228,7 +223,7 @@ function AddOrder() {
         uomRef.current.value = "";
         qtyRef.current.value = "0";
       } else {
-        console.log("Error response:", response.status);
+        console.log("Error response:", response.data);
       }
     } catch (error) {
       alert("Cannot adding order, please contact to system administrator!");

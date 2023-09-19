@@ -31,10 +31,10 @@ const itemsSchema = new Schema(
         itemName:{
             type: String,
         },
-        UOM:{
+        uom:{
             type: String,
         },
-        quantity:{
+        qty:{
             type: Number,
         },
     },
