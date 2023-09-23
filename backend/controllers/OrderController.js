@@ -238,6 +238,39 @@ export const getAllocatedOrder = (req, res) => {
       });
 }
 
+async function generateOrderNumber() {
+    let newOrderNumber = ''
+    await Order.find({ orderNumber:{$regex : new RegExp('MAN', 'i')}})
+    .sort({orderNumber: -1}).limit(1)
+    .then(order => {
+        if (order.length === 0) {
+            newOrderNumber = 'MAN000001'
+        } else {
+            let orderNumber = order[0].orderNumber
+            let orderNumberInt = parseInt(orderNumber.substring(3))
+            orderNumberInt += 1
+            newOrderNumber = 'MAN' + orderNumberInt.toString().padStart(6, '0')
+        }
+    })
+    return newOrderNumber;
+}
+
+
+export const createOrder = async(req, res) => {
+    let newOrder = new Order(req.body)
+    newOrder.orderNumber = await generateOrderNumber();
+
+    newOrder.save()
+    .then(order => {
+        res.send(order)
+    })
+    .catch(err => {
+        res.status(400).json({
+            message: err.toString()
+        });
+    })
+};
+
 export const createBatchOrders = (req, res) => {
     let newOrder = new Order(req.body)
     newOrder.save()
