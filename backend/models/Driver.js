@@ -2,16 +2,19 @@ import mongoose from "mongoose"
 
 const Schema = mongoose.Schema
 
-const locationSchema = new Schema({
-    lat: {
-        type: Number,
+const locationSchema = new Schema(
+    { 
+        lat:{
+            type: Number,
+        },
+        lng:{
+            type: Number,
+        },
     },
-    lng: {
-        type: Number,
-    },
-}, {
-    _id: false
-})
+    {
+        _id: false
+    }
+)
 
 export const driverSchema = new Schema({
     username: {
@@ -53,7 +56,7 @@ export const driverSchema = new Schema({
     location: {
         type: locationSchema,
     },
-    npm install
-
-
+    token: {
+        type: String,
+    }    
 })
