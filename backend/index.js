@@ -15,6 +15,7 @@ import bodyParser from "body-parser"
 import swaggerUi from 'swagger-ui-express'
 import Yaml from 'yamljs'
 import config from 'config'
+import { getAllSenders } from './controllers/SenderController.js'
 
 dotenv.config() // load env file
 
@@ -49,10 +50,9 @@ app.get("/pwd/:pwd", getPwd)
 app.get("/order/:orderNumber", getOrderByOrderNumber)
 
 app.get("/DispatchPage/FetchUnallocatedOrder", getUnallocatedOrder)
-
 app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
+app.get("/DispatchPage/FetchAllSenders", getAllSenders)
 app.post("/DispatchPage/InsertingOrder", createOrder)
-
 app.post("/DispatchPage/InsertingItem", createItem)
 
 app.get("/CarManagement/FetchingAllCars", getAllCars)
