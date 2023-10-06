@@ -1,51 +1,109 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Table,
+  FormControl,
+  Dropdown,
+} from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
 function DriverManage() {
   const [driverData, setDriverData] = useState([]);
-  const [driverName, setDriverName] = useState(
-    `${BASE_URL}"/DriverManagement/FetchingDriver/123`
-  );
-  const [isEditing, setIsEditing] = useState(false);
+  const [filteredDriver, setFilteredDriver] = useState([]);
+  const [driverName, setDriverName] = useState([]);
+  const [isEditing, setIsEditing] = useState(-1);
+  const [editedData, setEditedData] = useState([]);
+  // const [updateDriver, setUpdateDriver] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
-  // Fetching dispatcher data from MangoDB
+  // Fetching driver data from MangoDB
   const fetchData = async () => {
     try {
-      const response = await axios.get(driverName);
-      console.log(driverName);
+      const response = await axios.get(
+        `${BASE_URL}/DriverManagement/FetchingAllDrivers`
+      );
       setDriverData(response.data);
-      console.log("driver info:", response.data);
+      setFilteredDriver(response.data);
+      // console.log("driver info:", response.data);
     } catch (error) {
-      // console.log("Error fetching data:", error.message);
-      // alert(error.message);
+      console.log("Error fetching driver data:", error.message);
     }
   };
 
-  const handleEditDriver = () => {
-    // Code to handle editing a Driver entry based on driver name
-    setIsEditing(true);
+  //Filter driver by name
+  const handleSearch = () => {
+    const searchTerm = driverName.toLowerCase();
+    const filteredData = driverData.filter((driver) =>
+      driver.name.toLowerCase().includes(searchTerm)
+    );
+    setFilteredDriver(filteredData);
   };
 
-  const handleDeleteDriver = (index) => {
-    // Code to handle deleting a driver entry based on index
-    console.log("Deleting Driver:", index);
+  //update attributes of driver
+  const handleChange = (e, index, field) => {
+    const updateDriver = [...driverData];
+    const editedDriver = { ...editedData[index] }; // Get the edited data for the specific row
+    editedDriver["_id"] = driverData[index]["_id"]; // updated driver's id
+    if (field === "gender") {
+      // console.log("gender change !!!!", e);
+      updateDriver[index][field] = e;
+      editedDriver[field] = e; // Update the edited driver gender
+    } else {
+      const { value } = e.target;
+      updateDriver[index][field] = value;
+      editedDriver[field] = value; // Update the edited field
+    }
+    setDriverData(updateDriver);
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [index]: editedDriver, // Update the edited data for the specific row
+    }));
   };
 
-  //confirming updated car
-  const handleConfirm = () => {
-    console.log("confirm updating");
-    setIsEditing(false);
+  //confirming updated driver
+  const handleConfirm = async (index) => {
+    const editedDriver = editedData[index];
+    console.log("confirm updating:", editedDriver);
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/DriverManagement/UpdatingDriver`,
+        editedDriver // Send only the edited data for the specific driver ID
+      );
+      // Clear edited data and reset editing state
+      setEditedData((prevEditedData) => ({
+        ...prevEditedData,
+        [index]: {}, // Clear the edited data for the specific carID
+      }));
+      setIsEditing(-1);
+      fetchData();
+    } catch (error) {
+      console.log("Error updating driver:", error.message);
+    }
   };
 
-  // cancling change
-
-  const handleCancel = (index) => {
-    setIsEditing(false);
+  // deleting a driver entry based on index
+  const handleDeleteDriver = (driverID) => {
+    if (window.confirm("Dou want to delete this driver?")) {
+      axios
+        .delete(`${BASE_URL}/DriverManagement/DeletingDriver/${driverID}`, {})
+        .then((response) => {
+          // console.log(response.data);
+          alert("Remove successfully!");
+          fetchData();
+        })
+        .catch((error) => {
+          alert(
+            "Cannot remove this driver, please contact to system administrator."
+          );
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -58,18 +116,14 @@ function DriverManage() {
           <Col xs={2}>
             <Form.Control
               type="text"
-              name="dispatcherName"
-              onChange={(e) =>
-                setDriverName(
-                  `${BASE_URL}/DriverManagement/FetchingDriver/${e.target.value}`
-                )
-              }
+              name="driverName"
+              onChange={(e) => setDriverName(e.target.value)}
               placeholder="Search driver"
               required
             />
           </Col>
           <Col xs="auto" className="text-right">
-            <Button variant="success" onClick={fetchData}>
+            <Button variant="success" onClick={handleSearch}>
               Search
             </Button>
           </Col>
@@ -85,147 +139,151 @@ function DriverManage() {
             <th>Phone</th>
             <th>Address</th>
             <th>license Number</th>
-            <th>license Photo</th>
-            <th>photo</th>
+            {/* <th>license Photo</th>
+            <th>photo</th> */}
             <th>Password</th>
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {driverData.map((driver, index) => (
+          {filteredDriver.map((driver, index) => (
             <tr key={index}>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={driver.name}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "name")}
                   />
                 ) : (
                   driver.name
                 )}
               </td>
               <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={driver.gender}
-                    onChange={(e) => handleChange(e, index)}
-                  />
+                {isEditing === index ? (
+                  <Dropdown>
+                    <Dropdown.Toggle id="gender-dropdown">
+                      {driver.gender}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"Male"}
+                        onClick={(e) => handleChange("Male", index, "gender")}
+                      >
+                        {"Male"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"Female"}
+                        onClick={(e) => handleChange("Female", index, "gender")}
+                      >
+                        {"Female"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : (
                   driver.gender
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={driver.email}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "email")}
                   />
                 ) : (
                   driver.email
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={driver.phone}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "phone")}
                   />
                 ) : (
                   driver.phone
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={driver.address}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "address")}
                   />
                 ) : (
                   driver.address
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={driver.licenseNumber}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "licenseNumber")}
                   />
                 ) : (
                   driver.licenseNumber
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={driver.licensePhoto}
-                    onChange={(e) => handleChange(e, index)}
-                  />
-                ) : (
-                  driver.licensePhoto
-                )}
-              </td>
-              <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={driver.Photo}
-                    onChange={(e) => handleChange(e, index)}
-                  />
-                ) : (
-                  driver.Photo
-                )}
-              </td>
-              <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
+                    type="password"
                     rows={1}
                     defaultValue={""}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "password")}
                   />
                 ) : (
                   "******"
                 )}
               </td>
               <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={driver.status}
-                    onChange={(e) => handleChange(e, index)}
-                  />
+                {isEditing === index ? (
+                  <Dropdown>
+                    <Dropdown.Toggle id="gender-dropdown">
+                      {driver.status}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"Valid"}
+                        onClick={(e) => handleChange("Valid", index, "status")}
+                      >
+                        {"Valid"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"Invalid"}
+                        onClick={(e) =>
+                          handleChange("Invalid", index, "status")
+                        }
+                      >
+                        {"Invalid"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : (
                   driver.status
                 )}
               </td>
               <td>
                 {" "}
-                {isEditing ? (
+                {isEditing === index ? (
                   <>
-                    <Button variant="success" onClick={handleConfirm}>
+                    <Button
+                      variant="success"
+                      onClick={() => handleConfirm(index)}
+                    >
                       Confirm
                     </Button>
-                    <Button
-                      variant="warning"
-                      onClick={() => handleCancel(index)}
-                    >
+                    <Button variant="warning" onClick={() => setIsEditing(-1)}>
                       Cancel
                     </Button>
                   </>
@@ -233,7 +291,7 @@ function DriverManage() {
                   <>
                     <Button
                       variant="primary"
-                      onClick={() => handleEditDriver()}
+                      onClick={() => setIsEditing(index)}
                     >
                       Edit
                     </Button>{" "}
