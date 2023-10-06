@@ -87,6 +87,7 @@ function AddOrder() {
         qty: "0",
       });
       // Clear input fields using refs
+      setSelectedUOM("");
       itemNameRef.current.value = "";
       uomRef.current.value = "";
       qtyRef.current.value = "0";
@@ -195,10 +196,14 @@ function AddOrder() {
     event.preventDefault();
     // Code to submit form data goes here
     console.log("order details:", orderDetails);
+    console.log("order details type:", orderDetails.type);
 
     try {
-      const response = await axios.post(`${BASE_URL}/DispatchPage/InsertingOrder`, orderDetails);
-      
+      const response = await axios.post(
+        `${BASE_URL}/DispatchPage/InsertingOrder`,
+        orderDetails
+      );
+
       if (response.status === 200) {
         // Reset state variables to empty values
         setOrderDetails({
@@ -364,11 +369,10 @@ function AddOrder() {
                   type="text"
                   list="itemOptions"
                   name="itemName"
-                  value={selectedItem}
+                  // value={selectedItem}
                   onChange={handleItemChange}
                   ref={itemNameRef}
                   placeholder="Enter item name"
-                  required
                 />
                 <datalist id="itemOptions">
                   {fetchedItem.map((item, index) => (
@@ -403,7 +407,7 @@ function AddOrder() {
                   type="number"
                   name="qty"
                   ref={qtyRef}
-                  value={newItem.quantity}
+                  // value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({
                       ...newItem,

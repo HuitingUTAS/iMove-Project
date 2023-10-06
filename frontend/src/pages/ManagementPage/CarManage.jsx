@@ -67,6 +67,7 @@ function CarManage() {
         .delete(`${BASE_URL}/CarManagement/DeletingCar/${carID}`, {})
         .then((response) => {
           // console.log(response.data);
+          alert("Remove successfully!");
           fetchData();
         })
         .catch((error) => {
@@ -112,9 +113,6 @@ function CarManage() {
         `${BASE_URL}/CarManagement/UpdatingCar`,
         editedData[carID] // Send only the edited data for the specific carID
       );
-
-      // console.log("Updated car:", response.data);
-
       // Clear edited data and reset editing state
       setEditedData((prevEditedData) => ({
         ...prevEditedData,
