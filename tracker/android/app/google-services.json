@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "194903491762",
+    "project_id": "imove-4804a",
+    "storage_bucket": "imove-4804a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194903491762:android:6d5444e9985a35428fb5ab",
+        "android_client_info": {
+          "package_name": "stockwalks.com.tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCumkjNG6tvjjcnx68RUOsPqAhFsK9PApQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: Crowd Service API
+  description: This is the Customer Service API
+  version: 0.0.1
+paths:
+  /orders/{orderId}:
+    get:
+      parameters:
+        - name: orderId
+          in: path
+          description: Order Id
+          required: true
+          schema:
+            type: string
+      summary: Update order status
+      responses:
+        '200':    
+          description: An JSON of an order
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/OrderDetail'
+        '400':    
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ResponseBody'
+              example:
+                message: "MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017"
+  /orders/status:
+    post:
+      summary: Update order status
+      requestBody:
+        description: Customer Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatus'
+      responses:
+        '200':    
+          description: An JSON of the provider
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/OrderStatus'
+              example:
+                message: "Successfully updated an order."
+        '400':    
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ResponseBody'
+              example:
+                message: "MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017"
+  /customers:
+    post:
+      summary: Returns the newly created customer
+      description: Create a new customer
+      requestBody:
+        description: Customer Request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDetail'
+            example:
+              providerCode: "Peter333"
+              providerName: "Park"
+              providerDescription: 123456789
+              companyName: "abc@gmail.com"
+      responses:
+        '200':    
+          description: A JSON newly created customer
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/OrderStatus'
+        '400':    
+          description: Bad Request
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/ResponseBody'
+              example:
+                message: "MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017"
+components:
+  schemas:  
+    OrderStatus:
+      type: object
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+      example:
+        id: "12345"
+        status: "Delivering"
+    OrderDetail:
+      type: object
+      properties:
+        id: 
+          type: string
+        customerName:
+          type: string
+        pickupAddress:
+          type: string
+        deliverAddress:
+          type: string
+      example:
+        id: "12345"
+        customerName: "Peter"
+        pickupAddress: "Park"
+        deliverAddress: "277 Churchill Avenue, Sandy Bay, TAS 7000"
+        companyName: "111 Macquarie StHobart, TAS 7000"
+    ResponseBody:
+      type: object
+      properties:
+        message:
+          type: string
+
