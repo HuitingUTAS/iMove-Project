@@ -37,10 +37,10 @@ function DispatchPage() {
     <div className="dispatchtest">
       <h1>Order Allocation</h1>
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-7">
           <UnallocatedOrders orders={unallocatedOrders} />
         </div>
-        <div className="col-md-6">
+        <div className="col-md-5">
           <AllocatedOrders />
         </div>
       </div>

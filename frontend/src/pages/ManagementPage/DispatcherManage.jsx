@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col, Table, FormControl } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Row,
+  Col,
+  Table,
+  FormControl,
+  Dropdown,
+} from "react-bootstrap";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
+import "./Management.css";
 
 function DispatcherManage() {
   const [dispatcherData, setDispatcherData] = useState([]);
-  const [dispatcherName, setDispatcherName] = useState(
-    `${BASE_URL}/DispatcherManagement/FetchingDispatcher/123`
-  );
-  const [isEditing, setIsEditing] = useState(false);
+  const [dispatcherName, setDispatcherName] = useState([]);
+  const [editedData, setEditedData] = useState([]);
+  // const [updatePacker, setUpdatePacker] = useState([]);
+  const [filteredDispatcher, setFilteredDispatcher] = useState([]);
+
+  const [isEditing, setIsEditing] = useState(-1);
 
   useEffect(() => {
     fetchData();
@@ -17,34 +28,88 @@ function DispatcherManage() {
   // Fetching dispatcher data from MangoDB
   const fetchData = async () => {
     try {
-      const response = await axios.get(dispatcherName);
+      const response = await axios.get(
+        `${BASE_URL}/DispatcherManagement/FetchingAllDispatchers`
+      );
       setDispatcherData(response.data);
+      setFilteredDispatcher(response.data);
     } catch (error) {
-      // console.log("Error fetching data:", error.message);
+      console.log("Error fetching data:", error.message);
       // alert(error.message);
     }
   };
 
-  const handleEditDispatcher = () => {
-    // Code to handle editing a dispatcher entry based on dispatcher name
-    setIsEditing(true);
+  //searching dispatchers by name
+  const handleSearch = () => {
+    const searchTerm = dispatcherName.toLowerCase();
+    const filteredData = dispatcherData.filter((dispatcher) =>
+      dispatcher.name.toLowerCase().includes(searchTerm)
+    );
+    setFilteredDispatcher(filteredData);
   };
 
-  const handleDeleteDispatcher = (index) => {
-    // Code to handle deleting a dispatcher entry based on index
-    console.log("Deleting dispatcher:", index);
+  //update attributes of dispatcher
+  const handleChange = (e, index, field) => {
+    const updateDispatcher = [...dispatcherData];
+    const editedDispatcher = { ...editedData[index] }; // Get the edited data for the specific row
+    editedDispatcher["_id"] = dispatcherData[index]["_id"]; // updated dispacther's id
+    if (field === "gender") {
+      // console.log("gender change !!!!", e);
+      updateDispatcher[index][field] = e;
+      editedDispatcher[field] = e; // Update the edited dispatcher gender
+    } else {
+      const { value } = e.target;
+      updateDispatcher[index][field] = value;
+      editedDispatcher[field] = value; // Update the edited field
+    }
+    setDispatcherData(updateDispatcher);
+    setEditedData((prevEditedData) => ({
+      ...prevEditedData,
+      [index]: editedDispatcher, // Update the edited data for the specific row
+    }));
   };
 
   //confirming updated car
-  const handleConfirm = () => {
-    console.log("confirm updating");
-    setIsEditing(false);
+  const handleConfirm = async (index) => {
+    const editedDispatcher = editedData[index];
+    console.log("confirm updating:", editedDispatcher);
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/DispatcherManagement/UpdatingDispatcher`,
+        editedDispatcher // Send only the edited data for the specific dispatcher ID
+      );
+      // Clear edited data and reset editing state
+      setEditedData((prevEditedData) => ({
+        ...prevEditedData,
+        [index]: {}, // Clear the edited data for the specific carID
+      }));
+      setIsEditing(-1);
+      fetchData();
+    } catch (error) {
+      console.log("Error updating dispatcher:", error.message);
+    }
   };
 
-  // cancling change
-
-  const handleCancel = (index) => {
-    setIsEditing(false);
+  // deleting a dispatcher entry based on index
+  const handleDeleteDispatcher = (dispatcherID) => {
+    if (window.confirm("Dou want to delete this dispacther?")) {
+      axios
+        .delete(
+          `${BASE_URL}/DispatcherManagement/DeletingDispatcher/${dispatcherID}`,
+          {}
+        )
+        .then((response) => {
+          // console.log(response.data);
+          alert("Remove successfully!");
+          fetchData();
+        })
+        .catch((error) => {
+          alert(
+            "Cannot remove this dispatcher, please contact to system administrator."
+          );
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -58,17 +123,13 @@ function DispatcherManage() {
             <Form.Control
               type="text"
               name="dispatcherName"
-              onChange={(e) =>
-                setDispatcherName(
-                  `${BASE_URL}/DispatcherManagement/FetchingDispatcher/${e.target.value}`
-                )
-              }
+              onChange={(e) => setDispatcherName(e.target.value)}
               placeholder="Search Dispatcher"
               required
             />
           </Col>
           <Col xs="auto" className="text-right">
-            <Button variant="success" onClick={fetchData}>
+            <Button variant="success" onClick={handleSearch}>
               Search
             </Button>
           </Col>
@@ -84,87 +145,100 @@ function DispatcherManage() {
             <th>Phone</th>
             <th>Address</th>
             <th>Password</th>
-            <th>photo</th>
+            {/* <th>photo</th> */}
             <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {dispatcherData.map((dispatcher, index) => (
+          {filteredDispatcher.map((dispatcher, index) => (
             <tr key={index}>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={dispatcher.name}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "name")}
                   />
                 ) : (
                   dispatcher.name
                 )}
               </td>
               <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={dispatcher.gender}
-                    onChange={(e) => handleChange(e, index)}
-                  />
+                {isEditing === index ? (
+                  <Dropdown>
+                    <Dropdown.Toggle id="gender-dropdown">
+                      {dispatcher.gender}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"Male"}
+                        onClick={(e) => handleChange("Male", index, "gender")}
+                      >
+                        {"Male"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"Female"}
+                        onClick={(e) => handleChange("Female", index, "gender")}
+                      >
+                        {"Female"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : (
                   dispatcher.gender
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={dispatcher.email}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "email")}
                   />
                 ) : (
                   dispatcher.email
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={dispatcher.phone}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "phone")}
                   />
                 ) : (
                   dispatcher.phone
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
                     as="textarea"
                     rows={1}
                     defaultValue={dispatcher.address}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "address")}
                   />
                 ) : (
                   dispatcher.address
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <FormControl
-                    as="password"
+                    type="password"
                     rows={1}
                     defaultValue={""}
-                    onChange={(e) => handleChange(e, index)}
+                    onChange={(e) => handleChange(e, index, "password")}
                   />
                 ) : (
                   "******"
                 )}
               </td>
-              <td>
+              {/* <td>
                 {isEditing ? (
                   <FormControl
                     as="textarea"
@@ -175,29 +249,44 @@ function DispatcherManage() {
                 ) : (
                   dispatcher.photo
                 )}
-              </td>
+              </td> */}
               <td>
-                {isEditing ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={dispatcher.status}
-                    onChange={(e) => handleChange(e, index)}
-                  />
+                {isEditing === index ? (
+                  <Dropdown>
+                    <Dropdown.Toggle id="gender-dropdown">
+                      {dispatcher.status}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"Valid"}
+                        onClick={(e) => handleChange("Valid", index, "status")}
+                      >
+                        {"Valid"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"Invalid"}
+                        onClick={(e) =>
+                          handleChange("Invalid", index, "status")
+                        }
+                      >
+                        {"Invalid"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : (
                   dispatcher.status
                 )}
               </td>
               <td>
-                {isEditing ? (
+                {isEditing === index ? (
                   <>
-                    <Button variant="success" onClick={handleConfirm}>
+                    <Button
+                      variant="success"
+                      onClick={() => handleConfirm(index)}
+                    >
                       Confirm
                     </Button>
-                    <Button
-                      variant="warning"
-                      onClick={() => handleCancel(index)}
-                    >
+                    <Button variant="warning" onClick={() => setIsEditing(-1)}>
                       Cancel
                     </Button>
                   </>
@@ -205,13 +294,13 @@ function DispatcherManage() {
                   <>
                     <Button
                       variant="primary"
-                      onClick={() => handleEditDispatcher()}
+                      onClick={() => setIsEditing(index)}
                     >
                       Edit
                     </Button>{" "}
                     <Button
                       variant="danger"
-                      onClick={() => handleDeleteDispatcher(index)}
+                      onClick={() => handleDeleteDispatcher(dispatcher._id)}
                     >
                       Delete
                     </Button>

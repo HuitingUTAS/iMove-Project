@@ -56,7 +56,7 @@ export const driverSchema = new Schema({
     location: {
         type: locationSchema,
     },
-    
-
-    
+    token: {
+        type: String,
+    }    
 })

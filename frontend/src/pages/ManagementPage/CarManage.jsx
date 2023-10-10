@@ -14,7 +14,7 @@ import { BASE_URL } from "../../../config";
 function CarManage() {
   const [carData, setCarData] = useState([]);
   const [searchCarID, setSearchCarID] = useState(
-    `${BASE_URL}/CarManagement/FetchingCar/123`
+    `${BASE_URL}/CarManagement/FetchingAllCars`
   );
   const [isEditing, setIsEditing] = useState("-1"); // representing no row is being edited
   const [editedData, setEditedData] = useState({}); // to hold edited data
@@ -31,11 +31,10 @@ function CarManage() {
     try {
       const response = await axios.get(searchCarID);
       setCarData(response.data);
-      // console.log("search car ID:", searchCarID);
-      console.log("fetched car: ", carData);
+      // console.log("fetched car: ", carData);
     } catch (error) {
-      console.log("Error fetching data:", error.message);
       // alert(error.message);
+      console.log("Error fetching data:", error.message);
     }
   };
 
@@ -51,50 +50,50 @@ function CarManage() {
     }
   };
 
-  //
-  const handleDriverSelect = (index, selectedDriver) => {
+  //update included driver
+  const handleDriverSelect = (index, driverID, driverUserName) => {
     const updatedCarData = [...carData];
-    updatedCarData[index].driver.username = selectedDriver;
+    updatedCarData[index].driver.username = driverUserName;
 
     setCarData(updatedCarData);
-    setEditedData((prevEditedData) => ({
-      ...prevEditedData,
-      [index]: {
-        ...prevEditedData[index],
-        driver: { username: selectedDriver },
-      },
-    }));
-  };
-
-  const handleEditCar = (carID) => {
-    // Code to handle editing a car entry based on carID
-    setIsEditing(carID);
-    console.log("Editing car:", carID);
+    handleChange(driverID, index, "driverUsername");
   };
 
   const handleDeleteCar = (carID) => {
-    // Code to handle deleting a car entry based on carID
-    console.log("Deleting car:", carID);
-  };
-
-  // cancling change
-
-  const handleCancel = (index) => {
-    setIsEditing("-1");
+    // // Code to handle deleting a car entry based on carID
+    //alter a window to double check
+    if (window.confirm("Dou want to delete this car?")) {
+      axios
+        .delete(`${BASE_URL}/CarManagement/DeletingCar/${carID}`, {})
+        .then((response) => {
+          // console.log(response.data);
+          alert("Remove successfully!");
+          fetchData();
+        })
+        .catch((error) => {
+          alert(
+            "Cannot remove this car, please contact to system administrator."
+          );
+          console.error(error);
+        });
+    }
   };
 
   // updating if there is any change
   const handleChange = (e, index, field) => {
-    const { value } = e.target;
     const updatedCarData = [...carData];
     const editedCar = { ...editedData[index] }; // Get the edited data for the specific row
 
     if (field === "driverUsername") {
-      console.log("changing drivername:", value);
-      console.log("updatedCarData: ", updatedCarData[index]);
-      updatedCarData[index].driver.username = value;
-      editedCar.driver.username = value; // Update the edited driver username
+      // console.log("updating driver !!!!");
+      updatedCarData[index].driver.ObjectId = e;
+      editedCar.driver = e; // Update the edited driver username
+    } else if (field === "isInsuranced" || field === "hasFridge") {
+      //Update the insuranced statu and whether include fridge
+      updatedCarData[index][field] = e;
+      editedCar[field] = e;
     } else {
+      const { value } = e.target;
       updatedCarData[index][field] = value;
       editedCar[field] = value; // Update the edited field
     }
@@ -105,23 +104,15 @@ function CarManage() {
       ...prevEditedData,
       [index]: editedCar, // Update the edited data for the specific row
     }));
-
-    console.log("changed data:", updatedCarData);
   };
 
   //confirming updated car
   const handleConfirm = async (carID) => {
-    console.log("----------------------------------");
-    console.log("confirmed edited data", editedData);
-    console.log("editedData carID:", editedData[carID]);
     try {
       const response = await axios.put(
         `${BASE_URL}/CarManagement/UpdatingCar`,
         editedData[carID] // Send only the edited data for the specific carID
       );
-
-      console.log("Updated car:", response.data);
-
       // Clear edited data and reset editing state
       setEditedData((prevEditedData) => ({
         ...prevEditedData,
@@ -231,12 +222,25 @@ function CarManage() {
               </td>
               <td>
                 {isEditing === index ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={car.hasFridge}
-                    onChange={(e) => handleChange(e, index, "hasFridge")}
-                  />
+                  <Dropdown>
+                    <Dropdown.Toggle id="fridge-dropdown">
+                      {car.hasFridge ? "true" : "false"}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"true"}
+                        onClick={(e) => handleChange(true, index, "hasFridge")}
+                      >
+                        {"true"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"false"}
+                        onClick={(e) => handleChange(false, index, "hasFridge")}
+                      >
+                        {"false"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : car.hasFridge ? (
                   "ture"
                 ) : (
@@ -245,12 +249,29 @@ function CarManage() {
               </td>
               <td>
                 {isEditing === index ? (
-                  <FormControl
-                    as="textarea"
-                    rows={1}
-                    defaultValue={car.isInsuranced}
-                    onChange={(e) => handleChange(e, index, "isInsuranced")}
-                  />
+                  <Dropdown>
+                    <Dropdown.Toggle id="insuranced-dropdown">
+                      {car.isInsuranced ? "true" : "false"}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        key={"true"}
+                        onClick={(e) =>
+                          handleChange(true, index, "isInsuranced")
+                        }
+                      >
+                        {"true"}
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        key={"false"}
+                        onClick={(e) =>
+                          handleChange(false, index, "isInsuranced")
+                        }
+                      >
+                        {"false"}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
                 ) : car.isInsuranced ? (
                   "ture"
                 ) : (
@@ -268,7 +289,11 @@ function CarManage() {
                         <Dropdown.Item
                           key={driver._id}
                           onClick={() =>
-                            handleDriverSelect(index, driver.username)
+                            handleDriverSelect(
+                              index,
+                              driver._id,
+                              driver.username
+                            )
                           }
                         >
                           {driver.username}
@@ -303,7 +328,7 @@ function CarManage() {
                     </Button>
                     <Button
                       variant="warning"
-                      onClick={() => handleCancel(index)}
+                      onClick={() => setIsEditing("-1")}
                     >
                       Cancel
                     </Button>
@@ -312,13 +337,13 @@ function CarManage() {
                   <>
                     <Button
                       variant="primary"
-                      onClick={() => handleEditCar(index)}
+                      onClick={() => setIsEditing(index)}
                     >
                       Edit
                     </Button>{" "}
                     <Button
                       variant="danger"
-                      onClick={() => handleDeleteCar(car.registrationNumber)}
+                      onClick={() => handleDeleteCar(car._id)}
                     >
                       Delete
                     </Button>

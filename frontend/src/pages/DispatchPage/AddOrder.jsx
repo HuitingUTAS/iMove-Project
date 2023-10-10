@@ -1,44 +1,107 @@
-import React, { useState } from "react";
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import { Form, Button, Row, Col, Table, Dropdown } from "react-bootstrap";
 import "./Dispatch.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../../config";
 
 function AddOrder() {
   const nagivation = new useNavigate();
+  const [items, setItems] = useState([]); //the whole inserted item array
   const [orderDetails, setOrderDetails] = useState({
-    OrderID: "",
-    SenderName: "",
-    ReciverName: "",
-    Address: "",
-    PhoneNumber: "",
-    Item: "",
-    Requirement: "",
-    Fridge: "",
-    DeliverDate: "",
+    orderNumber: "order123",
+    sender: "",
+    customer: "",
+    remark: "",
+    need_fridge: "",
+    prefferedDeliveryDate: "",
+    OrderStatus: "1", //unallocated
+    items: [],
   });
 
-  const [items, setItems] = useState([]);
+  //new added item to item array
   const [newItem, setNewItem] = useState({
     itemName: "",
     uom: "",
-    quantity: 0,
+    qty: "0",
   });
+  const [fetchedReceiver, setFetchedReceiver] = useState([]);
+  const [receiverInput, setReceiverInput] = useState("");
 
-  const handleAddItem = () => {
-    setItems((prevItems) => [...prevItems, newItem]);
-    setNewItem({
-      itemName: "",
-      uom: "",
-      quantity: 0,
-    });
+  const [selectedAddress, setselectedAddress] = useState("");
+  const [selectedPhone, setselectedPhone] = useState("");
+
+  const [fetchedItem, setFetchedItem] = useState([]); //fetched all item data
+  const [selectedItem, setSelectedItem] = useState(""); //selected item data from item name list
+  const [selectedUOM, setSelectedUOM] = useState(""); //selected UOM based on item
+
+  const itemNameRef = useRef(null);
+  const uomRef = useRef(null);
+  const qtyRef = useRef(null);
+
+  // loding data
+  useEffect(() => {
+    fetchReceiverData();
+    fetchItemData();
+  }, []);
+
+  // get all avaliable sender from MangoDB
+  const fetchReceiverData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/CustomerManagementPage/GetAllCustomers`
+      );
+      setFetchedReceiver(response.data);
+      // console.log(fetchedReceiver);
+    } catch (error) {
+      console.log("Error fetching receiver data:", error.message);
+    }
   };
 
+  // get all avaliable items infromation
+  const fetchItemData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/ItemManagementPage/GetAllItems`
+      );
+      setFetchedItem(response.data);
+      console.log("item fetching result:", fetchedItem);
+    } catch (error) {
+      console.log("Error fetching item data:", error);
+    }
+  };
+  //add items
+  const handleAddItem = () => {
+    console.log("this is single new item:", newItem);
+    if (newItem.itemName && newItem.uom && newItem.qty > 0) {
+      //insert added items to the order detail
+      setItems((prevItems) => [...prevItems, newItem]);
+      setOrderDetails((prevOrderDetails) => ({
+        ...prevOrderDetails,
+        items: [...prevOrderDetails.items, newItem], // Update the items array
+      }));
+      // Reset the newItem state to clear input fields
+      setNewItem({
+        itemName: "",
+        uom: "",
+        qty: "0",
+      });
+      // Clear input fields using refs
+      setSelectedUOM("");
+      itemNameRef.current.value = "";
+      uomRef.current.value = "";
+      qtyRef.current.value = "0";
+    } else {
+      alert("Please fill in all item details before adding.");
+    }
+  };
+
+  // recording whether require fridge or not
   const handleInputChange = (event) => {
     const target = event.target;
     const value =
       target.type === "radio" ? target.value === "true" : target.value;
     const name = target.name;
-
     setOrderDetails({
       ...orderDetails,
       [name]: value,
@@ -47,22 +110,130 @@ function AddOrder() {
   // Predictive selecting receiver name and address from database when it changed
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setOrderDetails((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === "customer") {
+      setReceiverInput(value); // Track user input
+      filterReceiver(value); // Filter receiver list based on user input
+      //get the selected customer information to achive customer ID
+      const selectedCustomer = fetchedReceiver.find(
+        (receiver) => receiver.companyName === value
+      );
+      // console.log("selected Customer:", selectedCustomer);
+      if (selectedCustomer) {
+        setOrderDetails((prevState) => ({
+          ...prevState,
+          [name]: selectedCustomer._id, // Store customer's ID
+        }));
+      }
+    } else {
+      setOrderDetails((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+    console.log("this is for checking order details:", orderDetails);
   };
-  //Predictiv selecting item name when it changed
-  const changeItem = (event) => {
-    const { name, value } = event.target;
-    setOrderDetails((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+
+  const filterReceiver = (input) => {
+    if (input) {
+      const filteredReceivers = fetchedReceiver.filter((receiver) =>
+        receiver.companyName.toLowerCase().includes(input.toLowerCase())
+      );
+      if (filteredReceivers.length > 0) {
+        setselectedAddress(filteredReceivers[0].address);
+        setselectedPhone(filteredReceivers[0].contactMobile);
+      } else {
+        // Handle case when no matching receiver is found
+        setselectedAddress("");
+        setselectedPhone("");
+      }
+    } else {
+      // Handle case when input is empty
+      setselectedAddress("");
+      setselectedPhone("");
+    }
   };
-  const handleSubmit = (event) => {
+
+  //Filtering items
+  const filterItems = (input) => {
+    if (typeof input === "string" && input.length > 0) {
+      // console.log("item babababa:", input.toLowerCase());
+      const filteredItems = fetchedItem.filter((item) =>
+        item.itemName.toLowerCase().includes(input.toLowerCase())
+      );
+      if (filteredItems.length > 0) {
+        setSelectedUOM(filteredItems[0].uom);
+      } else {
+        alert("There isn't this item, please select another item!");
+        setSelectedItem("");
+        setSelectedUOM("");
+      }
+    } else {
+      // Handle case when input is empty
+      setSelectedItem("");
+      setSelectedUOM("");
+    }
+  };
+
+  //Predictive selecting item name when it changed
+  const handleItemChange = (event) => {
+    const value = event.target.value;
+    console.log("selected item Name:", event.target);
+    setSelectedItem(value);
+    filterItems(value); // Filter item list based on content
+    // Get the selected item based on its name
+    const selectedItem = fetchedItem.find((item) => item.itemName === value);
+    if (selectedItem) {
+      setNewItem({
+        itemName: value,
+        uom: selectedItem.uom, // Set the uom based on the selected item
+        qty: "", // Keep the previous quantity value
+      });
+    }
+  };
+
+  //add order
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Code to submit form data goes here
+    console.log("order details:", orderDetails);
+    console.log("order details type:", orderDetails.type);
+
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/DispatchPage/InsertingOrder`,
+        orderDetails
+      );
+
+      if (response.status === 200) {
+        // Reset state variables to empty values
+        setOrderDetails({
+          OrderID: "",
+          sender: "",
+          customer: "",
+          remark: "",
+          need_fridge: "",
+          prefferedDeliveryDate: "",
+          OrderStatus: "1",
+          items: [],
+        });
+        setItems([]);
+        setNewItem({
+          itemName: "",
+          uom: "",
+          qty: "0",
+        });
+
+        // Clear input fields using refs
+        itemNameRef.current.value = "";
+        uomRef.current.value = "";
+        qtyRef.current.value = "0";
+      } else {
+        console.log("Error response:", response.data);
+      }
+    } catch (error) {
+      alert("Cannot adding order, please contact to system administrator!");
+      console.log("Error adding order:", error);
+    }
   };
 
   return (
@@ -75,25 +246,31 @@ function AddOrder() {
               <Form.Label>Sender Name</Form.Label>
               <Form.Control
                 type="text"
-                name="SenderName"
-                value={orderDetails.SenderName}
+                name="sender"
+                value={orderDetails.sender}
                 onChange={handleChange}
-                placeholder="Enter Sender name"
+                placeholder="Enter sender name"
                 required
               />
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group controlId="reciverName">
-              <Form.Label>Reciver Name</Form.Label>
+            <Form.Group controlId="receiver">
+              <Form.Label>Receiver</Form.Label>
               <Form.Control
                 type="text"
-                name="ReciverName"
-                value={orderDetails.ReciverName}
+                list="receiverOptions"
+                name="customer"
+                value={receiverInput}
                 onChange={handleChange}
-                placeholder="Enter reciver name"
+                placeholder="Enter receiver name"
                 required
               />
+              <datalist id="receiverOptions">
+                {fetchedReceiver.map((receiver, index) => (
+                  <option key={index} value={receiver.companyName} />
+                ))}
+              </datalist>
             </Form.Group>
           </Col>
         </Row>
@@ -104,8 +281,7 @@ function AddOrder() {
               <Form.Control
                 type="address"
                 name="Address"
-                value={orderDetails.Address}
-                onChange={handleChange}
+                value={selectedAddress}
                 placeholder="Enter address"
                 disabled
                 required
@@ -121,9 +297,9 @@ function AddOrder() {
               <Form.Control
                 type="tel"
                 name="PhoneNumber"
-                value={orderDetails.PhoneNumber}
-                onChange={handleChange}
+                value={selectedPhone}
                 placeholder="Enter phone number"
+                disabled
                 required
               />
             </Form.Group>
@@ -135,8 +311,8 @@ function AddOrder() {
               <Form.Label>Deliver Date</Form.Label>
               <Form.Control
                 type="datetime-local"
-                name="DeliverDate"
-                value={orderDetails.DeliverDate}
+                name="prefferedDeliveryDate"
+                value={orderDetails.prefferedDeliveryDate}
                 onChange={handleChange}
                 required
               />
@@ -150,18 +326,18 @@ function AddOrder() {
                 inline
                 label="Yes"
                 type="radio"
-                name="requireFridge"
+                name="need_fridge"
                 value={true}
-                checked={orderDetails.requireFridge === true}
+                checked={orderDetails.need_fridge === true}
                 onChange={handleInputChange}
               />
               <Form.Check
                 inline
                 label="No"
                 type="radio"
-                name="requireFridge"
+                name="need_fridge"
                 value={false}
-                checked={orderDetails.requireFridge === false}
+                checked={orderDetails.need_fridge === false}
                 onChange={handleInputChange}
               />
             </Form.Group>
@@ -173,8 +349,8 @@ function AddOrder() {
               <Form.Label>Special Requirement</Form.Label>
               <Form.Control
                 as="textarea"
-                name="Requirement"
-                value={orderDetails.Requirement}
+                name="remark"
+                value={orderDetails.remark}
                 onChange={handleChange}
                 rows={2}
                 placeholder="Enter special requirement"
@@ -188,29 +364,39 @@ function AddOrder() {
           <Row>
             <Col>
               <Form.Group controlId="itemName">
-                <Form.Label>Item Name</Form.Label>
+                <Form.Label>Item</Form.Label>
                 <Form.Control
                   type="text"
+                  list="itemOptions"
                   name="itemName"
-                  value={newItem.itemName}
-                  onChange={changeItem}
+                  // value={selectedItem}
+                  onChange={handleItemChange}
+                  ref={itemNameRef}
                   placeholder="Enter item name"
-                  required
                 />
+                <datalist id="itemOptions">
+                  {fetchedItem.map((item, index) => (
+                    <option key={index} value={item.itemName} />
+                  ))}
+                </datalist>
               </Form.Group>
             </Col>
             <Col>
               <Form.Group controlId="itemUOM">
-                <Form.Label>Item UOM</Form.Label>
+                <Form.Label>UOM</Form.Label>
                 <Form.Control
                   type="text"
                   name="uom"
-                  value={newItem.uom}
+                  ref={uomRef}
+                  value={selectedUOM}
                   onChange={(e) =>
-                    setNewItem({ ...newItem, uom: e.target.value })
+                    setNewItem({
+                      ...newItem,
+                      uom: e.target.value,
+                    })
                   }
-                  placeholder="Enter unit of measure"
-                  required
+                  placeholder="Enter unit of item"
+                  disabled
                 />
               </Form.Group>
             </Col>
@@ -219,12 +405,13 @@ function AddOrder() {
                 <Form.Label>Item Quantity</Form.Label>
                 <Form.Control
                   type="number"
-                  name="quantity"
-                  value={newItem.quantity}
+                  name="qty"
+                  ref={qtyRef}
+                  // value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({
                       ...newItem,
-                      quantity: parseInt(e.target.value),
+                      qty: e.target.value,
                     })
                   }
                   placeholder="Enter item quantity"
@@ -234,7 +421,7 @@ function AddOrder() {
             </Col>
             <Col>
               <Button
-                variant="primary"
+                variant="warning"
                 onClick={handleAddItem}
                 style={{ textAlign: "right" }}
               >
@@ -264,7 +451,7 @@ function AddOrder() {
                       <tr key={index}>
                         <td>{item.itemName}</td>
                         <td>{item.uom}</td>
-                        <td>{item.quantity}</td>
+                        <td>{item.qty}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -275,7 +462,7 @@ function AddOrder() {
         </div>
         <Row>
           <Col md={10} style={{ margin: "1rem auto" }}>
-            <Button variant="primary" type="submit">
+            <Button variant="success" type="submit">
               Add Order
             </Button>
           </Col>
