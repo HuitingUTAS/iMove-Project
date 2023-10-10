@@ -16,7 +16,12 @@ const defaultCenter = {
   lat: -3.745,
   lng: -38.523,
 };
-
+const statusMap = {
+  1: "unallocated",
+  2: "allocated",
+  3: "inProgress",
+  4: "delivered",
+};
 const libraries = ["places"];
 function TrackingPage() {
   const [orders, setOrders] = useState([]);
@@ -250,9 +255,16 @@ function TrackingPage() {
                   >
                     <td>{order.orderNumber}</td>
                     <td>
-                      {order.orderStatus.map((shipment, index) => (
-                        <div key={index}>{shipment.status}</div>
-                      ))}
+                      {order.orderStatus.length > 0 && (
+                        <div>
+                          {
+                            statusMap[
+                              order.orderStatus[order.orderStatus.length - 1]
+                                .status
+                            ]
+                          }
+                        </div>
+                      )}
                     </td>
                     <td>
                       Start Time：
