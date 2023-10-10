@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Form, Button, Row, Col, Table, Dropdown } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import "./Dispatch.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,13 +9,12 @@ function AddOrder() {
   const nagivation = new useNavigate();
   const [items, setItems] = useState([]); //the whole inserted item array
   const [orderDetails, setOrderDetails] = useState({
-    orderNumber: "order123",
     sender: "",
     customer: "",
     remark: "",
     need_fridge: "",
     prefferedDeliveryDate: "",
-    OrderStatus: "1", //unallocated
+    orderStatus: [{ status: 1, date: new Date() }], //unallocated
     items: [],
   });
 
@@ -23,10 +22,13 @@ function AddOrder() {
   const [newItem, setNewItem] = useState({
     itemName: "",
     uom: "",
-    qty: "0",
+    qty: "",
   });
-  const [fetchedReceiver, setFetchedReceiver] = useState([]);
+  // const [newStatus, setNewStatus] = useState({ status: 1, date: new Date() });
   const [receiverInput, setReceiverInput] = useState("");
+  const [fetchedReceiver, setFetchedReceiver] = useState([]);
+  const [fetchedSender, setFetchedSender] = useState([]);
+  const [senderInput, setSenderInput] = useState("");
 
   const [selectedAddress, setselectedAddress] = useState("");
   const [selectedPhone, setselectedPhone] = useState("");
@@ -43,9 +45,22 @@ function AddOrder() {
   useEffect(() => {
     fetchReceiverData();
     fetchItemData();
+    fetchSenderData();
   }, []);
 
   // get all avaliable sender from MangoDB
+  const fetchSenderData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/DispatchPage/FetchAllSenders`
+      );
+      setFetchedSender(response.data);
+      // console.log(fetchedSender);
+    } catch (error) {
+      console.log("Error fetching sender data:", error.message);
+    }
+  };
+  // get all avaliable receiver from MangoDB
   const fetchReceiverData = async () => {
     try {
       const response = await axios.get(
@@ -65,14 +80,13 @@ function AddOrder() {
         `${BASE_URL}/ItemManagementPage/GetAllItems`
       );
       setFetchedItem(response.data);
-      console.log("item fetching result:", fetchedItem);
+      // console.log("item fetching result:", fetchedItem);
     } catch (error) {
       console.log("Error fetching item data:", error);
     }
   };
   //add items
   const handleAddItem = () => {
-    console.log("this is single new item:", newItem);
     if (newItem.itemName && newItem.uom && newItem.qty > 0) {
       //insert added items to the order detail
       setItems((prevItems) => [...prevItems, newItem]);
@@ -84,13 +98,13 @@ function AddOrder() {
       setNewItem({
         itemName: "",
         uom: "",
-        qty: "0",
+        qty: "",
       });
       // Clear input fields using refs
       setSelectedUOM("");
       itemNameRef.current.value = "";
       uomRef.current.value = "";
-      qtyRef.current.value = "0";
+      qtyRef.current.value = "";
     } else {
       alert("Please fill in all item details before adding.");
     }
@@ -124,15 +138,29 @@ function AddOrder() {
           [name]: selectedCustomer._id, // Store customer's ID
         }));
       }
+    } else if (name === "sender") {
+      //store sender's ID
+      setSenderInput(value);
+      //Filter sender's ID based on sender's name
+      const selectedSender = fetchedSender.find(
+        (sender) => sender.name === value
+      );
+      if (selectedSender) {
+        setOrderDetails((prevState) => ({
+          ...prevState,
+          [name]: selectedSender._id, // Store sender's ID
+        }));
+      }
     } else {
       setOrderDetails((prevState) => ({
         ...prevState,
         [name]: value,
       }));
     }
-    console.log("this is for checking order details:", orderDetails);
+    // console.log("this is for checking order details:", orderDetails);
   };
 
+  //fetching receiver's address and phone number
   const filterReceiver = (input) => {
     if (input) {
       const filteredReceivers = fetchedReceiver.filter((receiver) =>
@@ -177,7 +205,7 @@ function AddOrder() {
   //Predictive selecting item name when it changed
   const handleItemChange = (event) => {
     const value = event.target.value;
-    console.log("selected item Name:", event.target);
+    // console.log("selected item Name:", event.target);
     setSelectedItem(value);
     filterItems(value); // Filter item list based on content
     // Get the selected item based on its name
@@ -194,10 +222,6 @@ function AddOrder() {
   //add order
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Code to submit form data goes here
-    console.log("order details:", orderDetails);
-    console.log("order details type:", orderDetails.type);
-
     try {
       const response = await axios.post(
         `${BASE_URL}/DispatchPage/InsertingOrder`,
@@ -205,7 +229,12 @@ function AddOrder() {
       );
 
       if (response.status === 200) {
+        alert("Adding new order successfully!");
         // Reset state variables to empty values
+        setReceiverInput("");
+        setSenderInput("");
+        setselectedAddress("");
+        setselectedPhone("");
         setOrderDetails({
           OrderID: "",
           sender: "",
@@ -213,20 +242,20 @@ function AddOrder() {
           remark: "",
           need_fridge: "",
           prefferedDeliveryDate: "",
-          OrderStatus: "1",
+          OrderStatus: [{ status: 1, date: new Date() }],
           items: [],
         });
         setItems([]);
         setNewItem({
           itemName: "",
           uom: "",
-          qty: "0",
+          qty: "",
         });
 
         // Clear input fields using refs
         itemNameRef.current.value = "";
         uomRef.current.value = "";
-        qtyRef.current.value = "0";
+        qtyRef.current.value = "";
       } else {
         console.log("Error response:", response.data);
       }
@@ -247,11 +276,17 @@ function AddOrder() {
               <Form.Control
                 type="text"
                 name="sender"
-                value={orderDetails.sender}
+                list="senderOptions"
+                value={senderInput}
                 onChange={handleChange}
                 placeholder="Enter sender name"
                 required
               />
+              <datalist id="senderOptions">
+                {fetchedSender.map((sender, index) => (
+                  <option key={index} value={sender.name} />
+                ))}
+              </datalist>
             </Form.Group>
           </Col>
           <Col>

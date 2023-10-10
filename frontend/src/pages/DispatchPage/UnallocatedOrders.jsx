@@ -12,29 +12,75 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 
-function UnallocatedOrders(orders) {
+function UnallocatedOrders() {
   const navigate = useNavigate();
   const [unallocatedOrders, setUnallocatedOrders] = useState([]);
+  const [fetchedSender, setFetchedSender] = useState([]);
+  const [fetchedReceiver, setFetchedReceiver] = useState([]);
   const [editedOrder, setEditedOrder] = useState();
   const [showEditModal, setShowEditModal] = useState(false);
-  const [itemEdit, setItemEdit] = useState(false); //change item content status to avaliable editing
+  const [itemEdit, setItemEdit] = useState(-1); //change item content status to avaliable editing
+
+  // Function to fetch unallocated data from MongoDB
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/DispatchPage/FetchUnallocatedOrder`
+      );
+      const unallocatedData = response.data;
+
+      // Fetch sender and receiver data
+      const senderResponse = await axios.get(
+        `${BASE_URL}/DispatchPage/FetchAllSenders`
+      );
+      const receiverResponse = await axios.get(
+        `${BASE_URL}/CustomerManagementPage/GetAllCustomers`
+      );
+
+      const senderData = senderResponse.data;
+      const receiverData = receiverResponse.data;
+
+      // Map sender and receiver IDs to names
+      const updatedOrders = unallocatedData.map((order) => {
+        const sender = senderData.find((sender) => sender._id === order.sender);
+        const receiver = receiverData.find(
+          (receiver) => receiver._id === order.customer
+        );
+
+        return {
+          ...order,
+          sender: sender ? sender.name : "",
+          customer: receiver ? receiver.companyName : "",
+          Address: receiver ? receiver.address : "",
+          PhoneNumber: receiver ? receiver.contactMobile : "",
+        };
+      });
+
+      setUnallocatedOrders(updatedOrders);
+      setFetchedSender(senderData);
+      setFetchedReceiver(receiverData);
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    setUnallocatedOrders(orders.orders);
-  }, [orders]);
+    fetchData();
+  }, []);
 
+  //allocating all orders
   const handleAllocate = async () => {
     try {
       const response = await axios.put(
         `${BASE_URL}/DispatchPage/AllocatingOrder`
       );
-      console.log("Allocated orders:", response.data);
+      // console.log("Allocated orders:", response.data);
     } catch (error) {
       console.log("Error allocating orders:", error.message);
     }
   };
 
-  //delete orderr
+  //delete order
   const handleDelete = (orderNum) => {
     console.log("delete selected order: ", orderNum);
   };
@@ -43,6 +89,7 @@ function UnallocatedOrders(orders) {
   const handleCloseModal = () => {
     setShowEditModal(false);
   };
+
   //click the eidt button: showing edit pop window
   const handleEdit = (orderNumber) => {
     const order = unallocatedOrders.find(
@@ -65,22 +112,24 @@ function UnallocatedOrders(orders) {
   //save changed order
   const handleSaveChanges = () => {
     // Code to save the edited order goes here
-    console.log("Edited Order:", editedOrder);
+    // console.log("Edited Order:", editedOrder);
     handleCloseModal();
   };
 
-  //change whether need fridge or not
+  // recording whether require fridge or not
   const needFridgeChange = (event) => {
-    const { name, value, type, checked } = event.target;
-    const newValue = type === "checkbox" ? checked : value;
-    setEditedOrder((prevValues) => ({
-      ...prevValues,
-      [name]: newValue,
-    }));
+    const target = event.target;
+    const value =
+      target.type === "radio" ? target.value === "true" : target.value;
+    const name = target.name;
+    setEditedOrder({
+      ...editedOrder,
+      [name]: value,
+    });
   };
   //click item edit button
-  const handleItemEdit = (event) => {
-    setItemEdit(true);
+  const handleItemEdit = (index) => {
+    setItemEdit(index);
     console.log("isediting : ", itemEdit);
   };
   // delete item
@@ -119,43 +168,57 @@ function UnallocatedOrders(orders) {
             Upload Orders
           </Button>
         </div>
-        <Table>
-          <thead>
-            <tr>
-              <th>Order ID</th>
-              <th>Sender</th>
-              <th>Revicer</th>
-              <th>Requirement</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {unallocatedOrders.length > 0
-              ? unallocatedOrders.map((order, index) => (
-                  <tr key={index}>
-                    <td className="column-wrap">{order.orderNumber}</td>
-                    <td className="column-wrap">{order.sender}</td>
-                    <td className="column-wrap">{order.customer}</td>
-                    <td className="column-wrap">{order.remark}</td>
-                    <td>
-                      <Button
-                        variant="primary"
-                        onClick={() => handleEdit(order.orderNumber)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger"
-                        onClick={() => handleDelete(order.orderNumber)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
+        <div>
+          <div
+            style={{
+              margin: "1.5rem auto",
+              overflowY: "scroll",
+              maxHeight: "1500px",
+            }}
+          >
+            <Table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Sender</th>
+                  <th>Revicer</th>
+                  <th>Requirement</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {unallocatedOrders.length > 0 ? (
+                  unallocatedOrders.map((order, index) => (
+                    <tr key={index}>
+                      <td className="column-wrap">{order.orderNumber}</td>
+                      <td className="column-wrap">{order.sender}</td>
+                      <td className="column-wrap">{order.customer}</td>
+                      <td className="column-wrap">{order.remark}</td>
+                      <td>
+                        <Button
+                          variant="primary"
+                          onClick={() => handleEdit(order.orderNumber)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          onClick={() => handleDelete(order.orderNumber)}
+                        >
+                          Delete
+                        </Button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">No unallocated orders found.</td>
                   </tr>
-                ))
-              : null}
-          </tbody>
-        </Table>
+                )}
+              </tbody>
+            </Table>
+          </div>
+        </div>
         <Button variant="success" onClick={handleAllocate}>
           Allocate Orders
         </Button>
@@ -174,12 +237,18 @@ function UnallocatedOrders(orders) {
                     <Form.Label>Sender Name</Form.Label>
                     <Form.Control
                       type="text"
-                      name="editedName"
+                      name="senderName"
                       defaultValue={editedOrder.sender}
                       onChange={handleInputChange}
+                      list="senderOptions"
                       placeholder="Enter Sender name"
                       required
                     />
+                    <datalist id="senderOptions">
+                      {fetchedSender.map((sender, index) => (
+                        <option key={index} value={sender.name} />
+                      ))}
+                    </datalist>
                   </Form.Group>
                 </Col>
                 <Col>
@@ -189,10 +258,16 @@ function UnallocatedOrders(orders) {
                       type="text"
                       name="ReciverName"
                       defaultValue={editedOrder.customer}
+                      list="receiverOptions"
                       onChange={handleInputChange}
                       placeholder="Enter reciver name"
                       required
                     />
+                    <datalist id="receiverOptions">
+                      {fetchedReceiver.map((receiver, index) => (
+                        <option key={index} value={receiver.companyName} />
+                      ))}
+                    </datalist>
                   </Form.Group>
                 </Col>
               </Row>
@@ -207,10 +282,8 @@ function UnallocatedOrders(orders) {
                       type="address"
                       name="Address"
                       defaultValue={editedOrder.Address}
-                      onChange={handleInputChange}
                       placeholder="Enter address"
                       disabled
-                      required
                     />
                   </Form.Group>
                 </Col>
@@ -224,9 +297,8 @@ function UnallocatedOrders(orders) {
                       type="tel"
                       name="PhoneNumber"
                       defaultValue={editedOrder.PhoneNumber}
-                      onChange={handleInputChange}
                       placeholder="Enter phone number"
-                      required
+                      disabled
                     />
                   </Form.Group>
                 </Col>
@@ -315,7 +387,7 @@ function UnallocatedOrders(orders) {
                         {editedOrder.items.map((editItem, ind) => (
                           <tr key={ind}>
                             <td>
-                              {itemEdit ? (
+                              {itemEdit === ind ? (
                                 <FormControl
                                   defaultValue={editItem.itemName}
                                   onChange={(e) => handleItemChange(e, ind)}
@@ -325,7 +397,7 @@ function UnallocatedOrders(orders) {
                               )}
                             </td>
                             <td>
-                              {itemEdit ? (
+                              {itemEdit === ind ? (
                                 <FormControl
                                   defaultValue={editItem.uom}
                                   onChange={(e) => handleItemChange(e, ind)}
@@ -335,17 +407,17 @@ function UnallocatedOrders(orders) {
                               )}
                             </td>
                             <td>
-                              {itemEdit ? (
+                              {itemEdit === ind ? (
                                 <FormControl
-                                  defaultValue={editItem.quantity}
+                                  defaultValue={editItem.qty}
                                   onChange={(e) => handleItemChange(e, ind)}
                                 />
                               ) : (
-                                editItem.quantity
+                                editItem.qty
                               )}
                             </td>
                             <td>
-                              {itemEdit ? (
+                              {itemEdit === ind ? (
                                 <>
                                   <Button
                                     variant="success"
@@ -355,7 +427,7 @@ function UnallocatedOrders(orders) {
                                   </Button>
                                   <Button
                                     variant="warning"
-                                    onClick={() => setItemEdit(false)}
+                                    onClick={() => setItemEdit(-1)}
                                   >
                                     Cancel
                                   </Button>
