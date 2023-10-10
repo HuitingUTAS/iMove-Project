@@ -19,7 +19,12 @@ function ItemManage() {
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [originalItem, setOriginalItem] = useState(null);
-  const [newItem, setNewItem] = useState({ uom: "", itemName: "", qty: "" });
+  const [newItem, setNewItem] = useState({
+    uom: "",
+    itemName: "",
+    qty: "",
+    weight: "",
+  });
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
@@ -66,13 +71,14 @@ function ItemManage() {
             uom: newItem.uom,
             itemName: newItem.itemName,
             qty: newItem.qty,
+            weight: newItem.weight,
           }),
         });
 
         if (response.ok) {
           const addedItem = await response.json();
           setItems([...items, addedItem]);
-          setNewItem({ uom: "", itemName: "", qty: "" });
+          setNewItem({ uom: "", itemName: "", qty: "", weight: "" });
           setShowModal(false);
         } else {
           console.log("Error response:", response.status);
@@ -94,6 +100,12 @@ function ItemManage() {
     const newItems = [...items];
     const itemIndex = newItems.findIndex((item) => item._id === _id);
     newItems[itemIndex].itemName = e.target.value;
+    setItems(newItems);
+  };
+  const handleWeightChange = (e, _id) => {
+    const newItems = [...items];
+    const itemIndex = newItems.findIndex((item) => item._id === _id);
+    newItems[itemIndex].weight = e.target.value;
     setItems(newItems);
   };
   const handleShowModal = () => {
@@ -143,6 +155,7 @@ function ItemManage() {
         _id: selectedItem._id,
         itemName: selectedItem.itemName,
         qty: selectedItem.qty,
+        weight: selectedItem.weight,
       })
       .then((response) => {
         // 处理成功响应
@@ -185,6 +198,7 @@ function ItemManage() {
             <tr>
               <th>UOM</th>
               <th>Item Name</th>
+              <th>Quality</th>
               <th>Weight (kg)</th>
               <th>Actions</th>
             </tr>
@@ -234,6 +248,18 @@ function ItemManage() {
                       </div>
                     ) : (
                       item.qty
+                    )}
+                  </td>
+                  <td>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className="form-control"
+                        defaultValue={item.weight}
+                        onChange={(e) => handleWeightChange(e, item._id)}
+                      />
+                    ) : (
+                      item.weight
                     )}
                   </td>
                   <td>
@@ -333,11 +359,11 @@ function ItemManage() {
                     type="number"
                     className="form-control"
                     min="0"
-                    value={newItem.qty}
+                    value={newItem.weight}
                     onChange={(e) =>
                       setNewItem({
                         ...newItem,
-                        qty: e.target.value,
+                        weight: e.target.value,
                       })
                     }
                   />
@@ -345,6 +371,20 @@ function ItemManage() {
                     <span className="input-group-text">kg</span>
                   </div>
                 </div>
+              </div>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">Quality</span>
+                </div>
+                <textarea
+                  className="form-control"
+                  value={newItem.qty}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, qty: e.target.value })
+                  }
+                  rows="1"
+                  style={{ resize: "none" }}
+                />
               </div>
               <div className="modal-footer">
                 <button

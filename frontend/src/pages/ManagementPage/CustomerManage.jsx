@@ -70,6 +70,7 @@ function CustomerManage() {
               code: newCustomer.code,
               companyName: newCustomer.companyName,
               address: newCustomer.address,
+              contactMobile: newCustomer.contactMobile,
             }),
           }
         );
@@ -114,7 +115,13 @@ function CustomerManage() {
     setCustomers(newCustomers);
   };
   const handleShowModal = () => {
-    setNewCustomer({ ...newCustomer, code: "", name: "", address: "" });
+    setNewCustomer({
+      ...newCustomer,
+      code: "",
+      name: "",
+      address: "",
+      contactMobile: "",
+    });
     setShowModal(true);
   };
   const handleAddressChange = (e, _id) => {
@@ -123,6 +130,14 @@ function CustomerManage() {
       (customer) => customer._id === _id
     );
     newCustomers[customerIndex].address = e.target.value;
+    setCustomers(newCustomers);
+  };
+  const handlePhoneChange = (e, _id) => {
+    const newCustomers = [...customers];
+    const customerIndex = newCustomers.findIndex(
+      (customer) => customer._id === _id
+    );
+    newCustomers[customerIndex].contactMobile = e.target.value;
     setCustomers(newCustomers);
   };
   const handleDelete = (code) => {
@@ -162,6 +177,7 @@ function CustomerManage() {
         code: selectedCustomer.code,
         companyName: selectedCustomer.companyName,
         address: selectedCustomer.address,
+        contactMobile: selectedCustomer.contactMobile,
       })
       .then((response) => {
         // 处理成功响应
@@ -202,6 +218,7 @@ function CustomerManage() {
               <th>Code</th>
               <th>Customer Name</th>
               <th>Address</th>
+              <th>Mobile Number</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -240,6 +257,18 @@ function CustomerManage() {
                       />
                     ) : (
                       customer.address
+                    )}
+                  </td>
+                  <td>
+                    {isEditing ? (
+                      <FormControl
+                        as="textarea"
+                        rows={1}
+                        defaultValue={customer.contactMobile}
+                        onChange={(e) => handlePhoneChange(e, customer._id)}
+                      />
+                    ) : (
+                      customer.contactMobile
                     )}
                   </td>
                   <td>
@@ -336,6 +365,22 @@ function CustomerManage() {
                   value={newCustomer.address}
                   onChange={(e) =>
                     setNewCustomer({ ...newCustomer, address: e.target.value })
+                  }
+                />
+              </div>
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
+                  <span className="input-group-text">Mobile Number</span>
+                </div>
+                <FormControl
+                  as="textarea"
+                  rows={1}
+                  value={newCustomer.contactMobile}
+                  onChange={(e) =>
+                    setNewCustomer({
+                      ...newCustomer,
+                      contactMobile: e.target.value,
+                    })
                   }
                 />
               </div>
