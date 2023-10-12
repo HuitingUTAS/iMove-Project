@@ -16,11 +16,17 @@ const defaultCenter = {
   lat: -3.745,
   lng: -38.523,
 };
-
+const statusMap = {
+  1: "unallocated",
+  2: "allocated",
+  3: "inProgress",
+  4: "delivered",
+};
 const libraries = ["places"];
 function TrackingPage() {
   const [orders, setOrders] = useState([]);
   const [cars, setCars] = useState([]);
+  const [customer, setCustomer] = useState(null);
   const [selectedCar, setSelectedCar] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showMap, setShowMap] = useState(false);
@@ -62,8 +68,8 @@ function TrackingPage() {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
-          setOrders([data]);
+          console.log("test", data);
+          setOrders(data);
         } else {
           console.log("Failed to fetch order data");
         }
@@ -77,10 +83,6 @@ function TrackingPage() {
     }
   }, [selectedCar]);
 
-  // useEffect(() => {
-  //   console.log("Updated Orders:", orders);
-  // }, [orders]);
-
   useEffect(() => {
     // This code fetches the geocode for each address in the orders
     const fetchGeocodes = async () => {
@@ -88,7 +90,7 @@ function TrackingPage() {
         orders.map(async (order) => {
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURI(
-              order.address
+              order.customer.address
             )}&key=AIzaSyCNrvo40mebXB_2dB1G-pzEATUil7mLraY`
           );
           const data = await response.json();
@@ -131,7 +133,7 @@ function TrackingPage() {
         const marker = new window.google.maps.Marker({
           position: order.location,
           map,
-          title: `This is order: ${order._id}`,
+          title: `This is order: ${order.customer.firstName}`,
         });
 
         marker.addListener("click", () => {
@@ -253,7 +255,16 @@ function TrackingPage() {
                   >
                     <td>{order.orderNumber}</td>
                     <td>
-                      {order.shipmentStatus.map((status) => `${status.status}`)}
+                      {order.orderStatus.length > 0 && (
+                        <div>
+                          {
+                            statusMap[
+                              order.orderStatus[order.orderStatus.length - 1]
+                                .status
+                            ]
+                          }
+                        </div>
+                      )}
                     </td>
                     <td>
                       Start Time：
@@ -280,16 +291,22 @@ function TrackingPage() {
           {selectedOrder && (
             <div>
               <p>
-                <b>Order ID:</b> {selectedOrder._id}
+                <b>Order number:</b> {selectedOrder.orderNumber}
               </p>
               <p>
-                <b>Address:</b> {selectedOrder.address}
+                <b>Address:</b> {selectedOrder.customer.address}
               </p>
               <p>
-                <b>Items:</b> {selectedOrder.items.join(", ")}
+                <b>Items:</b>{" "}
+                {selectedOrder.items.map((item, index) => (
+                  <div key={index}>
+                    itemName: {item.itemName} <br />
+                    quantity: {item.quantity}
+                  </div>
+                ))}
               </p>
               <p>
-                <b>Parcel Number:</b> {selectedOrder.parcelNumber}
+                <b>Parcel Number:</b> {selectedOrder.parcelQty}
               </p>
             </div>
           )}

@@ -53,6 +53,7 @@ app.get("/DispatchPage/FetchUnallocatedOrder", getUnallocatedOrder)
 app.get("/DispatchPage/FetchAllocatedOrder", getAllocatedOrder)
 app.get("/DispatchPage/FetchAllSenders", getAllSenders)
 app.post("/DispatchPage/InsertingOrder", createOrder)
+app.put("/DispatchPage/UpdatingOrder", updateOrder)
 app.post("/DispatchPage/InsertingItem", createItem)
 
 app.get("/CarManagement/FetchingAllCars", getAllCars)

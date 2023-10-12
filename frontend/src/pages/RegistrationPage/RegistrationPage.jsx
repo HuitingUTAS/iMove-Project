@@ -132,8 +132,6 @@ function RegistrationPage() {
         break;
       case "car":
         formData = {
-          username,
-          password,
           make,
           model,
           type: carType,
@@ -465,17 +463,6 @@ function RegistrationPage() {
             <h3>Car Registration</h3>
             <div className="row">
               <div className="col">
-                <div className="form-group">
-                  <label htmlFor="formUsername">Username</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="formUsername"
-                    placeholder="Enter username"
-                    value={username}
-                    onChange={handleUsernameChange}
-                  />
-                </div>
                 <div className="form-group">
                   <label htmlFor="formMake">Make</label>
                   <input
