@@ -9,6 +9,8 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../../config";
 
 function UnallocatedOrders(orders) {
   const navigate = useNavigate();
@@ -21,7 +23,16 @@ function UnallocatedOrders(orders) {
     setUnallocatedOrders(orders.orders);
   }, [orders]);
 
-  const handleAllocate = () => {};
+  const handleAllocate = async () => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/DispatchPage/AllocatingOrder`
+      );
+      console.log("Allocated orders:", response.data);
+    } catch (error) {
+      console.log("Error allocating orders:", error.message);
+    }
+  };
 
   //delete orderr
   const handleDelete = (orderNum) => {

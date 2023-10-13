@@ -12,21 +12,43 @@ import {
 } from "react-bootstrap";
 import { BASE_URL } from "../../../config";
 function DriverPage() {
-  const [orders] = useState(["Order1", "Order2", "Order3"]);
+  const [orders, setOrders] = useState([]);
+  const [driverID, setDriverID] = useState("");
+  const [driverName, setDriverName] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState("");
+  const [startTime, setStartTime] = useState(null);
+  const [completionTime, setCompletionTime] = useState(null);
 
-  const [selectedOrder, setSelectedPacker] = useState(orders[0]);
-
-  const [selectedStatus, setSelectedStatus] = useState("In Progress");
+  const [selectedStatus, setSelectedStatus] = useState("Allocated");
 
   const [orderData, setOrderData] = useState(null); // Store the received order data
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = localStorage.getItem("role");
+
+    console.log("User:", user);
+    console.log("Role:", role);
+    if (user && user.name) {
+      setDriverID(user._id);
+      setDriverName(user.name);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (driverID) {
+      fetchOrderData();
+    }
+  }, [driverID]);
   const fetchOrderData = async () => {
     try {
-      const response = await fetch("http://localhost:3002/order/SOF003101");
+      const response = await fetch(
+        `${BASE_URL}/DriverPage/GetOrders/${driverID}`
+      );
       if (response.ok) {
         const data = await response.json();
-        setOrderData(data);
-        console.log(data);
+        console.log("test 1", data);
+        setOrders(data);
       } else {
         console.log("Error response:", response.status);
       }
@@ -34,9 +56,83 @@ function DriverPage() {
       console.log("Error fetching order data:", error);
     }
   };
-  useEffect(() => {
-    fetchOrderData();
-  }, []);
+  const updateStatus = async () => {
+    const currentDateTime = new Date().toISOString(); // get current date-time in ISO format
+
+    if (selectedStatus === "In Progress") {
+      setStartTime(currentDateTime);
+      console.log("start time: ", currentDateTime);
+    } else if (selectedStatus === "Completed") {
+      setCompletionTime(currentDateTime);
+      console.log("end time: ", currentDateTime);
+    }
+    try {
+      const response = await fetch(`${BASE_URL}/DriverPage/UpdateStatus`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _id: selectedOrder._id,
+          shipmentStatus: selectedStatus,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Status updated successfully");
+      } else {
+        console.log("Error updating status:", response.status);
+      }
+      console.log(
+        "current status: ",
+        selectedOrder.orderStatus?.map((mystatus) => {
+          mystatus.status;
+        })
+      );
+      // if (startTime && completionTime) {
+      //   const timeResponse = await fetch(
+      //     `${BASE_URL}/DriverPage/AddTime/${selectedOrder._id}`,
+      //     {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({
+      //         _id: selectedOrder._id,
+      //         startTime: startTime,
+      //         endTime: completionTime,
+      //       }),
+      //     }
+      //   );
+
+      //   if (!timeResponse.ok) {
+      //     console.log("Error uploading time:", timeResponse.status);
+      //   }
+      // }
+      //   if (fileInputRef) {
+      //     const fileResponse = await fetch(
+      //       `${BASE_URL}/DriverPage/UploadFile/${selectedOrder._id}`,
+      //       {
+      //         method: "POST",
+      //         headers: {
+      //           "Content-Type": "application/json",
+      //         },
+      //         body: JSON.stringify({
+      //           _id: selectedOrder._id,
+      //           file: fileInputRef,
+      //         }),
+      //       }
+      //     );
+
+      //     if (!fileResponse.ok) {
+      //       console.log("Error uploading file:", fileResponse.status);
+      //     }
+      //   }
+    } catch (error) {
+      console.log("Error updating status:", error);
+    }
+  };
+
   const handleSelect = (number) => {
     setSelectedStatus(number);
   };
@@ -52,19 +148,19 @@ function DriverPage() {
   };
   return (
     <div className="drivertest">
-      <h1>This is Driver Page</h1>
+      <strong>Welcome {driverName}</strong>
       <Row className="mt-5">
         <Col md={{ span: 4, offset: 1 }}>
           <Dropdown
-            onSelect={(selectedKey) => setSelectedPacker(orders[selectedKey])}
+            onSelect={(selectedKey) => setSelectedOrder(orders[selectedKey])}
           >
             <Dropdown.Toggle variant="primary" id="dropdown-basic">
-              {selectedOrder}
+              {selectedOrder ? selectedOrder.orderNumber : "Select Order"}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               {orders.map((order, index) => (
                 <Dropdown.Item key={index} eventKey={index}>
-                  {order}
+                  {order.orderNumber}
                 </Dropdown.Item>
               ))}
             </Dropdown.Menu>
@@ -74,23 +170,32 @@ function DriverPage() {
       <Row className="mt-1">
         <Col md={{ span: 8, offset: 2 }}>
           <Card className="mb-4 h-100">
-            <Card.Header>{selectedOrder}</Card.Header>
+            <Card.Header>
+              {selectedOrder ? selectedOrder.orderNumber : "Order Details"}
+            </Card.Header>
             <Card.Body>
               <div className="mb-3">
-                <strong>Order number:</strong>
+                <strong>Order number: </strong>
+                {/* {selectedOrder.orderNumber} */}
+                <div>{selectedOrder.orderNumber}</div>
               </div>
+
               <div className="mb-3">
                 <strong>Recevier name:</strong>
+                {selectedOrder.customer?.firstName}
               </div>
               <div className="mb-3">
-                <strong>Address:</strong>
+                <strong>Address: </strong>
+                <div>{selectedOrder.customer?.address}</div>
+                {/* {selectedOrder.customer.address} */}
               </div>
               <div className="mb-3">
-                <strong>Parcel number:</strong>
+                <strong>Parcel number: </strong>
+                {selectedOrder.parcelQty}
               </div>
               <div className="mb-3" style={{ display: "flex" }}>
                 <div>
-                  <strong>Special requirements:</strong>
+                  <strong>Items:</strong>{" "}
                 </div>
                 <div
                   className="mb-3"
@@ -103,10 +208,12 @@ function DriverPage() {
                     padding: "10px",
                   }}
                 >
-                  <FormControl
-                    as="textarea"
-                    style={{ width: "100%", height: "100%" }}
-                  />
+                  {selectedOrder.items?.map((item, index) => (
+                    <div key={index}>
+                      itemName: {item.itemName} <br />
+                      quantity: {item.quantity}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -118,11 +225,11 @@ function DriverPage() {
                   {selectedStatus}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleSelect("allocated")}>
+                    Allocated
+                  </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSelect("In Progress")}>
                     In Progress
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleSelect("Shipping")}>
-                    Shipping
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSelect("Completed")}>
                     Completed
@@ -141,10 +248,13 @@ function DriverPage() {
       />
       <Row
         className="justify-content-end"
-        style={{ position: "fixed", bottom: "100px", right: "200px" }}
+        style={{ position: "fixed", bottom: "100px", right: "50px" }}
       >
         <Button variant="success" onClick={handleButtonClick}>
           upload
+        </Button>
+        <Button variant="success" className="mt-3" onClick={updateStatus}>
+          confirm
         </Button>
       </Row>
     </div>

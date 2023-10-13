@@ -34,6 +34,7 @@ function CustomNavbar() {
           Sign Up
         </Link>
       </Navbar>
+
       <Routes>
         <Route path="/" element={<LoginPage />}>
           <Route path="/DispatchPage" element={<DispatchPage />} />
