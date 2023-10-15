@@ -8,7 +8,7 @@ import { getCarByRegistrationNumber, updateCar, createCar, deleteCar, getAvaliab
 import { getDriverByNumber, updateDriver, updateDriverPassword, createDriver, deleteDriver, getAllDrivers } from "./controllers/DriverController.js"
 import { getDispatcherByNumber, updateDispatcher,updateDispatcherPassword, createDispatcher, deleteDispatcher, getAllDispatchers } from "./controllers/DispatcherController.js"
 import { getPackerByName, updatePacker,updatePackerPassword, createPacker, deletePacker, getAllPackers } from "./controllers/PackerController.js"
-import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager } from "./controllers/ManagerController.js"
+import { getManagerByName, updateManager,updateManagerPassword, createManager, deleteManager, getAllManagers } from "./controllers/ManagerController.js"
 import { createCustomer, deleteCustomer, getAllCustomers, updateCustomer } from "./controllers/CustomerController.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
@@ -83,6 +83,7 @@ app.put("/PackerManagement/UpdatingPackerPassword", updatePackerPassword)
 app.post("/RegistrationPage/packer", createPacker)
 app.delete("/PackerManagement/DeletingPacker/:PackerID", deletePacker)
 
+app.get("/ManagerManagement/FetchingAllManagers", getAllManagers)
 app.get("/ManagerManagement/FetchingManager/:ManagerName", getManagerByName)
 app.put("/ManagerManagement/UpdatingManager", updateManager)
 app.put("/ManagerManagement/UpdatingManagerPassword", updateManagerPassword)

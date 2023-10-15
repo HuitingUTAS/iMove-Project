@@ -7,6 +7,19 @@ dotenv.config() // load env file
 
 const Manager = mongoose.model("Manager", managerSchema);
 
+export const getAllManagers = (req, res) => {
+    Manager.find({} ,
+    function(err, manager) {
+        if (err) {
+            res.status(400).json({
+                message: err.toString()
+            })
+        }
+        else {
+            res.send(manager)
+        }
+    });
+};
 
 export const getManagerByName = (req, res) => {
     Manager.find({ name:{$regex : new RegExp(req.params.ManagerName, 'i')}} ,
