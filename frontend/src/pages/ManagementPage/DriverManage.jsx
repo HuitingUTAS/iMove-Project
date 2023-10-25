@@ -50,7 +50,7 @@ function DriverManage() {
     const updateDriver = [...driverData];
     const editedDriver = { ...editedData[index] }; // Get the edited data for the specific row
     editedDriver["_id"] = driverData[index]["_id"]; // updated driver's id
-    if (field === "gender") {
+    if (field === "gender" || field === "status") {
       // console.log("gender change !!!!", e);
       updateDriver[index][field] = e;
       editedDriver[field] = e; // Update the edited driver gender
@@ -75,10 +75,10 @@ function DriverManage() {
         `${BASE_URL}/DriverManagement/UpdatingDriver`,
         editedDriver // Send only the edited data for the specific driver ID
       );
-      // Clear edited data and reset editing state
+      // Clear edited data and reset editing status
       setEditedData((prevEditedData) => ({
         ...prevEditedData,
-        [index]: {}, // Clear the edited data for the specific carID
+        [index]: {}, // Clear the edited data for the specific driver ID
       }));
       setIsEditing(-1);
       fetchData();
@@ -297,7 +297,7 @@ function DriverManage() {
                     </Button>{" "}
                     <Button
                       variant="danger"
-                      onClick={() => handleDeleteDriver(index)}
+                      onClick={() => handleDeleteDriver(driver._id)}
                     >
                       Delete
                     </Button>
